@@ -1,0 +1,59 @@
+﻿
+@{ Layout = "/Views/SiteHome/_FooterSiteLayout.cshtml";
+	ViewData["Title"] = "Материалы"; }
+
+@model IEnumerable<ICan.Common.Models.Opt.MaterialModel>
+
+
+<main class="main main-material">
+	<div class="material-wrapper">
+		@foreach (var item in Model) 
+		{
+		<div class="material-item" id="@item.MaterialId">
+			<div class="material-item-block-text">
+				<h2 class="material-item-theme">@item.Theme</h2>
+				<p class="material-item-date">@item.Date.ToString("dd.MM.yyyy")</p>
+				<p class="material-item-text">@Html.Raw(@item.Content)</p>
+
+			</div>
+			@if (item.DownloadFile != null)
+			{
+		<div class="download-link-wrapper">
+			<a class="download-link"
+			   href="/materal/download/@item.DownloadFile.FileName"
+			   
+			   download="@item.DownloadFile.UserFileName">скачать материалы</a>
+		</div>}
+			@if (item.PreviewImages != null && item.PreviewImages.Any())
+			{
+		<div class="material-item-pictures-wrapper">
+
+			<div class="material-item-pictures">
+				@foreach (var image in item.PreviewImages)
+				{
+					if (item.DownloadFile != null)
+					{
+			<a class="download-link material-item-img"
+			   href="/materal/download/@item.DownloadFile.FileName"
+			   download="@item.DownloadFile.UserFileName">
+				<img 
+					 alt="@item.Theme"
+					 src="@image.FileFullPath" />
+				</a>
+					}
+					else {
+			<img class="material-item-img"
+				 alt="@item.Theme"
+				 src="@image.FileFullPath" />
+					}
+
+				}
+			</div>				
+			
+		</div>
+			}
+		</div>
+		}
+	</div> 
+</main>
+<script src="~/js/sitehome/homematerial.js" asp-append-version="true"></script>

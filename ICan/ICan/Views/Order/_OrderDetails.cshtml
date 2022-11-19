@@ -1,0 +1,83 @@
+﻿@model IEnumerable<ICan.Common.Models.Opt.OrderProductModel>
+@{
+	bool.TryParse(ViewData["IsMobileBrowser"]?.ToString(), out bool isMobileBrowser);
+
+}
+<style>
+	.order-details th {
+		border-top-color: #fff;
+		text-align: center;
+	}
+</style>
+
+<table class="table order-details">
+	<thead>
+		<tr>
+			@*<th>
+					@Html.DisplayNameFor(model => model.Productid)
+				</th>*@
+			<th>
+				@Html.DisplayNameFor(model => model.Product)
+			</th>
+			@if (!isMobileBrowser)
+			{
+				<th>
+					@Html.DisplayNameFor(model => model.Weight)
+				</th>
+			}
+			<th>
+				@Html.DisplayNameFor(model => model.Amount)
+			</th>
+			<th>
+				@Html.DisplayNameFor(model => model.Price)
+			</th>
+			<th>
+				@Html.DisplayNameFor(model => model.DiscountedPrice)
+			</th>
+
+			<th>
+				Цена, руб
+			</th>
+
+			@*<th>
+					@Html.DisplayNameFor(model => model.ProductPriceId)
+				</th>*@
+			@*<th></th>*@
+		</tr>
+	</thead>
+	<tbody>
+		@foreach (var item in Model)
+		{
+			<tr>
+				@{
+					var price = Math.Floor(item.Price);
+					var discountedPrice = Math.Floor(item.DiscountedPrice);
+				}
+				<td>
+					@Html.DisplayFor(modelItem => item.Product)
+				</td>
+				@if (!isMobileBrowser)
+				{
+					<td style="text-align: right">
+						@Math.Round(item.Weight, 1)
+					</td>
+				}
+				<td style="text-align: right">
+					@Html.DisplayFor(modelItem => item.Amount)
+				</td>
+				<td style="text-align: right">
+					@(price.ToString("N0"))
+				</td>
+
+				<td style="text-align: right">
+					@(discountedPrice.ToString("N0"))
+				</td>
+
+				<td style="text-align: right">
+					@((discountedPrice * item.Amount).ToString("N0"))
+				</td>
+
+			</tr>
+		}
+	</tbody>
+</table>

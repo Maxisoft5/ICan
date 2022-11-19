@@ -1,0 +1,19 @@
+﻿@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
+
+@{ 
+	Layout = "/Views/GlobalSiteHome/_FooterSiteLayout.cshtml";	
+	ViewData["Title"] = Localizer["Title"];
+}
+
+<main class="main-error">
+	<div class="error">
+		<img class="error-img" src="~/assets/error-witcher.svg" />
+		<div class="error-text">
+			<h2 class="error-text--heading">@Localizer["Oops"]</h2>
+			<p class="error-text--paragraph">@Localizer["NoPage"]</p>
+			<p class="error-text--link">@Localizer["WeAreHere"]</p>
+			<p class="error-text--http">HTTP ERROR 404</p>
+		</div>
+	</div>
+</main>

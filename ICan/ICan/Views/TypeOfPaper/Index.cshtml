@@ -1,0 +1,39 @@
+﻿@model IEnumerable<ICan.Common.Models.Opt.TypeOfPaperModel>
+@{ 
+
+	var title = "Виды бумаги";
+	ViewData["Title"] = title;
+}
+<h2>@title</h2>
+
+<span class="text-success">@TempData["StatusMessage"]</span>
+<span class="alert-danger">@TempData["ErrorMessage"]</span>
+<p>
+    <a asp-action="Create">Создать</a>
+</p>
+<table class="table table-responsive-md" style="margin-top:10px;">
+    <thead>
+        <tr>
+            <th>@Html.DisplayNameFor(model => model.Name)</th>
+            <th>@Html.DisplayNameFor(model => model.Density)</th>
+            <th>@Html.DisplayNameFor(model => model.PaperType)</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach(var typeOfPaper in Model)
+        {
+            <tr>
+                <td>@typeOfPaper.Name</td>
+                <td>@typeOfPaper.Density</td>
+                <td>@typeOfPaper.PaperType</td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@typeOfPaper.TypeOfPaperId"><i class="far fa-edit"></i></a> |
+                    <form asp-action="Delete" style="display: inline" asp-route-id="@typeOfPaper.TypeOfPaperId">
+                        <i class="submit index far fa-times-circle" style="color:rgb(0, 123, 255)"></i>
+                    </form>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

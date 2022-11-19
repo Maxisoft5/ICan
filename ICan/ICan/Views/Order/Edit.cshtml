@@ -1,0 +1,355 @@
+﻿@model ICan.Common.Models.Opt.OrderModel
+@using ICan.Common.Utils;
+
+@{
+	ViewData["Title"] = "Редактирование заказа";
+	var action = ViewData["Action"]?.ToString();
+	bool.TryParse(ViewData["IsAdmin"]?.ToString(), out var isAdmin);
+	bool.TryParse(ViewData["IsOperator"]?.ToString(), out var isOperator);
+	bool.TryParse(ViewData["IsStoreKeeper"]?.ToString(), out var isStoreKeeper);
+
+	bool.TryParse(ViewData["IsClient"]?.ToString(), out var isClient);
+
+	var disabled = isAdmin ? "" : "disabled";
+	var editableByICan = (isAdmin || isOperator) ? "" : "disabled";
+	var shortOrderNum = Model.ShortOrderId > 0 ? Model.ShortOrderId.ToString() : Util.GetShortNum(Model.OrderId);
+}
+
+<div style="margin-top:35px;">
+	<h4>Редактирование заказа № @shortOrderNum</h4>
+</div>
+
+<hr />
+<div class="row">
+	<div class="col-12">
+		<div style="text-align: center">@Html.Raw(@Model.Promo)</div>
+	</div>
+</div>
+<div class="row">
+
+	<div class="col-md-4">
+		<span class="alert-danger">@TempData["ErrorMessage"]</span>
+		<form asp-action="Edit" asp-route-id="@(Model.OrderId)" enctype="multipart/form-data">
+
+			<div asp-validation-summary="All" class="text-danger"></div>
+
+			<input type="hidden" asp-for="OrderId" class="order-id" />
+			<input type="hidden" asp-for="ShortOrderId" />
+			<input type="hidden" asp-for="OrderDate" />
+			<input type="hidden" asp-for="ClientId" />
+			<input type="hidden" asp-for="EventId" />
+			<input type="hidden" asp-for="TotalWeight" />
+			<input type="hidden" asp-for="TotalSum" />
+			<input type="hidden" asp-for="DiscountedSum" />
+
+			<input type="hidden" asp-for="RequisitesId" />
+
+
+			<div class="form-group">
+				<label asp-for="ClientId" class="control-label"></label><br />
+				@Html.DisplayFor(t => t.Client.FullName)
+			</div>
+			@if (isAdmin || isOperator)
+			{
+
+				<div class="form-group">
+					<label asp-for="ShopId" class="control-label"></label>
+					<select asp-for="ShopId" class="form-control"
+							asp-items="ViewBag.ShopId">
+						<option value="">-</option>
+					</select>
+				</div>
+			}
+			else
+			{
+				<input type="hidden" asp-for="ShopId" />
+			}
+
+			<div class="form-group">
+				<label class="control-label">Телефон</label><br />
+				@Html.DisplayFor(t => t.Client.PhoneNumber)
+
+			</div>
+			<div class="form-group">
+				<label class="control-label">Email клиента</label><br />
+				@Html.DisplayFor(t => t.Client.Email)
+			</div>
+			<div class="form-group">
+				<label asp-for="OrderDate" class="control-label"></label><br />
+				<span class="order-date" data-full-date="@Model.OrderDate.ToString("yyyy-MM-ddTHH:mm")">@Model.OrderDate.ToShortDateString()</span>
+				<span asp-validation-for="OrderDate" class="text-danger"></span>
+			</div>
+
+
+			<div class="form-group">
+				<label asp-for="OrderStatusId" class="control-label"></label>
+				@if (isAdmin || isOperator || isStoreKeeper)
+				{
+					<select asp-for="OrderStatusId" class="form-control" asp-items="ViewBag.OrderStatusId"></select>
+				}
+				else
+				{
+					<input asp-for="OrderStatus" class="form-control" disabled />
+					<input type="hidden" asp-for="OrderStatusId" />
+				}
+				<span asp-validation-for="OrderStatusId" class="text-danger"></span>
+			</div>
+
+			@if (!isClient && Model.AssemblyDate.HasValue)
+			{
+				<div class="form-group">
+					<label asp-for="AssemblyDate" class="control-label"></label><br />
+					@if (isAdmin)
+					{
+
+						<input asp-for="AssemblyDate" class="form-control check-assembly-date" />
+						<span class="assembly-date-valid text-danger" style="display:none">Дата сборки заказа не может быть меньше даты заказа</span>
+					}
+					else
+					{
+						<span>@Model.AssemblyDate</span>
+						<input type="hidden" asp-for="AssemblyDate" />
+					}
+				</div>
+			}
+			else
+			{
+				<input type="hidden" asp-for="AssemblyDate" />
+			}
+
+			@if (isAdmin || isOperator)
+			{
+				<div class="form-group">
+					<label asp-for="DoneDate" class="control-label"></label><br />
+
+					<input asp-for="DoneDate" class="form-control check-done-date" />
+					<span class="done-date-valid text-danger" style="display:none">Дата выполнения заказа не может быть меньше даты заказа</span>
+				</div>
+			}
+			else
+			{
+				<input type="hidden" asp-for="DoneDate" />
+				if (Model.DoneDate.HasValue)
+				{
+					<div class="form-group">
+						<label asp-for="DoneDate" class="control-label"></label><br />
+						<span>@Model.DoneDate</span>
+					</div>
+				}
+			}
+
+			<div class="form-group">
+				<label asp-for="TrackNo" class="control-label"></label>
+				@if (isAdmin || isOperator)
+				{
+					<input asp-for="TrackNo" class="form-control" />
+
+				}
+				else
+				{
+					<input asp-for="TrackNo" class="form-control" disabled />
+					<input type="hidden" asp-for="TrackNo" />
+				}
+				<span asp-validation-for="TrackNo" class="text-danger"></span>
+			</div>
+
+			<div class="form-group">
+				<label asp-for="ClientAddress" class="control-label"></label>
+				@if (!isStoreKeeper)
+				{
+					<textarea asp-for="ClientAddress" rows="9" class="form-control"> </textarea>
+				}
+				else
+				{
+					<input type="hidden" asp-for="ClientAddress" />
+					<textarea asp-for="ClientAddress" disabled rows="9" class="form-control"> </textarea>
+				}
+
+				<span asp-validation-for="ClientAddress" class="text-danger"></span>
+			</div>
+
+			@if (!string.IsNullOrWhiteSpace(Model.DeliveryPointAddress)) 
+			{
+				<div class="form-group">
+					<label asp-for="DeliveryPointAddress" class="control-label"></label>
+					@if (!isStoreKeeper)
+					{
+						<textarea asp-for="DeliveryPointAddress" rows="9" class="form-control"> </textarea>
+					}
+					else
+					{
+						<input type="hidden" asp-for="DeliveryPointAddress" />
+						<textarea asp-for="DeliveryPointAddress" disabled rows="9" class="form-control"> </textarea>
+					}
+
+					<span asp-validation-for="DeliveryPointAddress" class="text-danger"></span>
+				</div>
+			}
+
+
+			<div class="form-group">
+
+				@if (isAdmin && Model.PaidSum >= Model.DiscountedSum)
+				{
+					<label asp-for="IsPaid" class="control-label"></label>
+					<input asp-for="IsPaid" class="form-control left-aligned-checkbox" type="checkbox" />
+				}
+				else
+				{
+					<label asp-for="IsPaidString" class="control-label"></label>
+					<input asp-for="IsPaidString" class="form-control" disabled />
+					<input asp-for="IsPaid" type="hidden" />
+
+				}
+				<span asp-validation-for="IsPaid" class="text-danger"></span>
+			</div>
+
+			<div class="form-group">
+				<label asp-for="TotalWeight" class="control-label"></label><br />
+				<span>@Model.TotalWeight</span>
+			</div>
+
+			<div class="form-group">
+				<label asp-for="NoteBookAmount" class="control-label"></label>
+				<input asp-for="NoteBookAmount" class="form-control" type="number" disabled />
+			</div>
+
+			@if (Model.TotalDiscountedPercent > 0 && Model.OrderSizeDiscountPercent > 0)
+			{
+				<div class="form-group">
+					<label class="control-label">Исходная сумма, руб</label>
+					<input class="form-control" disabled value="@Model.TotalSum.ToString("N")" />
+				</div>
+				<div class="form-group">
+					<label asp-for="OrderSizeDiscountPercent" class="control-label"></label>
+					<input class="form-control" disabled value="@Model.OrderSizeDiscountPercent" />
+					<input class="form-control" type="hidden" asp-for="OrderSizeDiscountPercent" />
+				</div>
+
+				@if (Model.EventDiscountPercent > 0)
+				{
+					<div class="form-group">
+						<label asp-for="EventDiscountPercent" class="control-label"></label>
+						<input class="form-control" disabled asp-for="EventDiscountPercent" />
+						<input type="hidden" asp-for="EventDiscountPercent" id="event-discount-percent" />
+					</div>
+				}
+
+				@if (isAdmin || isOperator)
+				{
+					<div class="form-group">
+
+						<label asp-for="PersonalDiscountId" class="control-label"></label>
+						<select asp-for="PersonalDiscountId" class="form-control select-product-kind"
+								asp-items="ViewBag.PersonalDiscountId">
+							<option value="">-</option>
+						</select>
+					</div>
+				}
+				else if (Model.PersonalDiscountId.HasValue)
+				{
+					<select asp-for="PersonalDiscountId" class="form-control select-product-kind"
+							asp-items="ViewBag.PersonalDiscountId" disabled>
+					</select>
+					<input type="hidden" asp-for="PersonalDiscountId" id="discount-percent" />
+				}
+
+
+				<div class="form-group">
+					<label asp-for="TotalDiscountedPercent" class="control-label"></label>
+					<input class="form-control" disabled asp-for="TotalDiscountedPercent" />
+				</div>
+
+			}
+
+			<div class="form-group">
+				<label asp-for="DiscountedSum" class="control-label"></label>
+				<input class="form-control" disabled value="@Model.DiscountedSum.ToString("N")" />
+			</div>
+
+			@if (!isClient)
+			{
+				<div class="form-group">
+					<label asp-for="RequisitesOwner" class="control-label"></label>
+					<input class="form-control" disabled value="@Model.RequisitesOwner" />
+				</div>
+				<div class="form-group">
+					<label asp-for="UpdNum" class="control-label"></label>
+					<input class="form-control" asp-for="@Model.UpdNum" />
+				</div>
+
+			}
+			else
+			{
+				<input asp-for="UpdNum" type="hidden" />
+			}
+
+			<div class="form-group">
+				<label asp-for="Comment" class="control-label"></label>
+				<textarea asp-for="Comment" rows="3" class="form-control"> </textarea>
+			</div>
+			<div class="form-group">
+				<input type="submit" value="Сохранить" class="btn btn-default" />
+			</div>
+		</form>
+	</div>
+
+	<div class="col-8">
+		@if (Model.OrderStatusId == 1 /*Новый*/ && (isClient || isAdmin || isOperator))
+
+		{
+			<a href="#" id="edit-order-link" data-toggle="modal" data-target="#edit-order">
+				Редактировать заказ
+			</a><br />
+		}
+		<a asp-action="Export" asp-route-id="@Model.OrderId" title="Экспортировать в Excel">Экспортировать в Excel&nbsp;<i class="far fa-file-excel"></i></a> <br />
+
+
+		@await Html.PartialAsync("_OrderDetails", Model.OrderProducts)
+	</div>
+</div>
+
+<br />
+
+<div class="row">
+	<div class="col-12">
+		@await Html.PartialAsync("_OrderPayments", Model.OrderPayments)
+	</div>
+</div>
+
+<div>
+	<a asp-action="Index">Назад к списку</a>
+</div>
+
+<div class="modal" tabindex="-1" role="dialog" id="edit-order">
+	<div class="modal-dialog" role="document" style="max-width:90%">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title">Редактирование заказа</h5>
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+			</div>
+			<div class="modal-body">
+				@await Html.PartialAsync("~/views/Product/_ProductList.cshtml", Model.ProductList)
+			</div>
+			<div class="modal-footer">
+				<div class="form-group">
+					<input id="update-order-button" type="button" 
+						   value="Сохранить" class="btn btn-default btn-update-order" />
+				</div>
+				<div class="form-group">
+					<input type="reset" value="Отменить" data-dismiss="modal" class="btn btn-outline-dark" />
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+
+
+@section Scripts
+{
+	@{await Html.RenderPartialAsync("_ValidationScriptsPartial"); };
+}
+<script type="text/javascript" src="~/js/order.js" asp-append-version="true"></script>

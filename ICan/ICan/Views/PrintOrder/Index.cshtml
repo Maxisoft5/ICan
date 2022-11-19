@@ -1,0 +1,189 @@
+﻿@using ICan.Common.Models.Opt
+@model IEnumerable<ICan.Common.Models.Opt.PrintOrderModel>
+
+@{
+    var title = "Заказ печати";
+    ViewData["Title"] = title;
+    bool.TryParse(ViewData["IsDesigner"]?.ToString(), out var isDesigner);
+    bool.TryParse(ViewData["IsOperator"]?.ToString(), out var isOperator);
+    bool.TryParse(ViewData["IsAdmin"]?.ToString(), out var isAdmin);
+    bool.TryParse(ViewData["IsAssembler"]?.ToString(), out var isAssembler);
+}
+
+<h2>@title</h2>
+
+<span class="text-success">@TempData["StatusMessage"]</span>
+<span class="alert-danger">@TempData["ErrorMessage"]</span>
+
+@if (isAdmin || isOperator || isAssembler)
+{
+    <p>
+        <a asp-action="Create">Создать</a>
+        <a asp-action="GetArrearsReport" style="margin-left:20px;">Отчёт по задолженности</a>
+    </p>
+}
+
+<table class="table"
+       data-toggle="table"
+       data-search="true"
+       data-filter-control="true"
+       data-show-search-clear-button="true">
+    <thead>
+        <tr>
+            <th data-field="OrderDate"
+                data-sortable="true"
+                data-sorter="datesTimeSorter"
+                data-filter-control="input"
+                class="narrow-200">
+                @Html.DisplayNameFor(model => model.OrderDate)
+            </th>
+            <th data-field="PrintingHouseOrderNum" data-sortable="true"
+                data-filter-control="input" class="narrow-150">
+                @Html.DisplayNameFor(model => model.PrintingHouseOrderNum)
+            </th>
+
+            <th data-field="Printing" data-sortable="true"
+                data-filter-control="input">
+                @Html.DisplayNameFor(model => model.Printing)
+            </th>
+            <th data-field="SemiProductType" data-sortable="true"
+                data-filter-control="select">
+                @Html.DisplayNameFor(model => model.SemiProductType)
+            </th>
+			<th data-field="BlockType" data-sortable="true"
+				data-filter-control="select">
+				Тип блока
+			</th>
+            <th data-field="SemiproductsString" data-sortable="true"
+                data-filter-control="input" class="narrow-250">
+                @Html.DisplayNameFor(model => model.PrintOrderSemiproducts)
+            </th>
+            @if (!isDesigner)
+            {
+                <th data-field="OrderSum" data-sortable="true" data-sorter="formattedNumberSorter"
+                    data-filter-control="input">
+                    @Html.DisplayNameFor(model => model.OrderSumFormatted)
+                </th>
+            }
+            <th>
+                @Html.DisplayNameFor(model => model.SheetsTaken)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.IsPaid)
+            </th>
+            <th data-field="ConfirmPrint" data-sortable="true">
+                Подтвержд печать
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td class="narrow-100">
+                    @Html.DisplayFor(modelItem => item.OrderDate)
+                </td>
+                <td class="narrow-100">
+                    @Html.DisplayFor(modelItem => item.PrintingHouseOrderNum)
+                </td>
+                <td class="narrow-100">
+                    @Html.DisplayFor(modelItem => item.Printing) /
+                    @{
+                        var incomeLessPrintings = item.MinIncomes.Where(t => t.MinIncome < t.PrintingToCheck);
+                        var minIncomeLessPrintings = incomeLessPrintings.Any() ? incomeLessPrintings.Min(t => t.MinIncome) : (int?)null;
+                        var ordinaryPrinting = item.MinIncomes.Where(t => t.MinIncome >= t.PrintingToCheck);
+                        var minIncome = ordinaryPrinting.Any() ? ordinaryPrinting.Min(t => t.MinIncome) : 0;
+                        if (!item.PrintOrderIncomings.Any())
+                        {
+                            <span>0</span>
+                        }
+                        else if (incomeLessPrintings.Any() && item.PrintOrderIncomings.Any())
+                        {
+                            <span class="text-danger">@minIncomeLessPrintings.Value</span>
+                        }
+                        else if (minIncome >= item.Printing)
+                        {
+                            <span>@minIncome</span>
+                        }
+                        else
+                        {
+                            <span class="text-danger">???</span>
+                        }
+                    }
+                </td>
+                <td class="narrow-100">
+                    @Html.DisplayFor(modelItem => item.SemiProductType)
+                </td>
+                <td class="narrow-100">
+                    @if (item.HaveBlock)
+                    {
+                        @item.BlockTypeName
+                    }
+                </td>
+                <td class="narrow-250">
+                    @if (item.PrintOrderSemiproducts != null)
+                    {
+                        foreach (var printOrderSemiproduct in item.PrintOrderSemiproducts)
+                        {
+                            <div>
+                                @printOrderSemiproduct.SemiProduct.DisplayName
+                                @if (printOrderSemiproduct.IsAssembled)
+                                {
+                                    <span>&nbsp;</span><i class="fas fa-box"></i>
+                                }
+                            </div>
+                        }
+                    }
+                </td>
+                @if (!isDesigner)
+                {
+                    <td class="number-cell">
+                        @Html.DisplayFor(modelItem => item.OrderSumFormatted)
+                        / @item.PaymentDiffSum
+                    </td>
+                }
+
+                <td class="number-cell">
+                    @if (item.AllPaperOrdersAreSent)
+                    {
+                        <i class="fas fa-check"></i><span>&nbsp;&nbsp;</span>
+                    }
+
+                    @(item.SheetsTaken?.ToString("N0"))
+                </td>
+
+                <td class="text-center">
+                    @if (item.IsPaid)
+                    {
+                        <i class="fas fa-check"></i><br />
+                    }
+                    else
+                    {
+                        <i class="fas fa-times"></i>
+                    }
+
+                </td>
+                <td class="text-center narrow-50">
+                    @if (item.ConfirmPrint)
+                    {
+                        <i class="fas fa-thumbs-up"></i>
+                    }
+                </td>
+
+                <td class="narrow-100">
+                    <a asp-action="Report" asp-route-id="@item.PrintOrderId" class="buttons">
+                        <i class="fas fa-file-medical-alt"></i>
+                    </a>
+                    <a asp-action="Edit" asp-route-id="@item.PrintOrderId" class="buttons"><i class="far fa-edit"></i></a>
+                    @if (isAdmin || isOperator || isAssembler)
+                    {
+                        <form asp-action="Delete" style="display: inline" asp-route-id="@item.PrintOrderId">
+                            <i class="submit index far fa-times-circle" style="color:rgb(0, 123, 255)"></i>
+                        </form>
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

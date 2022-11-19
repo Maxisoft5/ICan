@@ -1,0 +1,52 @@
+﻿@model IEnumerable<ICan.Common.Models.Opt.DiscountModel>
+
+@{ var title = "Индивидуальные скидки";
+	ViewData["Title"] = title; }
+
+<h2>@title</h2>
+<p>
+	<a asp-action="Create">Создать</a>
+</p>
+<span class="text-success">@TempData["StatusMessage"]</span>
+<span class="alert-danger">@TempData["ErrorMessage"]</span>
+<table class="table">
+	<thead>
+		<tr>
+			<th style="max-width:200px">
+				@Html.DisplayNameFor(model => model.Value)
+			</th>
+			<th>
+				@Html.DisplayNameFor(model => model.Enabled)
+			</th>
+
+			<th style="max-width:220px">
+				@Html.DisplayNameFor(model => model.Description)
+			</th>
+			<th></th>
+		</tr>
+	</thead>
+	<tbody>
+		@foreach (var item in Model)
+		{
+<tr>
+	<td>
+		@Html.DisplayFor(modelItem => item.Value)
+	</td>
+	<td>
+		@Html.CheckBoxFor(modelItem => item.Enabled, new { disabled = "disabled" })
+
+	</td>
+
+	<td>
+		@Html.DisplayFor(modelItem => item.Description)
+	</td>
+
+	<td>
+		<a asp-action="Details" asp-route-id="@item.DiscountId"><i class="far fa-file-alt"></i></a> |
+		<form asp-action="Delete" style="display: inline" asp-route-id="@item.DiscountId">
+			<i class="submit index far fa-times-circle" style="color:rgb(0, 123, 255)"></i>
+		</form>
+	</td>
+</tr>}
+	</tbody>
+</table>

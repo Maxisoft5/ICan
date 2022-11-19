@@ -1,0 +1,70 @@
+﻿@model ICan.Common.Models.Opt.UniversalWarehouseModel
+
+@{ bool.TryParse(ViewData["IsAdmin"]?.ToString(), out var isAdmin); }
+
+<h2>@ViewData["Title"]</h2>
+
+<span class="text-success">@TempData["StatusMessage"]</span>
+<span class="alert-danger">@TempData["ErrorMessage"]</span>
+
+
+<div class="row">
+	<div class="col-3">
+		<a asp-action="Inventory" asp-route-warehouse-type="@ViewData["WarehouseType"]">
+			Внести инвентаризацию
+		</a>
+	</div>
+	<div class="col-6">
+		<a asp-action="State" target="_blank">Состояние склада</a>
+	</div>
+</div>
+
+
+<p>@ViewData["AdditionalInfo"]</p>
+
+
+@if (Model.Warehouses != null && Model.Warehouses.Any())
+{
+	var firstItem = Model.Warehouses.First();
+<table class="table">
+	<thead>
+		<tr>
+			<th style="max-width:200px">
+				@Html.DisplayNameFor(x => firstItem.WarehouseActionTypeName)
+			</th>
+			<th style="max-width:220px">
+				@Html.DisplayNameFor(x => firstItem.DateAdd)
+			</th>
+			<th style="max-width:220px">
+				@Html.DisplayNameFor(x => firstItem.Comment)
+			</th>
+			<th></th>
+		</tr>
+	</thead>
+	<tbody>
+		@foreach (var item in Model.Warehouses)
+		{
+<tr>
+	<td>
+		@Html.DisplayFor(modelItem => item.WarehouseActionTypeName)
+	</td>
+	<td>
+		@Html.DisplayFor(modelItem => item.DateAdd)
+	</td>
+	<td>
+		@Html.DisplayFor(modelItem => item.Comment)
+	</td>
+	<td>
+		<a asp-action="Details" asp-route-id="@item.WarehouseId"><i class="far fa-file-alt"></i></a>
+		@if (isAdmin)
+		{
+<span>|</span>
+						<a asp-action="Delete" asp-route-id="@item.WarehouseId"><i class="far fa-times-circle"></i></a>}
+	</td>
+</tr>
+}
+	</tbody>
+</table> }
+else
+{
+<p>Нет даных для отображения</p>}

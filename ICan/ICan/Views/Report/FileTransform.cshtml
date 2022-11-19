@@ -1,0 +1,43 @@
+﻿@model IEnumerable<ICan.Common.Models.Opt.ReportModel>
+
+@{
+	var title = ViewData["Title"]?.ToString();
+	var descr = ViewData["Description"]?.ToString();
+	var postAction = ViewData["PostAction"]?.ToString();
+	bool.TryParse(ViewData["OnlyXlsx"]?.ToString(), out var onlyXslx);
+	var accept = onlyXslx 
+		? "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+		: "application/vnd.ms-excel, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+}
+
+<h2> @title</h2>
+<style>
+
+	form.upload-form {
+		border-color: gainsboro;
+		border-style: groove;
+		border-radius: 20px;
+		padding: 10px;
+	}
+</style>
+
+
+<span class="alert-danger">@TempData["ErrorMessage"]</span>
+<span class="text-success">@TempData["StatusMessage"]</span>
+
+<label class="control-label show-hide upload-form" style="display: inline;  cursor:pointer">
+	@descr
+</label>
+
+
+<form class="upload-form" asp-action="@postAction" enctype="multipart/form-data">
+
+	<div class="form-group">
+		<label class="control-label"> Файл отчёта</label>
+
+		<input class="form-control" accept="@accept" type="file" name="ReportFile" id="reportFile" />
+
+	</div>
+	<button type="submit" class="btn btn-primary">Загрузить документ</button>
+</form>
+

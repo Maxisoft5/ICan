@@ -1,0 +1,100 @@
+﻿@model ICan.Common.Models.Opt.MarketplaceProductModel
+@using ICan.Common.Models.Enums
+@{
+	Layout = null;
+	var actionType = Model.MarketplaceProductId == 0 ? ActionType.Creation : ActionType.Edition;
+	var formAction = actionType == ActionType.Edition
+		? "EditMarketplaceProduct"
+		: "AddMarketplaceProduct";
+}
+
+<form method="post" asp-action="@formAction"
+	  class="universal-modal-form">
+	<div class="row">
+        <dix class="col-md-12">
+            @Html.HiddenFor(m => m.ProductId)
+            @if (actionType == ActionType.Edition)
+            {
+                @Html.HiddenFor(m => m.MarketplaceId)
+                <strong>@Html.DisplayFor(m => m.MarketplaceName)</strong>
+                @Html.HiddenFor(m => m.MarketplaceProductId)
+            }
+            else
+            {
+                <div class="form-group">
+                    <label asp-for="MarketplaceId" class="control-label"></label>
+                    <sup><i class="fas fa-asterisk" style="font-size: 10px; color: red"></i></sup><br />
+                    @Html.DropDownListFor(model => model.MarketplaceId, (IEnumerable<SelectListItem>)ViewData["MarketplaceId"], null, new { @class = "form-control", style = "width:300px" })
+                </div>
+            }
+            <div class="form-group">
+                <label asp-for="Urls" class="control-label"></label><br />
+                <a href="#" class="add-product-url">Добавить ссылку</a><br />
+                <div class="product-urls">
+                    @if (Model.Urls != null && Model.Urls.Any())
+                    {
+                        var urls = Model.Urls.ToArray();
+                        for (var i = 0; i < urls.Count(); i++)
+                        {
+                            <div class="row product-url">
+
+                                @{
+                                    var marketplaceUrl = urls[i];
+                                    var marketplaceUrlTemplate = $"Urls[{i}]";
+                                    var marketplaceUrlIdName = $"{marketplaceUrlTemplate}.MarketplaceProductUrlId";
+                                    var marketplaceUrlLinkName = $"{marketplaceUrlTemplate}.Url";
+                                }
+
+                                <div class="col-10">
+                                    @if (marketplaceUrl.MarketplaceProductUrlId > 0)
+                                    {
+                                        <input type="hidden"
+                                               name="@marketplaceUrlIdName"
+                                               class="product-url-item-id"
+                                               value="@marketplaceUrl.MarketplaceProductUrlId" />
+                                    }
+                                    <input name="@marketplaceUrlLinkName"
+                                           class="form-control product-url-item-link"
+                                           value="@marketplaceUrl.Url" />
+                                </div>
+
+                                <div class="col-2">
+                                    <a href="#" class="delete-product-url">
+                                        <i class="index far fa-times-circle" style="color:rgb(0, 123, 255)"></i>
+                                    </a>
+                                </div>
+
+                            </div>
+                        }
+                    }
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Code" class="control-label"></label>	<br />
+                <input class="form-control" asp-for="Code" />
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Price" class="control-label"></label>	<br />
+                <input class="form-control" asp-for="Price" />
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Raiting" class="control-label"></label>	<br />
+                <input class="form-control" asp-for="Raiting" />
+            </div>
+
+            <div class="form-group">
+                <label asp-for="ReviewsAmount" class="control-label"></label>	<br />
+                <input class="form-control" asp-for="ReviewsAmount" />
+            </div>
+
+            <div class="form-group" style="display:flex; flex-flow:column;  align-items:flex-start">
+                <label asp-for="ShowOnSite" class="control-label"></label>
+                <input asp-for="ShowOnSite" class="form-control left-aligned-checkbox" />
+            </div>
+        </dix>
+	</div>
+</form>
+<script src="~/js/marketplaceproduct.js"></script>

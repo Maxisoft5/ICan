@@ -1,0 +1,114 @@
+﻿@model ICan.Common.Models.Opt.CampaignModel
+@using ICan.Common.Models.Enums
+
+@{
+    ViewData["Title"] = "Редактирование кампании";
+}
+
+<h2>@ViewData["Title"]</h2>
+
+<br />
+<span class="alert-danger">@TempData["ErrorMessage"]</span>
+<span class="text-success">@TempData["StatusMessage"]</span>
+<br />
+
+<div class="nav nav-tabs" id="nav-tab" role="tablist">
+    <a class="nav-item nav-link active"
+       id="main-tab" data-toggle="tab" href="#main-info" role="tab" aria-controls="main-info"
+       aria-selected="true">Кампания</a>
+    <a class="nav-item nav-link"
+       id="image-tab" data-toggle="tab" href="#image-info" role="tab"
+       aria-controls="image-info" aria-selected="false">Вложения</a>
+</div>
+<div class="tab-content" id="siteProductTabContent">
+    <div class="tab-pane fade show active" id="main-info" role="tabpanel" aria-labelledby="main-tab">
+        <div class="row">
+            <div class="col-md-12">
+                <form asp-action="Edit">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    <input type="hidden" asp-for="CampaignId" />
+                    <div class="form-group">
+                        <label asp-for="CampaignName" class="control-label"></label>
+                        <sup><i class="fas fa-asterisk" style="font-size: 10px; color: red"></i></sup>
+                        <input asp-for="CampaignName" class="form-control" />
+                        <span asp-validation-for="CampaignName" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="CampaignType" class="control-label"></label>
+                        <sup><i class="fas fa-asterisk" style="font-size: 10px; color: red"></i></sup>
+                        <select id="clientType" asp-for="CampaignType" class="form-control" asp-items="Html.GetEnumSelectList<CampaignType>()"></select>
+                        <span asp-validation-for="CampaignType" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Title" class="control-label"></label>
+                        <sup><i class="fas fa-asterisk" style="font-size: 10px; color: red"></i></sup>
+                        <input asp-for="Title" class="form-control" />
+                        <span asp-validation-for="Title" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <label asp-for="Text" class="control-label"></label>
+                        <sup><i class="fas fa-asterisk" style="font-size: 10px; color: red"></i></sup>
+                        <textarea asp-for="Text" class="form-control" style="min-height:400px;"></textarea>
+                        <span asp-validation-for="Text" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <input type="submit" value="Сохранить" class="btn btn-default" />
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="tab-pane fade" id="image-info" role="tabpanel" aria-labelledby="image-tab">
+        <p>
+            <button class="btn btn-link add-image">Загрузить файл</button>
+        </p>
+        <div class="row">
+            <div class="col-md-12">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>
+                                Файл
+                            </th>
+                            <th>
+                                Ссылка
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody class="image-list">
+                        @foreach (var image in Model.Images)
+                        {
+                            <tr>
+                                <td style="width:500px; text-align:center;">
+                                    <img src="@image.ImageUrl" style="max-width:400px" />
+                                </td>
+                                <td style="width:100%;">
+                                    <button type="button" class="btn btn-link copy-image-path" data-image-path="@image.ImageUrl">@image.UserFileName</button>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+<div>
+    <a asp-action="Index">Назад к списку</a>
+</div>
+
+<partial name="_UniversalModal" />
+
+<script src="~/lib/tinymce/tinymce.min.js"></script>
+<script asp-append-version="true" src="~/js/campaign.js"></script>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

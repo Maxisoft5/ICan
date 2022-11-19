@@ -1,0 +1,45 @@
+﻿@model bool?
+
+@{
+	ViewData["Title"] = "Администрирование";
+	var message = Model != null ?
+			 (Model.Value ? "Ипморт прошёл успешно" : "При импорте возникли ошикби")
+			 : "Импорт не выполнялся";
+}
+
+<h2>@ViewData["Title"]</h2>
+<br />
+<span>@message</span>
+<form asp-action="RunJobNow" method="post">
+	<button  type="button" class="btn btn-primary save-button">Запустить импорт из 1С</button>
+</form>
+<br />
+<form asp-action="OzonExperiment" method="post">
+	<button  type="button" class="btn btn-primary save-button">Ozon</button>
+</form>
+<br />
+<form asp-action="RunWbJob" method="post" class="upload-form">
+	<div class="form-group">
+		<label for="jobName" class="control-label">Собираем</label>
+		<select name="jobName" id="jobName" class="form-control">
+			<option>Заказы</option>
+			<option>Продажи</option>
+		</select>
+	</div>
+	<div class="form-group">
+		<label for="minDate" class="control-label">Начиная с </label>
+		<input type="date" name="minDate" id="minDate"  class="form-control" />
+	</div>
+
+	<button type="button" class="btn btn-primary save-button">Запустить</button>
+</form>
+<form asp-action="Migrate" method="post" class="upload-form">
+	<button type="button" class="btn btn-primary save-button">Накатить миграции</button>
+</form> 
+ 
+<form asp-action="Amazon" method="post" class="upload-form">
+	<button type="button" class="btn btn-primary save-button">Amazon  </button>
+</form> 
+<form asp-action="GetWbReport" method="post" class="upload-form">
+	<button type="button" class="btn btn-primary save-button">GetWbReport</button>
+</form>

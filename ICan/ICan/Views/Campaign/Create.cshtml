@@ -1,0 +1,64 @@
+﻿@model ICan.Common.Models.Opt.CampaignModel
+@using ICan.Common.Models.Enums
+
+@{
+    ViewData["Title"] = "Создание кампании";
+}
+
+<h2>@ViewData["Title"]</h2>
+
+<br />
+<span class="alert-danger">@TempData["ErrorMessage"]</span>
+<span class="text-success">@TempData["StatusMessage"]</span>
+<br />
+
+<div class="row">
+    <div class="col-md-12">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+            <div class="form-group">
+                <label asp-for="CampaignName" class="control-label"></label>
+                <sup><i class="fas fa-asterisk" style="font-size: 10px; color: red"></i></sup>
+                <input asp-for="CampaignName" class="form-control" />
+                <span asp-validation-for="CampaignName" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="CampaignType" class="control-label"></label>
+                <sup><i class="fas fa-asterisk" style="font-size: 10px; color: red"></i></sup>
+                <select id="clientType" asp-for="CampaignType" class="form-control" asp-items="Html.GetEnumSelectList<CampaignType>()"></select>
+                <span asp-validation-for="CampaignType" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Title" class="control-label"></label>
+                <sup><i class="fas fa-asterisk" style="font-size: 10px; color: red"></i></sup>
+                <input asp-for="Title" class="form-control" />
+                <span asp-validation-for="Title" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Text" class="control-label"></label>
+                <sup><i class="fas fa-asterisk" style="font-size: 10px; color: red"></i></sup>
+                <textarea asp-for="Text" class="form-control" style="min-height:400px"></textarea>
+                <span asp-validation-for="Text" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <input type="submit" value="Создать" class="btn btn-default" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Назад к списку</a>
+</div>
+
+<script src="~/lib/tinymce/tinymce.min.js"></script>
+<script asp-append-version="true" src="~/js/campaign.js"></script>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

@@ -1,0 +1,45 @@
+﻿@model ICan.Common.Models.Opt.DiscountModel
+
+@{
+	var title = "Создание скидки";
+	ViewData["Title"] = title;
+}
+
+<h2>@title</h2>
+
+<hr />
+<div class="row">
+	<div class="col-md-4">
+		<form asp-action="Create">
+			<div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+			<div class="form-group">
+				<label asp-for="Value" class="control-label"></label>
+				<sup><i class="fas fa-asterisk" style="font-size: 10px; color: red"></i></sup>
+				<input asp-for="Value" class="form-control" type="number" />
+				<span asp-validation-for="Value" class="text-danger"></span>
+			</div>
+			<div class="form-group">
+				<label asp-for="Description" class="control-label"></label>
+				@Html.TextAreaFor(model => model.Description, new { @class = "form-control" })
+				<span asp-validation-for="Description" class="text-danger"></span>
+			</div>
+			<div class="form-group" style="display:flex; flex-flow:column;  align-items:flex-start">
+				<label asp-for="Enabled" class="control-label"></label>
+				<input asp-for="Enabled" class="form-control left-aligned-checkbox" checked />
+				<span asp-validation-for="Enabled" class="text-danger"></span>
+			</div>
+			<div class="form-group">
+				<input type="submit" value="Создать" class="btn btn-default" />
+			</div>
+		</form>
+	</div>
+</div>
+
+<div>
+	<a asp-action="Index">Назад к списку</a>
+</div>
+
+@section Scripts {
+	@{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

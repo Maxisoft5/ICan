@@ -1,0 +1,143 @@
+﻿@using ICan.Common.Models.Enums
+@model IEnumerable<ICan.Common.Models.ManageViewModels.ClientModel>
+@{
+	Layout = "~/Views/Shared/_Layout.cshtml";
+	bool.TryParse(ViewData["IsAdmin"]?.ToString(), out var isAdmin);
+	bool.TryParse(ViewData["IsOperator"]?.ToString(), out var isOperator);
+	var title = "Пользователи";
+	ViewData["Title"] = title;
+}
+
+<h2>@title</h2>
+<hr />
+
+@if (isAdmin || isOperator)
+{
+	<p>
+		<a asp-action="ManualRegister">Зарегистрировать нового клиента</a> <br />
+		@if (isAdmin)
+		{
+			<a asp-action="CreateEmployee">Добавить сотрудника</a>
+		}
+	</p>
+}
+<span class="text-success">@TempData["StatusMessage"]</span>
+<span class="alert-danger">@TempData["ErrorMessage"]</span>
+
+<table class="table table-responsive-md" data-toggle="table"
+	   data-pagination="true"
+	   data-page-size="200"
+	   data-page-list="[200, 400, 1000]"
+	   data-search="true"
+	   data-filter-control="true"
+	   data-show-search-clear-button="true">
+	<thead>
+        <tr>
+            <th data-field="LastName" data-sortable="true"
+                data-filter-control="input" data-sorter="lastNameSorter">
+                @Html.DisplayNameFor(model => model.LastName)
+            </th>
+            <th data-field="FirstName" data-sortable="true"
+                data-filter-control="input">
+                @Html.DisplayNameFor(model => model.FirstName)
+            </th>
+            <th data-field="Email" data-sortable="true"
+                data-filter-control="input">
+                Email
+            </th>
+            <th data-field="Phone" data-sortable="true"
+                data-filter-control="input">
+                Телефон
+            </th>
+            <th data-field="DateRegistration" data-sortable="true"
+                data-filter-control="input">
+                @Html.DisplayNameFor(model => model.DateRegistration)
+            </th>
+            <th data-field="ShopName" data-sortable="true" data-filter-control="select">
+                @Html.DisplayNameFor(model => model.ShopName)
+            </th>
+
+            <th data-field="IsClient" data-sortable="true" data-filter-control="select"
+                data-filter-data='json:{"fa-check":"Клиент", "no-data":"Не клиент"}'>
+                @Html.DisplayNameFor(model => model.IsClient)
+            </th>
+            <th data-field="ClientType" data-sortable="true" data-filter-control="select">
+                @Html.DisplayNameFor(model => model.ClientType)
+            </th>
+            @if (isAdmin || isOperator)
+            {
+                <th></th>
+            }
+        </tr>
+	</thead>
+	<tbody>
+		@foreach (var item in Model)
+		{
+			<tr>
+				@if (isAdmin || isOperator)
+				{
+					<td>
+						<a asp-action="Index" asp-route-id="@item.Id" data-lastname="@item.LastName">@Html.DisplayFor(modelItem => item.LastName) </a>
+					</td>
+				}
+				else
+				{
+					<td>
+						@Html.DisplayFor(modelItem => item.LastName)
+					</td>
+				}
+
+				<td>
+					@Html.DisplayFor(modelItem => item.FirstName)
+				</td>
+				<td>
+					<span>@item.Email</span>
+				</td>
+				<td>
+					@Html.DisplayFor(modelItem => item.PhoneNumber)
+				</td>
+				<td>
+					@item.DateRegistration.ToShortDateString()
+				</td>
+				<td>
+					@Html.DisplayFor(modelItem => item.ShopName, new { style = "max-width: 150px" })
+				</td>
+				<td class="checkbox-cell">
+					@if (item.IsClient)
+					{
+						<i class="fas fa-check"></i>
+					}
+					else
+					{
+						<span class="no-data"></span>
+					}
+				</td>
+				<td>
+					@item.ClientType.GetName()
+				</td>
+				@if (isAdmin || isOperator)
+				{
+					<td style="text-align:right">
+						@if (item.IsClient)
+						{
+							<a asp-action="Index" asp-route-id="@item.Id"><i class="far fa-edit"></i></a>
+						}
+						else
+						{
+							<a asp-action="EditEmployee" asp-route-id="@item.Id"><i class="far fa-edit"></i></a>
+						}
+						@if (isAdmin)
+						{
+							<span>|</span>
+							<form asp-action="DeleteClient" style="display: inline" asp-route-id="@item.Id">
+								<i class="submit index far fa-times-circle" style="color:rgb(0, 123, 255)"></i>
+							</form>
+						}
+					</td>
+				}
+			</tr>
+		}
+	</tbody>
+</table>
+
+<script src="~/js/user.js" asp-append-version="true"></script>

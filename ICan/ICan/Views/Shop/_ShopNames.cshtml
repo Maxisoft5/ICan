@@ -1,0 +1,195 @@
+﻿
+@model IEnumerable<ICan.Common.Models.Opt.ShopNameModel>
+
+@{
+	Layout = null;
+	bool.TryParse(ViewData["IsAdmin"]?.ToString(), out var isAdmin);
+	bool.TryParse(ViewData["IsStoreKeeper"]?.ToString(), out var isStoreKeeper);
+	bool.TryParse(ViewData["IsOperator"]?.ToString(), out var isOperator);
+	int.TryParse(ViewData["ShopId"]?.ToString(), out var shopId);
+}
+
+<a href="#" id="add-shop-name" data-toggle="modal" data-target="#editShopName">
+	Добавить юридическое название
+</a>
+<table class="table shop-names">
+	<thead>
+		<tr>
+			<th>@Html.DisplayNameFor(model => model.Name)</th>
+			<th>@Html.DisplayNameFor(model => model.Inn)</th>
+			@*<th>@Html.DisplayNameFor(model => model.Enabled)</th>*@
+			<th></th>
+		</tr>
+	</thead>
+	<tbody>
+		@foreach (var shopName in Model)
+		{
+			<tr>
+				<td>
+					<span class="shop-name">@(shopName.Name)</span>
+</td>
+				<td><span class="inn">@(shopName.Inn)</span></td>
+				@*<td>@Html.DisplayFor(shop => shopName.Enabled)</td>*@
+				<td>
+					@Html.HiddenFor(item => shopName.ShopNameId)
+				@*<a href="#" data-shop-name-id="@shopName.ShopNameId" class="shop-name-edit buttons"><i class="far fa-edit"></i></a>*@
+			
+					<a href="#" data-shop-name-id="@shopName.ShopNameId" class="shop-name-delete buttons">
+					<i class="delete-shop-name index far fa-times-circle"></i>
+				</a>
+			</td>
+		</tr>
+	}
+	</tbody>
+</table>
+
+
+<div class="modal" tabindex="-1" role="dialog" id="editShopName">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title">Редактирование названия магазина</h5>
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+			</div>
+			<div class="modal-body">
+				<form asp-action="AddPayment" id="add-shop-name-form">
+					@Html.AntiForgeryToken();
+					<input name="ShopId" type="hidden" value="@shopId" />
+					<input name="ShopNameId" id="editShopNameId" type="hidden" />
+					<input id="editAction" type="hidden" value="add" />
+					<div class="row">
+						<div class="col-3">
+							<label>Назание</label>
+						</div>
+						<div class="col-9">
+
+							<input name="Name" id="editName" class="form-control"
+								   placeholder="Точное название грузополучателя" />
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-3">
+							<label>ИНН</label>
+						</div>
+						<div class="col-9">
+							<input name="INN" id="editInn" class="form-control"
+								   type="number" placeholder="ИНН"
+								   pattern="/^[0-9]+$/" />
+						</div>
+					</div>
+
+					@*<div class="row" style="margin-top:10px">
+						<div class="col-3">
+							<label>Активно</label>
+						</div>
+						<div class="col-9">
+							<input name="Enabled" id="editEnabled" class="form-control"
+								   type="checkbox" />
+						</div>
+					</div>*@
+				</form>
+			</div>
+			<div class="modal-footer">
+				<div class="form-group">
+
+					<input id="shop-name-submit" type="button" value="Сохранить" class="btn btn-default" />
+				</div>
+				<div class="form-group">
+					<input type="reset" value="Отменить" data-dismiss="modal" class="btn btn-outline-dark" />
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<script>
+
+	$(function () {
+		$("#shop-name-submit").on("click", function () {
+
+			if (checkForm()) {
+				let formData = $("#add-shop-name-form").serialize();
+				let editAction = $("#editAction").val();
+				let url = editAction == "add"
+					? window.urls.addShopName
+					: window.urls.editShopName;
+				$.ajax({
+					type: 'POST',
+					url: url,
+					data: formData,
+					success: function () {
+						location.reload();
+					},
+					error: function (data) {
+						console.log(data.error);
+						alert(data.responseText);
+					}
+				});
+			}
+		});
+
+		function checkForm() {
+			var isOk = true;
+			return isOk;
+			var n = $("#OrderPaymentAmount").val();
+			if (n <= 0) {
+				$("#AmountErrorSum").show();
+				isOk = false;
+			}
+			else { $("#AmountErrorSum").hide(); }
+			var valid = n.search(/^[0-9]+.?[0-9]{0,2}$/) == 0 ? true : false;
+			if (!valid) {
+				$("#AmountError").show();
+				isOk = false;
+			}
+			else { $("#AmountError").hide(); }
+			var pDate = $("#OrderPaymentDate").val();
+			if (!pDate) {
+
+				$("#DateError").show();
+				isOk = false;
+			}
+			else { $("#DateError").hide(); }
+			return isOk;
+		}
+
+
+		function editShopName(e) {
+			let elm = findTarget(e);
+			let row = $(elm).parents("tr");
+			let shopNameId = $(elm).data("shopNameId");
+			let shopName = row.find(".shop-name").text();
+			let inn = row.find(".inn").text();
+			//let enabled = row.find(".shop-enabled").val();
+
+			$("#editShopNameId").val(shopNameId);
+			$("#editName").val(shopName);
+			$("#editInn").val(inn);
+			//$("#editEnabled").checked(enabled);
+
+			$("#editShopName").modal();
+
+		}
+
+		$(".shop-name-edit").on("click", editShopName);
+		$(".shop-name-delete").on("click", deleteShopName);
+
+		function deleteShopName(e) {
+			let elm = findTarget(e);
+			let shopNameId = $(elm).data("shopNameId");
+			if (!confirm("Вы уверены, что хотите удалить элемент?"))
+				return;
+			$.post(`${window.urls.deleteShopName}/${shopNameId}`)
+				.done(function () {
+					//$("table.shop-names").find()
+					$(elm).parents("tr").remove();
+				})
+				.fail(function (ex) {
+					console.log(ex);
+					alert("Не удалось удалить запись");
+				})
+		}
+		
+	});
+</script>

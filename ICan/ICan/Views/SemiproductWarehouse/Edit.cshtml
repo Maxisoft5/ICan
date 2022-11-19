@@ -1,0 +1,177 @@
+﻿@using ICan.Common.Models.Opt;
+@model SemiproductWarehouseModel
+@{
+	var title = "Склад полуфабрикатов. Инвентаризация";
+	ViewData["Title"] = @title;
+	var readyWH = Model.WarehouseTypeId == (int)ICan.Common.Models.Enums.WarehouseType.SemiproductReady;
+
+}
+
+<link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/css/bootstrap-datetimepicker-standalone.css" />
+<link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/css/bootstrap-datetimepicker-standalone.min.css" />
+
+@*<script data-require="bootstrap@3.3.7" data-semver="3.3.7" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>*@
+<script data-require="MomentJS@2.10.0" data-semver="2.10.0" src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.10.6/moment.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/js/bootstrap-datetimepicker.min.js"></script>
+
+
+<h2> @title</h2>
+<hr />
+<span class="alert-danger">@TempData["ErrorMessage"]</span>
+<span class="text-success">@TempData["StatusMessage"]</span>
+<form asp-action="Edit" class="form-semiproduct-warehouse">
+	<div class="form-group">
+		<input type="submit" value="Сохранить" class="btn btn-default" />
+	</div>
+	<div asp-validation-summary="ModelOnly" class="text-danger"></div>
+	@Html.AntiForgeryToken()
+	<input type="hidden" name="WarehouseActionTypeId" value="@Model.WarehouseActionTypeId" />
+	<input type="hidden" name="WarehouseTypeId" value="@Model.WarehouseTypeId" />
+	<input type="hidden" name="SemiproductWarehouseId" value="@Model.SemiproductWarehouseId" />
+
+	<div class="row">
+		<div class="col-2">
+			<label asp-for="WarehouseTypeId" class="control-label"></label>
+			<sup><i class="fas fa-asterisk" style="font-size: 10px; color: red"></i></sup><br />
+
+		</div>
+		<div class="col-10">
+			@Html.DisplayFor(model => Model.WarehouseTypeName)
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-2">
+			<label asp-for="Date" class="control-label"></label>	<sup><i class="fas fa-asterisk" style="font-size: 10px; color: red"></i></sup><br />
+		</div>
+
+		<div class="col-10">
+			<div id="dateAddtimepicker">
+				<input type='datetime' id="DateAdd" name="Date" class="form-control" style="width:300px;display:inline-block" />
+				<span class="input-group-addon">
+					<span class="fa fa-calendar">
+					</span>
+				</span>
+			</div>
+			<span class="text-danger field-validation-valid"
+				  data-valmsg-for="Date" data-valmsg-replace="true"></span>
+		</div>
+	</div>
+	<div class="row" style="margin-top:5px;">
+		<div class="col-2">
+			<label asp-for="Comment" class="control-label"></label>
+		</div>
+		<div class="col-10">
+			@Html.DisplayFor(model => Model.Comment)
+			<input type="hidden" asp-for="Comment" />
+		</div>
+	</div>
+
+	<table class="table table-responsive-md">
+		<thead>
+			<tr>
+				<th scope="col">Тетрадь</th>
+				<th scope="col" style="text-align:right;">Блоков </th>
+				<th scope="col" style="text-align:right;">Наклеек </th>
+				<th scope="col" style="text-align:right;">Обложек </th>
+				<th scope="col" style="text-align:right;">Коробок (крышка)</th>
+				<th scope="col" style="text-align:right;">Коробок (дно)</th>
+			</tr>
+		</thead>
+		<tbody>
+			@{
+				var rowNum = 0;
+				var seriesName = "";
+			}
+
+			@foreach (var item in Model.SemiproductWarehouseFullItems)
+			{
+				if (!string.Equals(seriesName, item.SeriesName))
+				{
+					seriesName = item.SeriesName;
+					<tr>
+						<td colspan="6" style="cursor: pointer; background-color: #dee2e6"
+							data-toggle="collapse" aria-expanded="true"
+							data-target=".multi-collapse@(item.SeriesId)">
+							@seriesName
+						</td>
+					</tr>
+				}
+
+				var blockDisabled = readyWH && item.BlockId.HasValue ? string.Empty : "disabled";
+				var srickersDisabled = item.StickersId.HasValue ? string.Empty : "disabled";
+				var coversDisabled = readyWH && item.CoversId.HasValue ? string.Empty : "disabled";
+				var boxFrontDisabled = readyWH &&  item.BoxFrontId.HasValue ? string.Empty : "disabled";
+				var boxBackDisabled = readyWH &&  item.BoxBackId.HasValue ? string.Empty : "disabled";
+				var cursorDisabled = readyWH &&  item.CursorId.HasValue ? string.Empty : "disabled";
+
+				<tr class="multi-collapse@(item.SeriesId) collapse show"
+					aria-expanded="true">
+					<td>
+						@Html.DisplayFor(modelItem => item.ProductName)
+						<input type="hidden" name="SemiproductWarehouseFullItems[@(rowNum)].ProductId" value="@item.ProductId" />
+						<input type="hidden" name="SemiproductWarehouseFullItems[@(rowNum)].ProductName" value="@item.ProductName" />
+						<input type="hidden" name="SemiproductWarehouseFullItems[@(rowNum)].BlockId" value="@item.BlockId" />
+						<input type="hidden" name="SemiproductWarehouseFullItems[@(rowNum)].StickersId" value="@item.StickersId" />
+						<input type="hidden" name="SemiproductWarehouseFullItems[@(rowNum)].CoversId" value="@item.CoversId" />
+						<input type="hidden" name="SemiproductWarehouseFullItems[@(rowNum)].BoxFrontId" value="@item.BoxFrontId" />
+						<input type="hidden" name="SemiproductWarehouseFullItems[@(rowNum)].BoxBackId" value="@item.BoxBackId" />
+						<input type="hidden" name="SemiproductWarehouseFullItems[@(rowNum)].CursorId" value="@item.CursorId" />
+					</td>
+					<td style="text-align:right;">
+						<input type="number" step="1" min="0" max="1000000"
+							   name="SemiproductWarehouseFullItems[@(rowNum)].BlockAmount"
+							   placeholder="0" value="@item.BlockAmount" class="input-nullable"
+							   onfocus="removeZero(this)" @blockDisabled />
+					</td>
+					<td style="text-align:right;">
+						<input type="number" step="1" min="0" max="1000000"
+							   name="SemiproductWarehouseFullItems[@(rowNum)].StickersAmount"
+							   placeholder="0" value="@item.StickersAmount" class="input-nullable"
+							   onfocus="removeZero(this)" @srickersDisabled />
+					</td>
+					<td style="text-align:right;">
+						<input type="number" step="1" min="0" max="1000000"
+							   name="SemiproductWarehouseFullItems[@(rowNum)].CoversAmount"
+							   placeholder="0" value="@item.CoversAmount" class="input-nullable"
+							   onfocus="removeZero(this)" @coversDisabled />
+					</td>
+					<td style="text-align:right;">
+						<input type="number" step="1" min="0" max="1000000"
+							   name="SemiproductWarehouseFullItems[@(rowNum)].BoxFrontAmount"
+							   placeholder="0" value="@item.BoxFrontAmount" class="input-nullable"
+							   onfocus="removeZero(this)" @boxFrontDisabled />
+					</td>
+					<td style="text-align:right;">
+						<input type="number" step="1" min="0" max="1000000"
+							   name="SemiproductWarehouseFullItems[@(rowNum)].BoxBackAmount"
+							   placeholder="0" value="@item.BoxBackAmount" class="input-nullable"
+							   onfocus="removeZero(this)" @boxBackDisabled />
+					</td>
+					<td style="text-align:right;">
+						<input type="number" step="1" min="0" max="1000000"
+							   name="SemiproductWarehouseFullItems[@(rowNum)].CursorId"
+							   placeholder="0" value="@item.CursorAmount" class="input-nullable"
+							   onfocus="removeZero(this)" @cursorDisabled />
+					</td>
+				</tr>
+				rowNum++;
+			}
+		</tbody>
+	</table>
+
+	<div class="form-group">
+		<input type="submit" value="Сохранить" class="btn btn-default" />
+	</div>
+</form>
+
+<div>
+	<a asp-action="Index">Назад к списку</a>
+</div>
+<script src="~/js/util.js" asp-append-version="true"></script>
+<script>
+	$(function () {
+		initDatetimePicker('@Model.Date.ToString("yyyy-MM-ddTHH:mm:ss")');
+
+		$(".form-semiproduct-warehouse").submit(setEmptyValues);
+	});
+</script>

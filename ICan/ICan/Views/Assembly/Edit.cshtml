@@ -1,0 +1,114 @@
+﻿@using ICan.Common.Models.Enums
+@model ICan.Common.Models.Opt.AssemblyModel
+
+@{ var actionType = (ActionType)ViewBag.Action;
+	bool.TryParse(ViewData["IsAdmin"]?.ToString(), out var isAdmin);
+	bool.TryParse(ViewData["IsOperator"]?.ToString(), out var isOperator);
+	bool.TryParse(ViewData["IsStorekeeper"]?.ToString(), out var isStoreKeeper);
+	bool.TryParse(ViewData["IsAssembler"]?.ToString(), out var isAssembler);
+	var products = (IEnumerable<SelectListItem>)ViewData["ProductId"];
+	var title = "Редактирование сборки";
+	if (Model.AssemblyType == AssemblyType.Wind)
+	{
+		title = "Редактирование навивки";
+	}
+	ViewData["Title"] = title;
+}
+
+<h2>@title</h2>
+
+<hr />
+<span class="alert-danger">@TempData["ErrorMessage"]</span>
+<span class="text-success">@TempData["StatusMessage"]</span>
+
+
+<form asp-action="Edit" asp-controller="Assembly">
+	<div class="row">
+		<div class="col-md-4">
+			<input asp-for="AssemblyId" hidden />
+			<input asp-for="AssemblyType" hidden />
+			<div asp-validation-summary="ModelOnly" class="text-danger"></div>
+			<div class="form-group">
+				<label asp-for="Date" class="control-label"></label>
+				<sup><i class="fas fa-asterisk" style="font-size: 10px; color: red"></i></sup>
+
+				<br />
+				<span>@Model.Date.ToString("dd.MM.yyyy HH:mm")</span>
+				<input asp-for="Date" hidden />
+			</div>
+			<div class="form-group">
+				<label asp-for="ProductId" class="control-label"></label>
+				<sup><i class="fas fa-asterisk" style="font-size: 10px; color: red"></i></sup>
+
+				<input type="text" class="form-control" value="@Model.ProductDisplayName" readonly />
+				<input type="hidden" asp-for="ProductId" />
+				<input type="hidden" asp-for="ProductDisplayName" />
+
+				<span asp-validation-for="ProductId" class="text-danger"></span>
+			</div>
+			<div class="form-group">
+				<label asp-for="Amount" class="control-label"></label>
+				<sup><i class="fas fa-asterisk" style="font-size: 10px; color: red"></i></sup>
+				<input asp-for="Amount" class="form-control" />
+				<span asp-validation-for="Amount" class="text-danger"></span>
+			</div>
+
+			<div class="form-group">
+				<input type="submit" value="Сохранить" class="btn btn-default" />
+			</div>
+		</div>
+		<div class="col-md-4 semiprods-orders">
+			@if (Model.SemiproductsWithPrintOrders != null && Model.SemiproductsWithPrintOrders.Any())
+			{
+				var counter = 0;
+
+				foreach (var assemblySemiprods in Model.AssemblySemiproducts.OrderBy(asm => asm.DisplayOrder))
+				{
+					var semiproduct = Model.SemiproductsWithPrintOrders.Keys
+							.FirstOrDefault(t => t.SemiproductTypeId ==
+							(int)assemblySemiprods.SemiproductTypeId);
+
+					var keyFieldName = "PrintOrderSemiproductId";
+					var keyValue = assemblySemiprods.PrintOrderSemiproductId;
+
+					var displayName = assemblySemiprods.PrintOrderSemiproduct?.DisplayName;
+					if (assemblySemiprods.PrintOrderSemiproduct == null)
+					{
+						keyFieldName = "NotchOrderId";
+
+						keyValue = assemblySemiprods.NotchOrderId.Value;
+
+						displayName = assemblySemiprods.NotchOrder?.GetDisplayForAssembly();
+					}
+
+					<div class="form-group">
+						<label class="control-label semiproductName">@semiproduct.SemiproductTypeName </label>  остаток на складе  @semiproduct.LeftAmount
+						<input type="hidden" name="AssemblySemiproducts[@counter].AssemblyId" value="@Model.AssemblyId" />
+						<input type="hidden" name="AssemblySemiproducts[@counter].SemiproductTypeId"
+							   value="@semiproduct.SemiproductTypeId" />
+						<select class="form-control list-orders[@counter]" name="AssemblySemiproducts[@counter].@keyFieldName">
+							<option value="@keyValue">@displayName</option>
+							@foreach (var printOrderSemiproducts in Model.SemiproductsWithPrintOrders.Where(x => x.Key
+						   .SemiproductTypeName.Equals(semiproduct.SemiproductTypeName)))
+							{
+								@foreach (var order in printOrderSemiproducts.Value.Where(x => x.Key != keyValue).ToList())
+								{
+									<option value="@order.Key">@order.Value</option>
+								}}
+						</select>
+					</div>
+					counter++;
+				}
+			}
+		</div>
+	</div>
+</form>
+
+
+<div>
+	<a asp-action="Index">Назад к списку</a>
+</div>
+<script src="~/js/assembly.js" asp-append-version="true"></script>
+@section Scripts {
+	@{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

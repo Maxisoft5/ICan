@@ -1,0 +1,61 @@
+﻿<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link rel="icon" type="image/x-icon" href="/favicon.ico">
+	<title>Я Могу</title>
+
+
+	<link rel="stylesheet" href="/lib/bootstrap/dist/css/bootstrap.css">
+	<link rel="stylesheet" href="/lib/bootstrap/dist/css/bootstrap-grid.css">
+	<link rel="stylesheet" href="/lib/bootstrap/dist/css/bootstrap-reboot.css">
+
+	<link rel="stylesheet" href="/css/site.css?v=Q5feGaYWB3-Q2JYXWV3cjjzxnAxHakSMV2ZjSaOVQXo">
+	<link rel="stylesheet" href="/css/fontawesome/css/fontawesome-all.min.css">
+
+
+
+	<script src="https://ajax.aspnetcdn.com/ajax/jquery/jquery-2.2.0.min.js" crossorigin="anonymous">
+	</script>
+	<script>(window.jQuery||document.write("\u003Cscript src=\u0022\/lib\/jquery\/dist\/jquery.min.js\u0022 crossorigin=\u0022anonymous\u0022\u003E\u003C\/script\u003E"));</script>
+	<script src="/lib/bootstrap/dist/js/bootstrap.min.js" crossorigin="anonymous">
+	</script>
+	<script>(window.jQuery && window.jQuery.fn && window.jQuery.fn.modal||document.write("\u003Cscript src=\u0022\/lib\/bootstrap\/dist\/js\/bootstrap.min.js\u0022 crossorigin=\u0022anonymous\u0022\u003E\u003C\/script\u003E"));</script>
+	<script src="/js/site.js"></script>
+
+</head>
+
+<body>
+
+	<div class="container body-content">
+
+		<h1 class="text-danger">Ошибка.</h1>
+		<h2 class="text-danger">Такой страницы не существует.</h2>
+
+	 
+		<p>
+			Пожалуйста, вернитесь на @Html.ActionLink("главную", "Index", "Product") страницу сайта и попробуйте ещё раз 
+		</p>
+		<hr>
+	 
+	</div>
+
+
+	<script>
+		$(document).ready(function () {
+			var iSubmit = $('i.submit.index');
+ 
+
+			$(".nav-item").on("click", function (elm) {
+				var thisElm = $(elm);
+				//	console.log(thisElm.val());
+			})
+		});
+
+
+	</script>
+
+
+
+</body>
+</html>

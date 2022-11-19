@@ -1,0 +1,104 @@
+﻿@model IEnumerable<ICan.Common.Models.Opt.KitProductModel>
+@{
+
+	var mainProductId = int.Parse(ViewData["ProductId"].ToString());
+}
+
+
+
+<div id="kit-content">
+	<h4>Компоненты набора</h4>
+
+	<p>
+		<a href="#" id="add-kit-product" data-toggle="modal" data-target="#addKitProduct">
+			Добавить
+		</a>
+	</p>
+	@if (Model != null && Model.Any())
+	{
+		<div class="row">
+			<div class="col-10">
+				<strong>@Html.DisplayNameFor(model => model.ProductName)</strong>
+			</div>
+		</div>
+
+		@foreach (var item in Model)
+		{
+			<div class="row">
+				<div class="col-10">
+					@Html.DisplayFor(model => item.ProductName)
+				</div>
+				<div class="col-1">
+					<form asp-action="DeleteKitProduct" style="display: inline">
+						@Html.AntiForgeryToken()
+						<input type="hidden" id="id" name="id" value="@item.KitProductId" />
+						<i class="submit kit-product-delete far fa-times-circle"></i>
+					</form>
+				</div>
+
+			</div>
+		}
+	}
+</div>
+
+
+<div class="modal" tabindex="-1" role="dialog" id="addKitProduct">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title">Добавление компонента</h5>
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+			</div>
+			<div class="modal-body">
+				<form asp-action="AddKitProduct" id="add-kit-product-form">
+					<input name="MainProductId" type="hidden" value="@mainProductId" />
+					<div class="row">
+						<div class="col-3">
+							<label for="ProductId">
+								Тетрадь
+							</label>
+						</div>
+						<div class="col-9">
+							<select id="ProductId" name="ProductId" required="required" class="form-control"
+									style="min-width:350px; max-width:350px;"
+									asp-items="ViewBag.NotebookProductId"></select>
+						</div>
+					</div>
+				</form>
+			</div>
+			<div class="modal-footer">
+				<div class="form-group">
+
+					<input id="kit-product-submit" type="button" value="Сохранить" class="btn btn-default" />
+				</div>
+				<div class="form-group">
+					<input type="reset" value="Отменить" data-dismiss="modal" class="btn btn-outline-dark" />
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<script>
+
+	$(function () {
+		$("#kit-product-submit").on("click", function () {
+			$("#add-kit-product-form").submit();
+		});
+
+		
+		$(".fa-times-circle.submit.kit-product-delete").click(
+			function () {
+				if (confirm("Удалить?")) {
+
+
+					$.post('@Url.Action("DeleteKitProduct")', $(this).closest('form').serialize(),
+						function (html) {
+							window.location.reload();
+						});
+				}
+			});
+	});
+
+</script>

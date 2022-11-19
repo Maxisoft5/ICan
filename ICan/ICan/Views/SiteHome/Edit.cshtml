@@ -1,0 +1,225 @@
+﻿@model ICan.Common.Models.Opt.SiteProductModel
+@{
+
+	ViewData["Title"] = Model.DisplayName;
+}
+
+<h2>@Model.DisplayName</h2>
+<a href="@Url.Action("Notebook", new { id = Model.ProductId})" target='_blank'>Превью тетради</a>
+<hr />
+
+<span class="alert-danger">@TempData["ErrorMessage"]</span>
+<span class="text-success">@TempData["StatusMessage"]</span>
+
+<div class="nav nav-tabs" id="nav-tab" role="tablist">
+	<a class="nav-item nav-link active"
+	   id="main-tab" data-toggle="tab" href="#main-info" role="tab" aria-controls="main-info"
+	   aria-selected="true">Основная информация</a>
+	<a class="nav-item nav-link"
+	   id="image-tab" data-toggle="tab" href="#image-info" role="tab"
+	   aria-controls="image-info" aria-selected="false">Иллюстрации</a>
+</div>
+<div class="tab-content" id="siteProductTabContent">
+	<div class="tab-pane fade show active" id="main-info" role="tabpanel" aria-labelledby="main-tab">
+		<form asp-action="Edit" enctype="multipart/form-data">
+			<div asp-validation-summary="ModelOnly" class="text-danger"></div>
+			<div class="row">
+                <div class="col-6">
+                    <input type="hidden" asp-for="ProductId" />
+                    <div class="form-group">
+                        <label asp-for="SiteName" class="control-label"></label>
+                        <input asp-for="SiteName" class="form-control" />
+                        <span asp-validation-for="SiteName" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="BotInformation" class="control-label"></label>
+                        <textarea asp-for="BotInformation" class="form-control"  rows="7"></textarea>
+                        <span asp-validation-for="BotInformation" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="BotDescription" class="control-label"></label>
+						<textarea asp-for="BotDescription" class="form-control" rows="7"></textarea>
+						<span asp-validation-for="BotDescription" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <label asp-for="Description" class="control-label"></label>
+                        <textarea class="product-description"
+                                  id="productDescription" rows="15"
+                                  name="Description">@Model.Description</textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label asp-for="Information" class="control-label"></label>
+                        <textarea class="product-information" id="productInformation"
+                                  rows="15"
+                                  name="Information">@Model.Information</textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label asp-for="ReviewsText" class="control-label"></label>
+                        <textarea class="product-reviews-text" id="productReviewsText"
+                                  rows="15"
+                                  name="ReviewsText">@Model.ReviewsText</textarea>
+                    </div>
+                </div>
+
+				<div class="col-6">
+					<div class="form-group">
+						<label asp-for="VideoFileName" class="control-label"></label>
+						@if (!string.IsNullOrWhiteSpace(Model.VideoFileName))
+						{
+							<div class="row">
+								<div class="col-10">
+									<span>Видео файл загружен. Для замены выберите новый файл</span>
+								</div>
+								<div class="col-1">
+									<a href="#" title="Удалить загруженный видео файл" class="delete-video">
+										<i class="index far fa-times-circle" style="color:rgb(0, 123, 255)"></i>
+									</a>
+								</div>
+							</div>
+						}
+
+						<input type="file" name="videoFileName" class="form-control"
+							   accept="video/*" value="Выберите видео файл" />
+					</div>
+
+					<div class="form-group">
+						<h4>Теги</h4>
+						<a class="add-tag" href="#">Добавить тег</a>
+						@if (Model.ProductTags != null && Model.ProductTags.Any())
+						{
+							foreach (var productTag in Model.ProductTags)
+							{
+								<div class="row product-tag">
+									<div class="col-10">@productTag.TagName</div>
+									<div class="col-2">
+										<a data-product-tag-id="@productTag.ProductTagId"
+										   data-product-id="@productTag.ProductId" class="delete-tag">
+											<i class="index far fa-times-circle " style="color:rgb(0, 123, 255)"></i>
+										</a>
+									</div>
+								</div>
+							}
+						}
+					</div>
+
+					<div class="form-group">
+						<h4>Маркетплейсы</h4>
+						<a href="#" class="add-product-marketplace">Добавить</a>
+						@if (Model.MarketplaceProducts != null && Model.MarketplaceProducts.Any())
+						{
+							<div class="row">
+								<div class="col-2">Название</div>
+								<div class="col-2">Ссылка</div>
+								<div class="col-2">Цена</div>
+								<div class="col-2">Количество <br />отзывов</div>
+								<div class="col-1">Рейтинг</div>
+								<div class="col-2">Показывать</div>
+								<div class="col-1"></div>
+							</div>
+
+							foreach (var marketplaceProduct in Model.MarketplaceProducts)
+							{
+								<div class="row marketplace-product">
+									<div class="col-2">@marketplaceProduct.MarketplaceName</div>
+									<div class="col-2">
+										@if (marketplaceProduct.Urls != null && marketplaceProduct.Urls.Any())
+										{
+											foreach (var url in marketplaceProduct.Urls)
+											{
+												<a href="@url.Url" target="_blank">Ссылка</a>
+											}
+										}
+									</div>
+									<div class="col-2">@(marketplaceProduct.Price?.ToString("N2"))</div>
+									<div class="col-2">@marketplaceProduct.ReviewsAmount</div>
+									<div class="col-1">@marketplaceProduct.Raiting</div>
+                                    <div class="col-2 text-center">
+                                        @if (marketplaceProduct.ShowOnSite)
+                                        {
+                                            <i class="fas fa-check"></i><br />
+                                        }
+                                        else
+                                        {
+                                            <i class="fas fa-times"></i>
+                                        }
+                                    </div>
+									<div class="col-1">
+										<a href="#" class="edit-product-marketplace"
+										   data-marketplace-product="@marketplaceProduct.MarketplaceProductId">
+											<i class="far fa-edit"></i>
+										</a>
+										<a href="#" class="delete-product-marketplace"
+										   data-marketplace-product="@marketplaceProduct.MarketplaceProductId">
+											<i class="index far fa-times-circle"></i>
+										</a>
+									</div>
+								</div>
+							}
+						}
+					</div>
+
+				</div>
+			</div>
+			<div class="row">
+				<div class="form-group">
+					<label asp-for="LongDescription" class="control-label"></label>
+					<textarea class="product-longdescription" id="productLongDescription"
+							  rows="55" style="width: 500px"
+							  name="LongDescription">@Model.LongDescription</textarea>
+				</div>
+			</div>
+
+			<div class="form-group">
+				<input type="submit" value="Сохранить" class="btn btn-default" />
+			</div>
+		</form>
+	</div>
+
+	<div class="tab-pane fade" id="image-info" role="tabpanel" aria-labelledby="image-tab">
+		<p>
+			<button class="btn btn-link add-image">Добавить иллюстрацию</button>
+		</p>
+		@if (Model.ProductImages != null && Model.ProductImages.Any())
+		{
+			foreach (var imageItem in Model.ProductImages)
+			{
+				<div class="row">
+					<div class="col-3">@imageItem.DisplayImageType</div>
+					<div class="col-2">@imageItem.Order</div>
+					<div class="col-4">
+						<button type="button" class="btn btn-link copy-image-path"
+								data-image-type="@imageItem.ImageType"
+								data-image-path="@imageItem.FileName">
+							@imageItem.UserFileName
+						</button>
+						<span class="src-copied" style="display:none; color:#9EC411"><i class="far fa-check-circle"></i></span>
+					</div>
+					<div class="col-3">
+						<button class="btn btn-link delete-image" type="button" title="Удалить иллюстрацию"
+								data-image-id="@imageItem.ProductImageId">
+							<i class="submit far fa-times-circle" style="color:rgb(0, 123, 255)"></i>
+						</button>
+					</div>
+				</div>
+			}
+		}
+	</div>
+</div>
+
+<partial name="_UniversalModal" />
+
+
+<script src="~/lib/tinymce/tinymce.min.js"></script>
+<script src="~/js/sitehome/editproduct.js" asp-append-version="true"></script>
+
+<div class="row">
+	<a asp-action="ProductList">Назад к списку</a>
+</div>
+
+@section Scripts {
+
+	@{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

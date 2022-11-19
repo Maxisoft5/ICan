@@ -1,0 +1,270 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+	<PropertyGroup>
+		<TargetFramework>net5.0</TargetFramework>
+		<UserSecretsId>aspnet-WebApplication2-DC0E2F04-0229-40C9-9716-BF4D160732EF</UserSecretsId>
+		<Configurations>Debug;Release;</Configurations>
+		<TypeScriptToolsVersion>2.8</TypeScriptToolsVersion>
+    <CodeAnalysisRuleSet>ican.ruleset</CodeAnalysisRuleSet>
+ 	</PropertyGroup>
+	<ItemGroup>
+		<Compile Remove="wwwroot\lib\bootstrap\bootstrap\**" />
+		<Compile Remove="wwwroot\lib\jquery.touchswipe\**" />
+		<Content Remove="wwwroot\lib\bootstrap\bootstrap\**" />
+		<Content Remove="wwwroot\lib\jquery.touchswipe\**" />
+		<EmbeddedResource Remove="wwwroot\lib\bootstrap\bootstrap\**" />
+		<EmbeddedResource Remove="wwwroot\lib\jquery.touchswipe\**" />
+		<None Remove="wwwroot\lib\bootstrap\bootstrap\**" />
+		<None Remove="wwwroot\lib\jquery.touchswipe\**" />
+	</ItemGroup>
+	<ItemGroup>
+		<None Remove="webpack.config.js" />
+	</ItemGroup>
+	<ItemGroup>
+		<Content Include="webpack.config.js" />
+		<Content Include="Profile.Data/**" />
+	</ItemGroup>
+  <ItemGroup>
+    <AdditionalFiles Include="stylecop.json" Link="stylecop.json" />
+  </ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="AutoMapper" Version="10.1.1" />
+		<PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="8.1.1" />
+		<PackageReference Include="EasyNetQ" Version="6.3.1" />
+		<PackageReference Include="EPPlus" Version="4.5.3.3" />
+		<PackageReference Include="ExcelDataReader" Version="3.6.0" />
+		<PackageReference Include="ExcelDataReader.DataSet" Version="3.6.0" />
+		<PackageReference Include="Flurl" Version="3.0.1" />
+		<PackageReference Include="FreeSpire.PDF" Version="6.2.0" />
+		<PackageReference Include="HangFire" Version="1.7.22" />
+		<PackageReference Include="Hangfire.AspNetCore" Version="1.7.22" />
+		<PackageReference Include="HangFire.Core" Version="1.7.22" />
+		<PackageReference Include="Hangfire.MySqlStorage" Version="2.0.3" />
+		<PackageReference Include="HtmlAgilityPack" Version="1.11.32" />
+		<PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="5.0.5" />
+		<PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="5.0.5" />
+		<PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="5.0.5" />
+		<PackageReference Include="Microsoft.AspNetCore.Session" Version="2.2.0" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore" Version="5.0.5" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="5.0.5">
+		  <PrivateAssets>all</PrivateAssets>
+		  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
+		<PackageReference Include="Microsoft.jQuery.Unobtrusive.Ajax" Version="3.2.6" />
+		<PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.11.1" />
+		<PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="5.0.2" PrivateAssets="All" />
+		<PackageReference Include="Nito.AsyncEx.Context" Version="5.1.0" />
+		<PackageReference Include="NLog" Version="4.7.12" />
+		<PackageReference Include="NLog.Web.AspNetCore" Version="4.14.0" />
+		<PackageReference Include="NUglify" Version="1.16.1" />
+		<PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="5.0.0" />
+		<PackageReference Include="Pomelo.EntityFrameworkCore.MySql.Design" Version="1.1.2" />
+		<PackageReference Include="Selenium.Opera.WebDriver" Version="2.30.0" />
+		<PackageReference Include="StyleCop.Analyzers" Version="1.1.118">
+		  <PrivateAssets>all</PrivateAssets>
+		  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
+	</ItemGroup>
+	
+	<PropertyGroup>
+		<PreserveCompilationReferences>true</PreserveCompilationReferences>
+		<PreserveCompilationContext>true</PreserveCompilationContext>
+		<EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
+		<EnableNETAnalyzers>true</EnableNETAnalyzers>
+		<RunAnalyzersDuringBuild>true</RunAnalyzersDuringBuild>
+		<DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+	</PropertyGroup>
+	
+	<ItemGroup>
+		<DotNetCliToolReference Include="Microsoft.EntityFrameworkCore.Tools.DotNet" Version="2.0.2" />
+		<DotNetCliToolReference Include="Microsoft.Extensions.SecretManager.Tools" Version="2.0.1" />
+		<DotNetCliToolReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Tools" Version="2.0.3" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<EmbeddedResource Include="nlog.Staging.config">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		  <Generator>MSBuild:Compile</Generator>
+		</EmbeddedResource>
+		<EmbeddedResource Include="nlog.config">
+			<Generator>MSBuild:Compile</Generator>
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</EmbeddedResource>
+	</ItemGroup>
+
+	<ItemGroup>
+		<None Include="..\.editorconfig" Link=".editorconfig" />
+		<None Include="wwwroot\css\fontawesome\webfonts\fa-brands-400.svg" />
+		<None Include="wwwroot\css\fontawesome\webfonts\fa-brands-400.woff2" />
+		<None Include="wwwroot\css\fontawesome\webfonts\fa-regular-400.svg" />
+		<None Include="wwwroot\css\fontawesome\webfonts\fa-regular-400.woff2" />
+		<None Include="wwwroot\css\fontawesome\webfonts\fa-solid-900.svg" />
+		<None Include="wwwroot\css\fontawesome\webfonts\fa-solid-900.woff2" />
+		<None Include="wwwroot\lib\bootstrap\dist\css\bootstrap-grid.css.map" />
+		<None Include="wwwroot\lib\bootstrap\dist\css\bootstrap-grid.min.css.map" />
+		<None Include="wwwroot\lib\bootstrap\dist\css\bootstrap-reboot.css.map" />
+		<None Include="wwwroot\lib\bootstrap\dist\css\bootstrap-reboot.min.css.map" />
+		<None Include="wwwroot\lib\bootstrap\dist\css\bootstrap.css.map" />
+		<None Include="wwwroot\lib\bootstrap\dist\css\bootstrap.min.css.map" />
+		<None Include="wwwroot\lib\bootstrap\dist\js\bootstrap.bundle.js" />
+		<None Include="wwwroot\lib\bootstrap\dist\js\bootstrap.bundle.js.map" />
+		<None Include="wwwroot\lib\bootstrap\dist\js\bootstrap.bundle.min.js" />
+		<None Include="wwwroot\lib\bootstrap\dist\js\bootstrap.bundle.min.js.map" />
+		<None Include="wwwroot\lib\bootstrap\dist\js\bootstrap.js" />
+		<None Include="wwwroot\lib\bootstrap\dist\js\bootstrap.js.map" />
+		<None Include="wwwroot\lib\bootstrap\dist\js\bootstrap.min.js" />
+		<None Include="wwwroot\lib\bootstrap\dist\js\bootstrap.min.js.map" />
+		<None Include="wwwroot\robots.txt" />
+	</ItemGroup>
+
+	
+	<ItemGroup>
+		<Content Remove="nlog.config" />
+		<Content Remove="nlog.Staging.config" />
+		<Content Remove="wwwroot\robots.txt" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<Content Update="Views\Delivery\Edit.cshtml">
+			<Pack>$(IncludeRazorContentInPack)</Pack>
+		</Content>
+		<Content Update="Views\GluePadWarehouse\State.cshtml">
+		  <Pack>$(IncludeRazorContentInPack)</Pack>
+		</Content>
+		<Content Update="Views\Report\Details.cshtml">
+			<Pack>$(IncludeRazorContentInPack)</Pack>
+		</Content>
+		<Content Update="Views\Report\FileTransform.cshtml">
+			<Pack>$(IncludeRazorContentInPack)</Pack>
+		</Content>
+		<Content Update="Views\Report\UploadedUpds.cshtml">
+			<Pack>$(IncludeRazorContentInPack)</Pack>
+		</Content>
+		<Content Update="Views\Report\Index.cshtml">
+			<Pack>$(IncludeRazorContentInPack)</Pack>
+		</Content>
+		<Content Update="Views\Report\_DownloadReport.cshtml">
+			<Pack>$(IncludeRazorContentInPack)</Pack>
+		</Content>
+		<Content Update="Views\GlobalSetting\Edit.cshtml">
+			<Pack>$(IncludeRazorContentInPack)</Pack>
+		</Content>
+		<Content Update="Views\SemiproductWarehouse\Edit.cshtml">
+		  <Pack>$(IncludeRazorContentInPack)</Pack>
+		</Content>
+		<Content Update="Views\Shared\NoRights.cshtml">
+			<Pack>$(IncludeRazorContentInPack)</Pack>
+		</Content>
+		<Content Update="Views\Shipment\Index.cshtml">
+			<Pack>$(IncludeRazorContentInPack)</Pack>
+		</Content>
+		<Content Update="Views\SemiproductWarehouse\Create.cshtml">
+			<Pack>$(IncludeRazorContentInPack)</Pack>
+		</Content>
+		<Content Update="Views\SemiproductWarehouse\Details.cshtml">
+			<Pack>$(IncludeRazorContentInPack)</Pack>
+		</Content>
+		<Content Update="Views\SemiproductWarehouse\Index.cshtml">
+			<Pack>$(IncludeRazorContentInPack)</Pack>
+		</Content>
+		<Content Update="Views\Warehouse\WarehouseState.cshtml">
+		  <Pack>$(IncludeRazorContentInPack)</Pack>
+		</Content>
+		<Content Update="Views\Warehouse\_JournalDetails.cshtml">
+		  <Pack>$(IncludeRazorContentInPack)</Pack>
+		</Content>
+		<Content Update="Views\Warehouse\ProductState.cshtml">
+			<Pack>$(IncludeRazorContentInPack)</Pack>
+		</Content>
+		<Content Update="Views\Warehouse\Edit.cshtml">
+			<Pack>$(IncludeRazorContentInPack)</Pack>
+		</Content>
+		<Content Update="Views\Warehouse\Details.cshtml">
+			<Pack>$(IncludeRazorContentInPack)</Pack>
+		</Content>
+		<Content Update="Views\Warehouse\Create.cshtml">
+			<Pack>$(IncludeRazorContentInPack)</Pack>
+		</Content>
+		<Content Update="Views\Warehouse\Index.cshtml">
+			<Pack>$(IncludeRazorContentInPack)</Pack>
+		</Content>
+		<Content Update="Views\Wb\CompareReport.cshtml">
+		  <Pack>$(IncludeRazorContentInPack)</Pack>
+		</Content>
+		<Content Update="wwwroot\css\fontawesome\css\fontawesome-all.css">
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\css\fontawesome\css\fontawesome-all.min.css">
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\css\fontawesome\webfonts\fa-brands-400.eot">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\css\fontawesome\webfonts\fa-brands-400.svg">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\css\fontawesome\webfonts\fa-brands-400.ttf">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\css\fontawesome\webfonts\fa-brands-400.woff">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\css\fontawesome\webfonts\fa-brands-400.woff2">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\css\fontawesome\webfonts\fa-regular-400.eot">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\css\fontawesome\webfonts\fa-regular-400.svg">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\css\fontawesome\webfonts\fa-regular-400.ttf">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\css\fontawesome\webfonts\fa-regular-400.woff">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\css\fontawesome\webfonts\fa-regular-400.woff2">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\css\fontawesome\webfonts\fa-solid-900.eot">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\css\fontawesome\webfonts\fa-solid-900.svg">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\css\fontawesome\webfonts\fa-solid-900.ttf">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\css\fontawesome\webfonts\fa-solid-900.woff">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\css\fontawesome\webfonts\fa-solid-900.woff2">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\js\warehouseView.js">
+		  <Generator>MSBuild:Compile</Generator>
+		</Content>
+		<Content Update="wwwroot\js\orderView.js">
+		  <Generator>MSBuild:Compile</Generator>
+		</Content>
+		<Content Update="wwwroot\js\order.js">
+			<Generator>MSBuild:Compile</Generator>
+		</Content>
+	</ItemGroup>
+
+	<ItemGroup>
+		<Folder Include="wwwroot\bundle\" />
+		<Folder Include="wwwroot\lib\bootstrap\3.3.7\" />
+		<Folder Include="wwwroot\lib\moment\" />
+		<Folder Include="wwwroot\lib\bootstrap-select\" />
+		<Folder Include="wwwroot\lib\tableExport\" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <ProjectReference Include="..\ICan.Business\ICan.Business.csproj" />
+	  <ProjectReference Include="..\ICan.Data\ICan.Data.csproj" />
+	  <ProjectReference Include="..\ICan.DomainModel\ICan.Common.csproj" />
+	  <ProjectReference Include="..\ICan.Jobs\ICan.Jobs.csproj" />
+	</ItemGroup>
+
+</Project>

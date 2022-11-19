@@ -1,0 +1,31 @@
+﻿@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
+@{
+	Layout = "/Views/GlobalSiteHome/_FooterSiteLayout.cshtml";
+	ViewData["Title"] = Localizer["Our Books"];
+}
+
+@model IEnumerable<ICan.Common.Models.Opt.SiteProductModel>
+
+
+<main class="main">
+	<div class="container-fluid">
+		<div class="row-wrapper row-wrapper--uk">
+			<div class="row">
+				@foreach (var item in Model)
+				{
+					<div class="col-xs-6 col-sm-4 col-lg-3 catalog-item" itemscope itemtype="https://schema.org/PriceSpecification">
+						<a class="catalog-item-inner" href="/Notebook/@(item.ProductId)">
+							<img class="catalog-item-img"
+								 itemprop="image"
+								 alt="@item.SiteName"
+								 src="@(item.CoverCatalogImageFullPath)" />
+					
+							<p class="catalog-item-price" itemprop="price">@item.DisplayPrice</p>
+						</a>
+					</div>
+				}
+			</div>
+		</div>
+	</div>
+</main>

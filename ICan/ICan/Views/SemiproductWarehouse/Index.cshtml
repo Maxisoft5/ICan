@@ -1,0 +1,95 @@
+﻿@model IEnumerable<ICan.Common.Models.Opt.WarehouseModel>
+@using ICan.Common.Models.Opt
+@{
+	var title = "Склад полуфабрикатов";
+	ViewData["Title"] = @title;
+	bool.TryParse(ViewData["IsAdmin"]?.ToString(), out var isAdmin);
+	bool.TryParse(ViewData["IsStoreKeeper"]?.ToString(), out var isStoreKeeper);
+	bool.TryParse(ViewData["IsAssembler"]?.ToString(), out var isAssembler);
+	bool.TryParse(ViewData["IsOperator"]?.ToString(), out var isOperator);
+}
+<h2> @title</h2>
+
+<div class="row">
+	<div class="col-3">
+		<a asp-action="Create">Внести инвентаризацию</a>
+	</div>
+
+	<div class="col-3">
+		<a asp-action="PartialInventory">Внести единичную инвентаризацию</a>
+	</div>
+
+	<div class="col-3">
+		<form method="post" asp-action="CalculateWhJournal" style="margin:0; padding:0; border:none;" target="_blank">
+			<button class=" btn btn-link" style="margin:0; padding:0; border:none;">Состояние склада полуфабрикатов</button>
+		</form>
+	</div>
+
+	<div class="col-3">
+		<a asp-action="SemiproductReport"
+		   style="padding-top: 3px; display: inline-block;"
+		   title="Отчёт по состоянию полуфабрикатов">Отчёт по состоянию полуфабрикатов</a> <br />
+	</div>
+</div>
+
+<span class="alert-danger">@TempData["ErrorMessage"]</span>
+<span class="text-success">@TempData["StatusMessage"]</span>
+
+<table class="table table-responsive-md" data-toggle="table"
+	   data-pagination="true" data-search="true"
+	   data-filter-control="true"
+	   data-page-size="100"
+	   data-sort-order="desc"
+	   data-show-search-clear-button="true">
+	<thead>
+		<tr>
+			<th data-field="WarehouseActionTypeName" data-sortable="true" data-filter-control="select">
+				@Html.DisplayNameFor(model => model.WarehouseActionTypeName)
+			</th>
+			<th data-field="WarehouseTypeName" data-sortable="true" data-filter-control="select">
+				@Html.DisplayNameFor(model => model.WarehouseTypeName)
+			</th>
+			<th data-field="date" data-sortable="true" data-filter-control="input">
+				@Html.DisplayNameFor(model => model.DateAdd)
+			</th>
+			<th data-field="Comment" data-sortable="true" data-filter-control="input">
+				@Html.DisplayNameFor(model => model.Comment)
+			</th>
+			<th></th>
+		</tr>
+	</thead>
+	<tbody>
+		@foreach (var item in Model)
+		{
+			<tr>
+				<td>
+					@Html.DisplayFor(modelItem => item.WarehouseActionTypeName)
+				</td>
+				<td>
+					@Html.DisplayFor(modelItem => item.WarehouseTypeName)
+				</td>
+				<td>
+					@Html.DisplayFor(modelItem => item.DateAdd)
+				</td>
+				<td>
+					@Html.DisplayFor(modelItem => item.Comment)
+				</td>
+				<td>
+					<a asp-action="Details" asp-route-id="@item.WarehouseId"><i class="far fa-file-alt"></i></a>
+					@if (isAdmin)
+					{
+						<span>|</span>
+						<a asp-action="Edit" asp-route-id="@item.WarehouseId"><i class="far fa-edit"></i></a>
+						<span>|</span>
+					}
+					@if (isAdmin || isAssembler)
+					{
+					<form asp-action="Delete" style="display: inline" asp-route-id="@item.WarehouseId">
+						<i class="submit index far fa-times-circle" style="color:rgb(0, 123, 255)"></i>
+					</form>
+					}
+				</td>
+			</tr>
+		}
+	</tbody>
+</table>

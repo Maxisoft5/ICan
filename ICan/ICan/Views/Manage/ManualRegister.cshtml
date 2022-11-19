@@ -1,0 +1,65 @@
+﻿@using ICan.Common.Models.Enums
+@model ManualRegisterViewModel
+@{
+	ViewData["Title"] = "Регистрация пользователя";
+	bool.TryParse(ViewData["IsAdmin"]?.ToString(), out var isAdmin);
+	bool.TryParse(ViewData["IsOperator"]?.ToString(), out var isOperator);
+}
+
+<br />
+<h4>@ViewData["Title"]</h4>
+
+<hr />
+
+<form asp-route-returnUrl="@ViewData["ReturnUrl"]" method="post" style="    width: 100%;">
+	<div asp-validation-summary="ModelOnly" class="text-danger"></div>
+	<div class="row">
+
+        <div class="col-md-5">
+            <div class="form-group">
+                <label asp-for="FirstName"></label>
+                <sup><i class="fas fa-asterisk" style="font-size: 10px; color: red"></i></sup>
+                <input asp-for="FirstName" class="form-control" />
+                <span asp-validation-for="FirstName" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="LastName"></label>
+                <sup><i class="fas fa-asterisk" style="font-size: 10px; color: red"></i></sup>
+                <input asp-for="LastName" class="form-control" />
+                <span asp-validation-for="LastName" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Phone"></label>
+                <input asp-for="Phone" class="form-control" />
+                <span asp-validation-for="Phone" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Email"></label>
+                <sup><i class="fas fa-asterisk" style="font-size: 10px; color: red"></i></sup>
+                <input asp-for="Email" class="form-control" />
+                <span asp-validation-for="Email" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="ClientType"></label>
+                <sup><i class="fas fa-asterisk" style="font-size: 10px; color: red"></i></sup>
+                <select id="clientType" asp-for="ClientType" class="form-control" asp-items="Html.GetEnumSelectList<ClientType>()"></select>
+                <span asp-validation-for="ClientType" class="text-danger"></span>
+            </div>
+        </div>
+	</div>
+	<div class="row">
+		<button type="submit" class="btn btn-default" style="margin-left: 15px;">Отправить приглашение на почту</button>
+	</div>
+</form>
+
+<div style="margin-top:20px;">
+	<a asp-action="List">Назад к списку</a>
+</div>
+
+
+@section Scripts {
+	@await Html.PartialAsync("_ValidationScriptsPartial")
+}

@@ -1,0 +1,83 @@
+﻿@using ICan.Common.Models.Opt;
+@model ReportModel
+@{
+
+	//var title = isInternal ? "Приход" : "Коррекция остатков";
+	//var action = isInternal ? "Arrival" : "Index";
+	var title = $"{Model?.ReportKindName} {Model?.ShopName}";
+	ViewData["Title"] = title;
+
+}
+<h2> @title</h2>
+<hr />
+
+@if (Model != null)
+{
+ 
+	<div class="form-group">
+		<label asp-for="UploadDate" class="control-label"></label>
+		<sup><i class="fas fa-asterisk" style="font-size: 10px; color: red"></i></sup>
+		@Html.DisplayFor(t => Model.UploadDate)
+	</div>
+	<div class="form-group">
+		<label asp-for="ShopName" class="control-label"></label>
+		<sup><i class="fas fa-asterisk" style="font-size: 10px; color: red"></i></sup>
+		@Html.DisplayFor(t => Model.ShopName)
+	</div>
+	<div class="form-group">
+		<label asp-for="FileName" class="control-label"></label>
+		<sup><i class="fas fa-asterisk" style="font-size: 10px; color: red"></i></sup>
+		@Html.DisplayFor(t => Model.FileName)
+	</div>
+
+
+	<table class="table table-responsive-md">
+		<thead>
+			<tr>
+				<th scope="col">Товар</th>
+				<th scope="col" style="text-align:right;">Количество</th>
+				<th scope="col" style="text-align:right;">Сумма</th>
+			</tr>
+		</thead>
+		<tbody>
+			@{ var rowNum = 0;}
+			@foreach (var group in Model.Items)
+			{
+				<tr>
+					<td colspan="3" style="cursor: pointer; background-color: #dee2e6"
+						data-toggle="collapse" aria-expanded="true"
+						data-target=".multi-collapse@(group.Key.ProductSeriesId)">
+						@group.Key.Name
+					</td>
+				</tr>
+				foreach (var item in group.Value)
+				{
+					<tr class="multi-collapse@(group.Key.ProductSeriesId) collapse show  @(item.Enabled ? "" : "disabled")"
+						aria-expanded="true" style="width:98%;">
+						<td>
+							@Html.DisplayFor(modelItem => item.DisplayName)
+						</td>
+						<td style="text-align:right;">
+							@Html.DisplayFor(modelItem => item.Amount)
+						</td>
+						<td style="text-align:right;">
+							@Html.DisplayFor(modelItem => item.TotalSum)
+						</td>
+					</tr>
+					rowNum++;
+				}
+
+			}
+		</tbody>
+	</table>
+}
+else
+{
+	<p>
+		<span>Нет данных для отображения</span>
+	</p>
+}
+
+<div>
+	<a asp-action="Index">Назад к списку</a>
+</div>

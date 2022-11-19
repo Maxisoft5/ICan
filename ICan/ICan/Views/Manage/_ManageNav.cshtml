@@ -1,0 +1,22 @@
+﻿@using ICan.Views.Manage
+@inject SignInManager<ApplicationUser> SignInManager
+@{
+	var hasExternalLogins = (await SignInManager.GetExternalAuthenticationSchemesAsync()).Any();
+	bool.TryParse(ViewData["IsCurrentUser"]?.ToString(), out bool isCurrentUser);
+	bool.TryParse(ViewData["ChangePassword"]?.ToString(), out bool isChangePassword);
+	var guid = Guid.Empty;
+	Guid.TryParse(ViewData["ThisUser"]?.ToString(), out guid);
+}
+
+<div style="padding-top: 15vh;">
+	<ul style="list-style: none;">
+		@if (isChangePassword)
+		{
+			<li class="@ManageNavPages.IndexNavClass(ViewContext)"><a asp-action="Index" asp-route-id="@guid">Перейти к учетной записи</a></li>
+		}
+		else
+		{
+			<li class="@ManageNavPages.ChangePasswordNavClass(ViewContext)"><a asp-action="ChangePassword">Сменить пароль</a></li>
+		}
+	</ul>
+</div>

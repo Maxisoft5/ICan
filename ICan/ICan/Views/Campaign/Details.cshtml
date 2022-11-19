@@ -1,0 +1,45 @@
+﻿@model ICan.Common.Models.Opt.CampaignModel
+
+@{
+    var title = "Детали рассылки";
+    ViewData["Title"] = title;
+}
+
+<br />
+<h2>@title</h2>
+<br />
+
+@if (Model != null)
+{
+    <div class="row">
+        <div class="col-12">
+            <div class="form-group">
+                <label asp-for="CampaignName" class="control-label"></label>
+                <br />
+                @Html.DisplayFor(m => m.CampaignName)
+            </div>
+            <div class="form-group">
+                <label asp-for="CampaignType" class="control-label"></label>
+                <br />
+                @Html.DisplayFor(m => m.CampaignType)
+            </div>
+            <div class="form-group">
+                <label asp-for="Date" class="control-label"></label>
+                <br />
+                @Html.DisplayFor(m => m.Date)
+            </div>
+            <div class="form-group">
+                <label asp-for="Title" class="control-label"></label>
+                <br />
+                @Html.DisplayFor(m => m.Title)
+            </div>
+            <div class="form-group">
+                <label asp-for="Text" class="control-label"></label>
+                <textarea asp-for="Text" class="form-control details" style="min-height:400px;"></textarea>
+            </div>
+        </div>
+    </div>
+}
+
+<script src="~/lib/tinymce/tinymce.min.js"></script>
+<script asp-append-version="true" src="~/js/campaign.js"></script>

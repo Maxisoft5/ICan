@@ -1,0 +1,50 @@
+﻿@model ICan.Common.Models.Opt.ProductShopPriceForDateViewModel
+@{
+    ViewData["Title"] = "Цены на товары в магазинах";
+    bool.TryParse(ViewData["IsAdmin"]?.ToString(), out var isAdmin);
+    bool.TryParse(ViewData["IsStoreKeeper"]?.ToString(), out var isStoreKeeper);
+    bool.TryParse(ViewData["IsOperator"]?.ToString(), out var isOperator);
+    List<int> keys = new List<int>() { 1, 2, 5, 6, 7 };
+}
+
+<h2> Цены на товары в магазинах</h2>
+
+
+<p>
+
+    <a asp-action="Create"> Собрать данные о ценах </a>
+</p>
+<table class="table">
+    <tr>
+        <th scope="col"></th>
+        @foreach (var shop in Model.Shops)
+        {
+            <th scope="col">@shop.Name</th>
+        }
+
+    </tr>
+    @foreach (var item in Model.ProductShopPriceForDateList)
+    {
+    <tr>
+        <th scope="col"> @Html.DisplayFor(modelItem => item.ProductName)</th>
+        @foreach (var shop in Model.Shops)
+        {
+            @if (item.PriceShopLinks.ContainsKey(shop.ShopId))
+            {
+                @if (item.PriceShopLinks[shop.ShopId].Price != null)
+                {
+                    <td><a href=@item.PriceShopLinks[shop.ShopId].Link target="_blank">@item.PriceShopLinks[shop.ShopId].Price</a></td>
+                }
+                else
+                {
+                    <td><a href=@item.PriceShopLinks[shop.ShopId].Link target="_blank">-</a></td>
+                }
+            }
+            else
+            {
+                <td>-</td>
+            }
+        }
+    </tr>
+    }
+</table>

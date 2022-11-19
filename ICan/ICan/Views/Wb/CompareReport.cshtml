@@ -1,0 +1,28 @@
+﻿@model IEnumerable<ICan.Common.Models.Opt.ReportModel>
+
+@{
+	var title = "Сравнение ЛК с API";
+	var accepts = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+	ViewData["Title"] = title;
+}
+
+<h2> @title</h2>
+
+
+<span class="alert-danger">@TempData["ErrorMessage"]</span>
+<span class="text-success">@TempData["StatusMessage"]</span>
+
+<form class="upload-form"  asp-action="CompareReport"
+	  enctype="multipart/form-data" method="post">
+
+	<div class="form-group">
+		<label class="control-label">Файл для сравнения с API</label>
+
+		<input class="form-control" accept="@accepts" type="file" 
+			   name="formFile" />
+
+	</div>
+	<button type="button" class="btn btn-primary btn-upload">Загрузить</button>
+</form>
+
+<script src="~/js/wbapireport.js" asp-append-version="true"></script>

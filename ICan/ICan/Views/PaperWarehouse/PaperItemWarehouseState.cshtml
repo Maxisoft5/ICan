@@ -1,0 +1,121 @@
+﻿@using ICan.Common.Models.Opt;
+@model IEnumerable<CalcPaperWhjDetails>
+@{
+	var paperName = Model.First().PaperName;
+	var title = $"Состояние склада для бумаги {paperName}";
+	ViewData["Title"] = title;
+}
+<h2> @title</h2>
+<hr />
+
+@if (Model != null)
+{
+	<div class="form-group">
+		<strong>
+			@paperName
+		</strong>
+	</div>
+	<br />
+
+	foreach (var detail in Model)
+	{
+		<div class="form-group">
+			<strong> @Html.DisplayFor(t => detail.WarehouseType)</strong>
+		</div>
+
+		<div class="form-group">
+			<label asp-for="@detail.Current" class="control-label"></label>
+			@Html.DisplayFor(t => detail.Current)
+		</div>
+
+		<div class="form-group">
+			<label asp-for="@detail.InventoryDate" class="control-label"></label>
+			@Html.DisplayFor(t => detail.InventoryDate)
+
+		</div>
+		<div class="form-group">
+			<label asp-for="@detail.InventoryAmount" class="control-label"></label>
+			@Html.DisplayFor(t => detail.InventoryAmount)
+		</div>
+
+		<div class="form-group">
+			<label asp-for="@detail.SingleInventoryDate" class="control-label"></label>
+			@Html.DisplayFor(t => detail.SingleInventoryDate)
+
+		</div>
+		<div class="form-group">
+			<label asp-for="@detail.SingleInventoryAmount" class="control-label"></label>
+			@Html.DisplayFor(t => detail.SingleInventoryAmount)
+		</div>
+
+		<div class="form-group">
+			<label asp-for="@detail.PaperOrderSum" class="control-label"></label>
+			@Html.DisplayFor(t => detail.PaperOrderSum)
+		</div>
+
+
+		@if (detail.PaperOrderIncomingItems != null && detail.PaperOrderIncomingItems.Any())
+		{
+			<div class="form-group">
+				<ul>
+					@foreach (var incomingItem in detail.PaperOrderIncomingItems)
+					{
+						<li>
+							@{
+								var paperOrder = detail.PaperOrderIncomings
+												.FirstOrDefault(paperOrderIn => paperOrderIn.PaperOrderIncomingId == int.Parse(incomingItem.ActionId));
+								var explanation = string.IsNullOrWhiteSpace(incomingItem.Comment)
+								? $"Дата прихода: {incomingItem.ActionDate}, количество {incomingItem.Amount}, посмотреть <a target='_blank' href='{Url.Action("Edit","PaperOrder", new { id = paperOrder?.PaperOrderId })}'>заказ бумаги</a>" 
+								: incomingItem.Comment;
+							}
+							<span>@Html.Raw(explanation)</span>
+						</li>
+					}
+				</ul>
+			</div>
+		}
+
+
+		<div class="form-group">
+			<label asp-for="@detail.PrintOrderPaperSum" class="control-label"></label>
+			@Html.DisplayFor(t => detail.PrintOrderPaperSum)
+		</div>
+
+		@if (detail.PrintOrderPapers != null && detail.PrintOrderPapers.Any())
+		{
+			<div class="form-group">
+				<ul>
+					@foreach (var printOrderPaper in detail.PrintOrderPapers)
+					{
+						<li>
+							@{
+								var printOrder = detail.PrintOrderPaperExtended
+												.FirstOrDefault(printP => printP.PrintOrderPaperId == int.Parse(printOrderPaper.ActionId));
+							
+
+								var explanation = string.IsNullOrWhiteSpace(printOrderPaper.Comment)
+								? $"Дата добавления в заказ печати: {printOrderPaper.ActionDate}, количество {printOrderPaper.Amount}, посмотреть <a target='_blank' href='{Url.Action("Edit","PrintOrder", new { id = printOrder?.PrintOrderId })}'>заказ печати</a>" 
+								: printOrderPaper.Comment;
+							}
+							<span>@Html.Raw(explanation)</span>
+						</li>
+					}
+				</ul>
+			</div>
+		}
+
+		<div class="form-group">
+			<label asp-for="@detail.MovingPaperIncomeSum" class="control-label"></label>
+			@Html.DisplayFor(t => detail.MovingPaperIncomeSum)
+		</div>
+
+		<div class="form-group">
+			<label asp-for="@detail.MovingPaperOutcomeSum" class="control-label"></label>
+			@Html.DisplayFor(t => detail.MovingPaperOutcomeSum)
+		</div>
+		<br />
+	}
+}
+<div>
+	<a asp-action="#" onClick="history.go(-1); return false;">Назад к списку</a>
+</div>

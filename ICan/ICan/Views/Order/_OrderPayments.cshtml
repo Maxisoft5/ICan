@@ -1,0 +1,131 @@
+﻿@model IEnumerable<ICan.Common.Domain.OptOrderpayment>
+@{
+	var action = ViewData["Action"]?.ToString();
+	Guid.TryParse(ViewData["OrderId"]?.ToString(), out var orderId);
+	bool.TryParse(ViewData["IsAdmin"]?.ToString(), out var isAdmin);
+	bool.TryParse(ViewData["IsStoreKeeper"]?.ToString(), out var isStoreKeeper);
+	bool.TryParse(ViewData["IsOperator"]?.ToString(), out var isOperator);
+}
+
+@if (isAdmin)
+{
+	<p>
+		<a href="#" id="add-payment" data-toggle="modal" data-target="#addPayment">
+			Добавить платёж
+		</a>
+	</p>}
+
+<h3>Платежи</h3>
+<table class="table">
+	<thead>
+		<tr>
+			<th>
+				@Html.DisplayNameFor(model => model.OrderPaymentDate)
+			</th>
+			<th>
+				@Html.DisplayNameFor(model => model.Amount)
+			</th>
+
+			<th></th>
+		</tr>
+	</thead>
+	<tbody>
+		@foreach (var item in Model)
+		{
+			<tr>
+				<td>
+					@Html.DisplayFor(modelItem => item.OrderPaymentDate)
+				</td>
+				<td>
+					<span>@item.Amount.ToString("N")</span>
+				</td>
+				<td>
+					@if (isAdmin)
+					{
+						<form asp-action="DeletePayment" style="display: inline"
+							  asp-route-id="@item.OrderPaymentId">
+							<i class="submit index far fa-times-circle"></i>
+						</form>
+					}
+				</td>
+			</tr>
+		}
+	</tbody>
+</table>
+
+
+
+<div class="modal" tabindex="-1" role="dialog" id="addPayment">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title">Добавление платежа</h5>
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+			</div>
+			<div class="modal-body">
+				<form asp-action="AddPayment" id="add-payment-form">
+					<input name="OrderId" type="hidden" value="@orderId" />
+					<input name="OrderPaymentDate" id="OrderPaymentDate" type="date"
+						   class="form-control" required="required"
+						   placeholder="Дата платежа" value="@DateTime.Now.Date.ToString("yyyy-MM-dd")" />
+					<span id="DateError" class="payment-error red" style="display:none">Не верная дата</span>
+					<input name="Amount" class="form-control"
+						   required="required" id="OrderPaymentAmount"
+						   type="number" step="0.01" placeholder="Сумма платежа" min="0.01"
+						   pattern="/^[0-9]+.?[0-9]{0,2}$/" />
+					<span id="AmountError" class="payment-error red" style="display:none">Не верная сумма</span>
+					<span id="AmountErrorSum" class="payment-error red" style="display:none">Сумма должна быть больше нуля</span>
+				</form>
+			</div>
+			<div class="modal-footer">
+				<div class="form-group">
+
+					<input id="payment-submit" type="button" value="Сохранить" class="btn btn-default" />
+				</div>
+				<div class="form-group">
+					<input type="reset" value="Отменить" data-dismiss="modal" class="btn btn-outline-dark" />
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<script>
+
+	$(function () {
+		$("#payment-submit").on("click", function () {
+
+			if (checkPaymentForm()) {
+				$("#add-payment-form").submit();
+				$(".payment-error").hide();
+				$("#addPayment").modal();
+			}
+		});
+
+		function checkPaymentForm() {
+			var isOk = true;
+			var n = $("#OrderPaymentAmount").val();
+			if (n <= 0) {
+				$("#AmountErrorSum").show();
+				isOk = false;
+			}
+			else { $("#AmountErrorSum").hide(); }
+			var valid = n.search(/^[0-9]+.?[0-9]{0,2}$/) == 0 ? true : false;
+			if (!valid) {
+				$("#AmountError").show();
+				isOk = false;
+			}
+			else { $("#AmountError").hide(); }
+			var pDate = $("#OrderPaymentDate").val();
+			if (!pDate) {
+
+				$("#DateError").show();
+				isOk = false;
+			}
+			else { $("#DateError").hide(); }
+			return isOk;
+		}
+
+	});
+</script>

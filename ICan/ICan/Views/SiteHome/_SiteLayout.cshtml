@@ -1,0 +1,150 @@
+﻿@using System.Text.Encodings.Web;
+<!DOCTYPE html>
+<html lang="@ViewData["Language"]">
+@{ var isProduction = Context.Request.Host.Host == "yamogu.ru"; }
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	@if (isProduction)
+	{
+		<!-- Google Tag Manager -->
+		<script>
+
+			(function (w, d, s, l, i) {
+				w[l] = w[l] || []; w[l].push({
+					'gtm.start':
+						new Date().getTime(), event: 'gtm.js'
+				}); var f = d.getElementsByTagName(s)[0],
+					j = d.createElement(s), dl = l != 'dataLayer' ? '&l=' + l : ''; j.async = true; j.src =
+						'https://www.googletagmanager.com/gtm.js?id=' + i + dl; f.parentNode.insertBefore(j, f);
+			})(window, document, 'script', 'dataLayer', 'GTM-NQXC29K');</script>
+		<!-- End Google Tag Manager -->
+		<meta name="google-site-verification" content="BZfZEauptg-o4B6hq6DqDJ824SaRKYMzjR1J-duIFlo	">
+		<meta name="facebook-domain-verification" content="tyh0vawcreuq23210n3ialt2cskxf1" />
+	}
+
+
+	<link rel="icon" type="image/x-icon" href="~/favicon.ico">
+	<title>Я Могу</title>
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
+		  asp-fallback-href="~/lib/bootstrap/3.3.7/bootstrap.min.css"
+		  asp-fallback-test-class="sr-only"
+		  asp-fallback-test-property="position"
+		  asp-fallback-test-value="absolute"
+		  integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u"
+		  crossorigin="anonymous">
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/css/bootstrap-select.min.css"
+		  asp-fallback-href="~/lib/bootstrap-select/bootstrap-select.min.css"
+		  asp-fallback-test-class="selectpicker"
+		  asp-fallback-test-property="position"
+		  asp-fallback-test-value="absolute">
+	<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
+			asp-fallback-src="~/lib/jquery/3.5.1/jquery-3.5.1.slim.min.js"
+			asp-fallback-test="window.jQuery"
+			integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
+			crossorigin="anonymous"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"
+			asp-fallback-src="~/lib/bootstrap/3.3.7/bootstrap.min.js"
+			asp-fallback-test="window.jQuery && window.jQuery.fn && window.jQuery.fn.modal"
+			integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
+			crossorigin="anonymous"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.touchswipe/1.6.19/jquery.touchSwipe.min.js"
+			asp-fallback-src="~/lib/jquery-touchswipe/jquery.touchSwipe.min.js"
+			asp-fallback-test="window.jQuery && window.jQuery.fn && window.jQuery.fn.swipe"></script>
+	<script src="/js/sitehome/watch.js" asp-append-version="true"></script>
+	<script src="~/js/site.js" asp-append-version="true"></script>
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/js/bootstrap-select.min.js"
+			asp-fallback-src="~/lib/bootstrap-select/bootstrap-select.min.js"
+			asp-fallback-test="window.jQuery && window.jQuery.fn && window.jQuery.fn.selectpicker"></script>
+	<link rel="preconnect" href="https://fonts.gstatic.com">
+	<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+	<link href="~/css/main.css" rel="stylesheet" asp-append-version="true" />
+	<script>
+		window.applicationBaseUrl = '@Html.Raw(JavaScriptEncoder.Default.Encode(Url.Content("~/")))';
+		window.siteUrls = {
+			filterProducts: "@Url.Action("Index", "SiteHome")"
+		}
+	</script>
+</head>
+<body>
+	@if (isProduction)
+	{
+		<!-- Google Tag Manager (noscript) -->
+		<noscript>
+			<iframe src="https://www.googletagmanager.com/ns.html?id=GTM-NQXC29K"
+					height="0" width="0" style="display:none;visibility:hidden"></iframe>
+		</noscript>
+		<!-- End Google Tag Manager (noscript) -->
+	}
+	@{
+		var showFilter = false;
+		bool.TryParse(ViewData["ShowFilter"]?.ToString(), out showFilter);
+		var selectedFilter = int.TryParse(ViewData["SelectedFilter"]?.ToString(), out var ser)
+			? $"{ser}-filter"
+			: string.Empty;
+		var selectedTag = int.TryParse(ViewData["selectedTag"]?.ToString(), out var tg)
+			? $"{tg}-tag"
+			: string.Empty;
+		var selectedLang = string.IsNullOrWhiteSpace(ViewData["SelectedLang"]?.ToString()) ? "" : ViewData["SelectedLang"].ToString();
+	}
+	<header class="header">
+		<div class="header-nav-wrapper">
+			<nav class="header-nav">
+				<a class="i-can" href="/AboutUs">
+					<picture class="logo-rocket">
+						<source srcset="~/assets/desk-rocket-57x54.png" media="(min-width: 1024px)">
+						<img src="~/assets/rocket-mobile.png">
+					</picture>
+					<picture class="i-can-img">
+						<source srcset="~/assets/desk-YaMogu-75-14.png" media="(min-width: 1024px)">
+						<img src="~/assets/i-can.png">
+					</picture>
+				</a>
+				<a class="catalog" href="/">
+					<picture>
+						<source srcset="~/assets/desk-katalog-40-34.png" media="(min-width: 1024px)">
+						<img class="logo-catalog" src="~/assets/catalog.png">
+					</picture>
+					<div class="catalog-link">Каталог</div>
+				</a>
+				<div class="nav-telephone">
+					<p class="nav-telephone-number">+7 (495) 14 200 13</p>
+					<p class="nav-telephone-text">по будням с 9 до 17</p>
+				</div>
+				<a class="contacts" href="/Contacts">
+					<picture>
+						<source srcset="~/assets/desk-kontakty-40-29.png" media="(min-width: 1024px)">
+						<img class="logo-contacts" src="~/assets/contacts.png">
+					</picture>
+					<div class="contacts-link">Контакты</div>
+				</a>
+			</nav>
+		</div>
+		@if (showFilter)
+		{
+			<section class="filters">
+				<div class="filters-series" onClick='onSelectSeries(event)'>
+					<button type="button" class="filter-series @(selectedFilter.Equals("2-filter") ?"selected" : string.Empty)" id="2-filter">2-3</button>
+					<button type="button" class="filter-series @(selectedFilter.Equals("3-filter") ?"selected" : string.Empty)" id="3-filter">3-4</button>
+					<button type="button" class="filter-series @(selectedFilter.Equals("4-filter") ?"selected" : string.Empty)" id="4-filter">4-5</button>
+					<button type="button" class="filter-series @(selectedFilter.Equals("5-filter") ?"selected" : string.Empty)" id="5-filter">5+</button>
+					<div class="select-wrapper">
+						<select class="selectpicker" id="lang-selectpicker">
+							<option selected="@selectedLang.Equals("ru")" class="lang-book" name='ru' title="Рус">Тетради на русском</option>
+							<option selected="@selectedLang.Equals("en")" class="lang-book" name='en' title="Англ">Тетради на английском</option>
+						</select>
+					</div>
+				</div>
+				<div class="filters-tag" onClick='onSelectTag(event)'>
+					<button type="button" class="filter-tag @(selectedTag.Equals("1-tag") ? "selected" : string.Empty)" id="1-tag">Вырезаем</button>
+					<button type="button" class="filter-tag @(selectedTag.Equals("2-tag") ? "selected" : string.Empty)" id="2-tag">Рисуем</button>
+					<button type="button" class="filter-tag @(selectedTag.Equals("3-tag") ? "selected" : string.Empty)" id="3-tag">Читаем</button>
+					<button type="button" class="filter-tag @(selectedTag.Equals("4-tag") ? "selected" : string.Empty)" id="4-tag">Думаем</button>
+				</div>
+			</section>
+		}
+	</header>
+	@RenderBody()
+	<script src="~/js/sitehome/catalog.js" asp-append-version="true"></script>
+</body>
+</html>

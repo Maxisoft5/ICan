@@ -1,0 +1,124 @@
+﻿@model IEnumerable<ICan.Common.Models.Opt.ReportModel>
+
+@{
+	var title = "Отчёты";
+	ViewData["Title"] = @title;
+}
+
+<h2> @title</h2>
+<style>
+	.toggle-show {
+		display: inline;
+	}
+
+	.toggle-hide {
+		display: none;
+	}
+</style>
+ 
+<span class="alert-danger">@TempData["ErrorMessage"]</span>
+<span class="text-success">@TempData["StatusMessage"]</span>
+
+<label class="control-label show-hide upload-form" style="display: inline;  cursor:pointer">
+	Загрузить новый документ
+	<span class="fas fa-angle-down toggle-show upload-form"></span>
+	<span class="fas fa-angle-up   toggle-hide upload-form"></span>
+</label>
+
+
+
+
+<form class="upload-form toggle-hide" asp-action="UploadReport" enctype="multipart/form-data">
+    <div class="row">
+        <div class="col-md-6">
+            <label class="control-label" style="width: 60px">Месяц</label>
+            @Html.DropDownList("Month", (IEnumerable<SelectListItem>)ViewData["Months"],
+               null, new { @class="form-control", style = "min-width:300px" })
+
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-6">
+            <label class="control-label" style="width: 60px">Год</label>
+            @Html.DropDownList("Year", (IEnumerable<SelectListItem>)ViewData["Years"],
+				   null, new { @class = "form-control", style = "min-width:300px" })
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label"> Файл отчёта</label>
+        <input class="form-control"
+               accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/vnd.ms-excel"
+               type="file" name="ReportFile" id="reportFile" multiple />
+    </div>
+    <button type="submit" class="btn btn-primary">Загрузить документ</button>
+</form>
+
+<label class="control-label show-hide download-form" style="display: inline;  cursor:pointer">
+	Скачать отчёт
+	<span class="fas fa-angle-down   toggle-show download-form" style="cursor: pointer"></span>
+	<span class="fas fa-angle-up  toggle-hide download-form " style="cursor: pointer"></span>
+</label>
+<form asp-action="DownloadReport" asp-method="post" class="download-form toggle-hide">
+	<div class="row">
+		<div class="col-md-4">
+			<label class="control-label">Месяц(с)</label>
+		</div>
+		<div class="col-md-4">
+			@Html.DropDownList("fromMonth", (IEnumerable<SelectListItem>)ViewData["Months"],
+			   null, new { @class = "form-control", style ="min-width:300px"})
+
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-md-4">
+			<label class="control-label">Год(с)</label>
+		</div>
+		<div class="col-md-4">
+			@Html.DropDownList("fromYear", (IEnumerable<SelectListItem>)ViewData["Years"],
+				   null, new { @class = "form-control", style ="min-width:300px"})
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-md-4">
+
+			<label class="control-label">Месяц(по)</label>
+		</div>
+		<div class="col-md-4">
+			@Html.DropDownList("toMonth", (IEnumerable<SelectListItem>)ViewData["Months"],
+			   null, new { @class = "form-control", style ="min-width:300px"})
+
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-md-4">
+			<label class="control-label">Год(по)</label>
+		</div>
+		<div class="col-md-4">
+			@Html.DropDownList("toYear", (IEnumerable<SelectListItem>)ViewData["Years"],
+				   null, new { @class = "form-control", style ="min-width:300px"})
+
+		</div>
+	</div>
+	<button class="btn btn-primary" type="submit" href="#" download="">Скачать</button>
+</form>
+
+
+
+<div id="reports">
+	@{await Html.RenderPartialAsync("_ReportList", Model);}
+</div>
+
+<script>
+	$(function () {
+		$(".show-hide.upload-form").on("click", function (e) {
+			$(".upload-form").toggleClass("toggle-show").toggleClass("toggle-hide");
+
+		});
+
+		$(".show-hide.download-form").on("click", function (e) {
+			$(".download-form").toggleClass("toggle-show").toggleClass("toggle-hide");
+		});
+
+		$("th[data-field='ReportDate'] .sortable").click();
+	});
+</script>

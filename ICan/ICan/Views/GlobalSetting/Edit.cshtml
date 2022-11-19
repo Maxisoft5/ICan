@@ -1,0 +1,49 @@
+﻿@model ICan.Common.Models.Opt.GlobalSettingModel
+@{ var title = ViewData["Title"]; }
+<script src="~/lib/tinymce/tinymce.js"></script>
+<script>
+    $(function () {
+        tinymce.init(
+            {
+                selector: 'textarea',
+                plugins: ['autolink lists link preview textcolor colorpicker image code paste'],
+                menubar: false,
+                toolbar: ' undo redo |  formatselect | bold italic backcolor forecolor | alignleft aligncenter alignright alignjustify | bullist numlist image | removeformat | preview code',
+            });
+    })</script>
+
+<h2>@title</h2>
+<hr />
+<span class="text-success">@TempData["StatusMessage"]</span>
+<span class="alert-danger">@TempData["ErrorMessage"]</span>
+<div class="row">
+    <div class="col-12">
+        <form asp-action="Edit">
+            <div asp-validation-summary="All" class="text-danger"></div>
+            <input asp-for="GlobalSettingId" class="form-control" type="hidden" />
+            <div class="form-group">
+                <label asp-for="Content" class="control-label">Содержание</label>
+                <sup><i class="fas fa-asterisk" style="font-size: 10px; color: red"></i></sup>
+                <br />
+                @Html.TextAreaFor(t => t.Content, new { @class = "form-control", cols = 600, rows = 20 })
+                <span asp-validation-for="Content" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Comment" class="control-label">Комментарий</label>
+                <br />
+                @Html.DisplayFor(t => t.Comment, new { @class = "form-control" })
+
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Сохранить" class="btn btn-default" />
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
+
+<script src="~/lib/tinymce/tinymce.min.js"></script>

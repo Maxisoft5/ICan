@@ -1,0 +1,73 @@
+﻿@model IEnumerable<ICan.Common.Models.Opt.ShopModel>
+
+@{
+	var title = "Отчёт по отгрузкам";
+	ViewData["Title"] = @title;
+}
+
+
+<h2> @title</h2>
+
+
+<span class="alert-danger">@TempData["ErrorMessage"]</span>
+<span class="text-success">@TempData["StatusMessage"]</span>
+
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Index">
+            <div class="row">
+                <div class="col-md-4">
+                    <label class="control-label">Год</label>
+                </div>
+                <div class="col-md-4">
+                    @Html.DropDownList("year", (IEnumerable<SelectListItem>)ViewData["Years"],
+                           null, new { style = "min-width:300px" })
+                </div>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Скачать" class="btn btn-default" />
+            </div>
+        </form>
+
+        <br />
+        <br />
+
+        <h3>Отчёт по продажам букваря БоБуквы</h3>
+        <br />
+        <form asp-action="GetReportForPrimer">
+            <div class="row">
+                <div class="col-md-4">
+                    <label class="control-label">Год</label>
+                </div>
+                <div class="col-md-4">
+                    @Html.DropDownList("year", (IEnumerable<SelectListItem>)ViewData["Years"],
+                           null, new { style = "min-width:300px" })
+                </div>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Скачать" class="btn btn-default" />
+            </div>
+        </form>
+
+        <br />
+        <br />
+
+        <h3>Отчёт по продажам букваря БоБуквы(кол-во)</h3>
+        <br />
+        <form asp-action="GetReportForPrimerQty">
+            <div class="row">
+                <div class="col-md-4">
+                    <label class="control-label">Год</label>
+                </div>
+                <div class="col-md-4">
+                    @Html.DropDownList("year", (IEnumerable<SelectListItem>)ViewData["Years"],
+                           null, new { style = "min-width:300px" })
+                </div>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Скачать" class="btn btn-default" />
+            </div>
+        </form>
+    </div>
+</div>

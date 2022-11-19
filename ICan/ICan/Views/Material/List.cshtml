@@ -1,0 +1,71 @@
+﻿@model IEnumerable<ICan.Common.Models.Opt.MaterialModel>
+
+@{ var title = "Материалы";
+	ViewData["Title"] = title; }
+
+<h2>@title</h2>
+
+<span class="text-success">@TempData["StatusMessage"]</span>
+<span class="alert-danger">@TempData["ErrorMessage"]</span>
+
+<p>
+	<a asp-action="Create">Создать</a>
+	<a href="@Url.Action("Index")" target="_blank">Посмотреть на сайте</a>
+</p>
+<table class="table">
+	<thead>
+		<tr>
+			<th style="max-width:200px">
+				@Html.DisplayNameFor(model => model.Theme)
+			</th>
+			<th style="max-width:220px">
+				@Html.DisplayNameFor(model => model.DisplayDate)
+			</th>
+			<th style="max-width:220px">
+				@Html.DisplayNameFor(model => model.IsActive)
+			</th>
+			 
+			<th></th>
+		</tr>
+	</thead>
+	<tbody>
+		@foreach (var item in Model)
+		{
+		<tr>
+			<td>
+				@Html.DisplayFor(modelItem => item.Theme)
+			</td>
+			<td>
+				@Html.DisplayFor(modelItem => item.DisplayDate)
+			</td>
+
+			<td class="text-center">
+				@if (item.IsActive)
+				{
+					<i class="fas fa-check"></i><br />
+				}
+				else
+				{
+					<i class="fas fa-times"></i>
+				}
+
+			</td>
+			<td class="narrow-130">
+				<div style="max-width: 14px; display:inline-block">
+					<span class="src-copied" style="display:none; color:#9EC411"><i class="far fa-check-circle"></i></span>
+				</div>
+				<div style="max-width:100px;display:inline-block">
+					<a href="#" class="copy-material-path"
+					   data-material-id="@item.MaterialId">
+						<i class="fas fa-clone"></i>
+					</a> &nbsp;&nbsp;
+					<a asp-action="Edit" asp-route-id="@item.MaterialId"><i class="far fa-edit"></i></a>&nbsp;&nbsp;
+					<form asp-action="Delete" style="display: inline" asp-route-id="@item.MaterialId">
+						<i class="submit index far fa-times-circle" style="color:rgb(0, 123, 255)"></i>
+					</form>
+				</div>
+			</td>
+		</tr>}
+	</tbody>
+</table>
+<script src="~/js/materialView.js" asp-append-version="true"> </script>

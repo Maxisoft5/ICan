@@ -1,0 +1,28 @@
+﻿@model ICan.Common.Models.Opt.SiteFilterProductModel
+
+@{
+	Layout = null;
+}
+<form method="post" asp-action="EditFilterProduct" class="universal-modal-form">
+	<div class="row">
+		<dix class="col-md-12">
+			<div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+			@Html.HiddenFor(Model => Model.SiteFilterId)
+			@Html.HiddenFor(Model => Model.SiteFilterProductId)
+			@Html.HiddenFor(Model => Model.ProductId)
+
+			<div class="form-group">
+				<label asp-for="ProductId" class="control-label"></label>
+				<sup><i class="fas fa-asterisk" style="font-size: 10px; color: red"></i></sup><br />
+				@Html.DisplayFor(m => m.Product.DisplayName)
+			</div>
+			<div class="form-group">
+				<label asp-for="Order" class="control-label"></label>
+				<sup><i class="fas fa-asterisk" style="font-size: 10px; color: red"></i></sup><br />
+				@Html.TextBoxFor(Model => Model.Order, new { @class = "form-control", @type = "number" })
+				<span class="text-danger field-validation-error" data-valmsg-for="Order" data-valmsg-replace="true"> </span>
+			</div>
+		</dix>
+	</div>
+</form>

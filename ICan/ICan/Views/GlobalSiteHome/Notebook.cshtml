@@ -1,0 +1,208 @@
+﻿@model ICan.Common.Models.Opt.SiteProductModel
+
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
+
+@{ 
+	Layout = "_SiteLayout.cshtml";
+	ViewData["Title"] = $"{Model.SiteName} {Model.RegionalName}"; 
+}
+
+<main class="product-main" itemscope itemtype="http://schema.org/Product">
+	<div class="carousel-wrapper">
+		<div id="carousel-products" class="carousel slide carousel-products" data-ride="carousel">
+			<div class="carousel-inner" role="listbox">
+				@if (Model.SmallGalleryImages != null && Model.SmallGalleryImages.Any())
+				{
+					var images = Model.SmallGalleryImages.ToArray();
+					for (int i = 0; i < images.Length; i++)
+					{
+						var activeClass = i == 0 ? "active" : "";
+						var path = $"{Model.BucketUrl}/{images[i].FileName}";
+						<div class="item @activeClass" data-number="@i">
+							<div class="item-center">
+								<img class="item-img" src="@path" itemprop="image">
+							</div>
+						</div>}
+				}
+			</div>
+
+			<a class="left carousel-control" href="#carousel-products" role="button" data-slide="prev">
+				<span class="glyphicon glyphicon-menu-left" aria-hidden="true"></span>
+			</a>
+			<a class="right carousel-control" href="#carousel-products" role="button" data-slide="next">
+				<span class="glyphicon glyphicon-menu-right" aria-hidden="true"></span>
+			</a>
+			<div class="indicator-wrapper">
+				<ol class="carousel-indicators">
+					<li data-target="#carousel-products" data-slide-to="0" class="active"></li>
+					<li data-target="#carousel-products" data-slide-to="1"></li>
+					<li data-target="#carousel-products" data-slide-to="2"></li>
+					<li data-target="#carousel-products" data-slide-to="3"></li>
+					<li data-target="#carousel-products" data-slide-to="4"></li>
+					<li data-target="#carousel-products" data-slide-to="5"></li>
+					<li data-target="#carousel-products" data-slide-to="6"></li>
+					<li data-target="#carousel-products" data-slide-to="7"></li>
+				</ol>
+				@if (!string.IsNullOrWhiteSpace(Model.VideoFileName))
+				{<img class="video-icon-circle" src="~/assets/play.svg" />}
+			</div>
+		</div>
+		<div class="product-tab">
+			<ul class="nav nav-tabs nav-tabs--uk" role="tablist">
+				<li role="presentation" class="active">
+					<a href="#description" aria-controls="description" role="tab" data-toggle="tab">
+						@Localizer["Book description"]
+
+					</a>
+				</li>
+				<li role="presentation"><a href="#information" aria-controls="information" role="tab" data-toggle="tab">@Localizer["Details"]</a></li>
+			</ul>
+			<div class="tab-content">
+				<div role="tabpanel" class="tab-pane tab-pane--global active" id="description">
+					<h2 class="tab-heading" itemprop="name">
+						@Model.SiteName
+					</h2>
+					<h2 class="tab-heading" itemprop="name">
+						@Model.ProductSeriesSiteName
+					</h2>
+					<div itemprop="description">
+						@Html.Raw(@Model.Description)
+					</div>
+					<div class="drop-down closed">more</div>
+				</div>
+				<div role="tabpanel" class="tab-pane tab-pane--global" id="information">
+					<h2 class="tab-heading">
+						@Model.SiteName
+					</h2>
+					<h2 class="tab-heading">
+						@Model.ProductSeriesSiteName
+					</h2>
+					@Html.Raw(@Model.Information)
+					<div class="drop-down closed">more</div>
+				</div>
+			</div>
+			<div class="marketplace-rating marketplace-rating--global">
+
+				@if (Model.AmazonUkMarketPlaceProduct?.Price != null)
+				{
+			<div class="marketplace-rating-item marketplace-rating-item--global" itemprop="offers" itemscope itemtype="http://schema.org/Offer">
+				<div>
+					<div itemprop="aggregateRating" itemscope itemtype="https://schema.org/AggregateRating">
+					<a
+						href="@Model.AmazonUkMarketPlaceProduct?.Url"
+						class="gtm-watch"
+						data-event-name="amUK-notebook"
+						target="_blank"
+						itemprop="ratingValue"
+					>
+						@{ var actingRating =  Model.AmazonUkMarketPlaceProduct?.Raiting ?? 0;
+						<partial name="_ProductRate" model="@actingRating" />
+							}
+					</a>
+					<a href="@Model.AmazonUkMarketPlaceProduct?.Url" class="gtm-watch" data-event-name="amUK-notebook" target="_blank">
+						<p class="quantity-reviews">
+							<span itemprop="reviewCount">@(Model.AmazonUkMarketPlaceProduct?.ReviewsAmount ?? 0)</span>
+							<span>@(Model.AmazonUkMarketPlaceProduct?.ReviewsAmountDescr)</span>
+						</p>
+					</a>
+					</div>
+					<a href="@Model.AmazonUkMarketPlaceProduct?.Url" class="gtm-watch" data-event-name="amUK-notebook" target="_blank">
+						<p class="marketplace-rating-price">
+							<span>@(Model.AmazonUkMarketPlaceProduct?.DisplayPriceAndCurrency)</span>
+							<meta itemprop="price" content="@(Model.AmazonUkMarketPlaceProduct?.DisplayPrice)">
+							<meta itemprop="priceCurrency" content="@(Model.AmazonUkMarketPlaceProduct?.DisplayPriceAndCurrency)">
+						</p>
+					</a>
+				</div>
+				<div class="marketplace-rating--amazon">
+					<a class="marketplace-link-rating gtm-watch" data-event-name="amUK-notebook" href="@Model.AmazonUkMarketPlaceProduct?.Url" target="_blank">
+						<img class="marketplace-rating-img--global" src="~/assets/amazon-market-place.svg">
+					</a>
+				</div>
+			</div>}
+			</div>
+		</div>
+	</div>
+	<div class="product-description">
+		@Html.Raw(Model.LongDescription)
+	</div>
+</main>
+<div class="footer-desktop-wrapper footer-desktop-wrapper-product">
+	<div class="footer-desktop">
+		<div class="footer-desktop-description">
+			<div class="footer-description-text footer-description-text--uk">
+				<h2 class="footer-description-text-heading">ACTIVITY BOOK SERIES</h2>
+			</div>
+		</div>
+		<div class="footer-publishing">
+			<p class="footer-publishing-text">© 2022 Yamogu Ltd.</p>
+			<p class="footer-publishing-text">All Rights Reserved</p>
+		</div>
+		<div class="footer-telephone">
+			<p class="footer-telephone-number">info@yamogu.uk</p>
+		</div>
+	</div>
+</div>
+<div class="modal fade" id="products-popup" tabindex="-1" role="dialog" aria-labelledby="products-popupLabel">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close cross-close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+
+			</div>
+			<div class="modal-body">
+				<div id="carousel-popup" class="carousel slide" data-ride="carousel">
+					<div class="carousel-inner" role="listbox">
+
+						@if (Model.BigGalleryImages != null && Model.BigGalleryImages.Any())
+						{
+							var images = Model.BigGalleryImages.ToArray();
+							@for (int i = 0; i < images.Length; i++)
+							{
+								var path = $"{Model.BucketUrl}/{images[i].FileName}";
+
+								var activeClass = i == 0 ? "active" : "";
+
+								<div class="item @activeClass">
+									<div class="item-center">
+										<figure class="zoom" onmousemove='zoom(event)' onmouseleave='clearBackground(event)'>
+											<img class="item-img" data-target="#carousel-popup" src="@path" />
+										</figure>
+									</div>
+								</div>}}
+					</div>
+					<div class="arrow-control-wrapper">
+						<div class="arrow-control">
+							<a class="left carousel-control" href="#carousel-popup" role="button" data-slide="prev">
+								<span class="glyphicon glyphicon-menu-left arrow-swipe" aria-hidden="true"></span>
+							</a>
+							<a class="right carousel-control" href="#carousel-popup" role="button" data-slide="next">
+								<span class="glyphicon glyphicon-menu-right arrow-swipe" aria-hidden="true"></span>
+							</a>
+						</div>
+					</div>
+					<div class="indicator-wrapper">
+						<ol class="carousel-indicators">
+							<li data-target="#carousel-popup" data-slide-to="0" class="active"></li>
+							<li data-target="#carousel-popup" data-slide-to="1"></li>
+							<li data-target="#carousel-popup" data-slide-to="2"></li>
+							<li data-target="#carousel-popup" data-slide-to="3"></li>
+							<li data-target="#carousel-popup" data-slide-to="4"></li>
+							<li data-target="#carousel-popup" data-slide-to="5"></li>
+							<li data-target="#carousel-popup" data-slide-to="6"></li>
+							<li data-target="#carousel-popup" data-slide-to="7"></li>
+						</ol>
+						@if (!string.IsNullOrWhiteSpace(Model.VideoFileName))
+						{<img class="video-icon-circle" src="~/assets/play.svg" />}
+					</div>
+				</div>
+				<div class="video-wrapper hidden">
+					<video class="video" controls src="@Model.VideoFileFullPath"></video>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<div class="is-large"></div>
+<script src="~/js/sitehome/product.js" asp-append-version="true"></script>

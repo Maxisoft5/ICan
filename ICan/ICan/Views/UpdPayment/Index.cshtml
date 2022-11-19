@@ -1,0 +1,65 @@
+﻿@model ICan.Common.Models.Opt.UpdCheckData
+@{ ViewData["Title"] = "Оплаты"; }
+
+@await Html.PartialAsync("_UnboundCarried", Model.Unbound)
+
+<h2>Оплаты</h2>
+<span class="text-success">@TempData["StatusMessage"]</span>
+<span class="alert-danger">@TempData["ErrorMessage"]</span>
+
+@if (Model.GrouppedUpds != null && Model.GrouppedUpds.Any())
+{
+<table class="table">
+	<thead>
+		<tr>
+			<th>
+				УПД
+			</th>
+			@foreach (var month in Model.Months)
+			{
+				<th>
+					@month
+				</th>
+			}
+			<th></th>
+		</tr>
+	</thead>
+	<tbody>
+		@foreach (var item in Model.GrouppedUpds)
+		{
+			 
+		<tr >
+			<td>
+				@item.Key
+			</td>
+			@foreach (var month in Model.Months)
+			{
+			<td>
+				@foreach (var upd in item.Where(up => up.ExpectingPaymentMontYear == month).OrderBy(up => up.ExpectingPaymentDate))
+				{
+				<form method="post" asp-action="CarryPayment">
+					<input type="hidden" name="ReportNums" value="@upd.DisplayReportNums" />
+					<input type="hidden" name="ReportYear" value="@upd.ReportDate.Year" />
+					<div style="display:inline;" title="УПД: @upd.DisplayReportNums">
+						@upd.TotalSum.ToString("N2") / @upd.ExpectingPaymentDate.Day
+					</div>
+					<button class="btn btn-link carry-upd-payment" style="margin-top: -5px;"
+							type="button" data-expecting-month="@upd.ExpectingPaymentMontYear" data-sum="@upd.TotalSum">
+						<i class="fas fa-hand-holding-usd" title="Провести" style="font-size: large;"></i>
+					</button>
+
+				</form>
+				}
+			</td>
+			}
+		</tr>
+		}
+	</tbody>
+</table>
+}
+else
+{
+	<span>Нет данных для отображения</span>
+}
+
+<script src="~/js/updpayment.js" asp-append-version="true"></script>

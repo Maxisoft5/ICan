@@ -1,0 +1,51 @@
+﻿@{ var title = "Добавление инвентаризации";
+				ViewData["Title"] = title; }
+<h2>@title</h2>
+<hr />
+@model ICan.Common.Models.Opt.WarehouseModel
+<div class="row">
+	<div class="col-md-4">
+		<form asp-action="AddInventory">
+			@Html.HiddenFor(model => model.WarehouseTypeId)
+			<div class="form-group" style="margin-top:5px;">
+				<label class="control-label">Комментарий</label>
+				<textarea name="comment" class="form-control"></textarea>
+			</div>
+
+			<table class="table table-responsive-md">
+				<thead>
+					<tr>
+						<th scope="col">Товар</th>
+						<th scope="col" style="text-align:right;">Количество </th>
+					</tr>
+				</thead>
+				<tbody>
+					@{ var rowNum = 0;}
+					@foreach (var warehouseItem in Model.WarehouseItems)
+					{
+						<tr>
+							<td>
+								@Html.DisplayFor(modelItem => warehouseItem.ObjectDisplayName)
+								<input type="hidden" value="@warehouseItem.ObjectId" name="WarehouseItems[@(rowNum)].ObjectId" />
+							</td>
+							<td style="text-align:right;">
+								<input type="number" step="1" min="0" max="1000000" name="WarehouseItems[@(rowNum)].Amount"
+									   placeholder="0" class="wh-item input-nullable" value="@warehouseItem.Amount"
+									   oninput="checkValidLetters(this)" onfocus="removeZero(this)" />
+							</td>
+						</tr>
+					rowNum++;
+				}
+				</tbody>
+			</table>
+
+			<div class="form-group">
+				<input type="submit" value="Сохранить" class="btn btn-default" />
+			</div>
+		</form>
+	</div>
+</div>
+<div>
+	<a asp-action="Index">Назад к списку</a>
+</div>
+

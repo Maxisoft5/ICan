@@ -1,0 +1,197 @@
+﻿@model ICan.Common.Models.Opt.PaperOrderModel
+
+@{
+	var title = "Редактирование заказа бумаги";
+	ViewData["Title"] = title;
+}
+
+<h2>@title</h2>
+
+<span class="text-success">@TempData["StatusMessage"]</span>
+<span class="alert-danger">@TempData["ErrorMessage"]</span>
+<hr />
+
+<ul class="nav nav-tabs">
+    <li class="nav-item">
+        <a class="nav-link active"
+           id="main-tab" data-toggle="tab" href="#edit-order" role="tab" aria-controls="main-info" aria-selected="true">Редактирование</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link"
+           id="payment-tab" data-toggle="tab" href="#report" role="tab"
+           aria-controls="payment-info" aria-selected="false">Отчёт</a>
+    </li>
+</ul>
+
+<br />
+
+<div class="tab-content" id="printOrderTabContent">
+    <div class="tab-pane fade show active" id="edit-order" role="tabpanel" aria-labelledby="main-tab">
+        <div class="row">
+            <div class="col-md-7">
+                <form asp-action="Edit">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    <input asp-for="PaperOrderId" hidden class="form-control" />
+
+                    <div class="form-group">
+                        <label asp-for="OrderDate" class="control-label"></label>
+                        <sup><i class="fas fa-asterisk" style="font-size: 10px; color: red"></i></sup><br />
+                        <input asp-for="OrderDate" class="form-control" />
+                        <span class="text-danger field-validation-error" data-valmsg-for="OrderDate" data-valmsg-replace="true"> </span>
+                    </div>
+
+                    <div class="form-group">
+                        <label asp-for="PaperId" class="control-label"></label>
+                        <sup><i class="fas fa-asterisk" style="font-size: 10px; color: red"></i></sup><br />
+                        @if (Model.CanEditPaperType)
+                        {
+                            @Html.DropDownListFor(model => model.PaperId, (IEnumerable<SelectListItem>)ViewData["PaperId"],
+                                                     null, new { @class = "form-control", style = "width:400px", id = "paperId" })
+                        }
+                        else
+                        {
+                            @Html.DropDownListFor(model => model.PaperId, (IEnumerable<SelectListItem>)ViewData["PaperId"],
+                                             null, new { @class = "form-control", style = "width:400px", disabled = "disabled", id = "paperId" })
+                            <input type="hidden" asp-for="PaperId" />
+                        }
+                    </div>
+
+                    <div class="form-group">
+                        <label asp-for="FormatId" class="control-label"></label>
+                        <sup><i class="fas fa-asterisk" style="font-size: 10px; color: red"></i></sup><br />
+                        @Html.DropDownListFor(model => model.FormatId, (IEnumerable<SelectListItem>)ViewData["FormatId"],
+                               null, new { @class = "form-control", style = "width:400px", id = "formatId" })
+                    </div>
+
+                    <div class="form-group">
+                        <label asp-for="OrderSum" class="control-label"></label><sup><i class="fas fa-asterisk" style="font-size: 10px; color: red"></i></sup><br />
+                        <input asp-for="OrderSum" class="form-control" />
+                        <span class="text-danger field-validation-error" data-valmsg-for="OrderSum" data-valmsg-replace="true"> </span>
+                    </div>
+
+                    <div class="form-group">
+                        <label asp-for="SheetCount" class="control-label"></label><sup><i class="fas fa-asterisk" style="font-size: 10px; color: red"></i></sup><br />
+                        <input asp-for="SheetCount" class="form-control" />
+                        <span class="text-danger field-validation-error" data-valmsg-for="SheetCount" data-valmsg-replace="true"> </span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Weight" class="control-label"></label><sup><i class="fas fa-asterisk" style="font-size: 10px; color: red"></i></sup><br />
+                        <input asp-for="Weight" class="form-control" />
+                        <span class="text-danger field-validation-error" data-valmsg-for="SheetCount" data-valmsg-replace="true"> </span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="SheetPriceRoundedFormatted" class="control-label"></label><sup><i class="fas fa-asterisk" style="font-size: 10px; color: red"></i></sup><br />
+                        <input asp-for="SheetPriceRoundedFormatted" class="form-control" disabled />
+                        <span class="text-danger field-validation-error" data-valmsg-for="SheetPriceRoundedFormatted" data-valmsg-replace="true"> </span>
+                    </div>
+
+                    <div class="form-group">
+                        <label asp-for="InvoiceNum" class="control-label"></label><br />
+                        <input asp-for="InvoiceNum" class="form-control" />
+                        <span class="text-danger field-validation-error" data-valmsg-for="InvoiceNum" data-valmsg-replace="true"> </span>
+                    </div>
+
+                    <div class="form-group">
+                        <label asp-for="InvoiceDate" class="control-label"></label><br />
+                        <input asp-for="InvoiceDate" class="form-control" />
+                        <span asp-validation-for="InvoiceDate" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <label asp-for="PaymentDate" class="control-label"></label><br />
+                        <input asp-for="PaymentDate" class="form-control" disabled />
+                        <span class="text-danger field-validation-error" data-valmsg-for="PaymentDate" data-valmsg-replace="true"> </span>
+                    </div>
+
+                    <div class="form-group" style="display:flex; flex-flow:column;  align-items:flex-start">
+                        <label asp-for="IsPaid" class="control-label"></label>
+                        <input asp-for="IsPaid" class="form-control left-aligned-checkbox" />
+                        <span asp-validation-for="IsPaid" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <label asp-for="PaidSum" class="control-label"></label><br />
+                        <input asp-for="PaidSum" class="form-control" />
+                        <span class="text-danger field-validation-error" data-valmsg-for="PaidSum" data-valmsg-replace="true"> </span>
+                    </div>
+
+
+                    <div class="form-group">
+                        <label asp-for="SupplierCounterPartyId" class="control-label"></label>
+                        <sup><i class="fas fa-asterisk" style="font-size: 10px; color: red"></i></sup><br />
+
+                        @Html.DropDownListFor(model => model.SupplierCounterPartyId, (IEnumerable<SelectListItem>)ViewData["SupplierCounterPartyId"],
+                               null, new { @class = "form-control", style = "width:400px", id = "supplierCounterPartyId" })
+                    </div>
+
+                    <input asp-for="RecieverCounterPartyId" class="form-control" value="@Model.RecieverCounterPartyId" hidden />
+
+                    <div class="form-group">
+                        <label asp-for="Comment" class="control-label"></label>
+                        <textarea asp-for="Comment" rows="3" class="form-control"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <input type="submit" value="Сохранить" class="btn btn-default" />
+                    </div>
+                </form>
+            </div>
+            <div class="col-md-5">
+                <h4>Приход</h4>
+                @if (Model.PaperOrderIncomings != null && Model.PaperOrderIncomings.Any())
+                {
+                    @foreach (var incoming in Model.PaperOrderIncomings)
+                    {
+                        <div class="row">
+                            <span class="col-md-3">@incoming.IncomingDate</span>
+                            <span class="col-md-2 text-center">@incoming.Amount</span>
+                            <span class="col-md-5 text-center">@incoming.WarehouseTypeName</span>
+                            <div class="col-2">
+                                <a href="#" class="delete-order-income" data-paper-order-incoming-id="@(incoming.PaperOrderIncomingId)">
+                                    <i class="index far fa-times-circle" style="color:rgb(0, 123, 255)"></i>
+                                </a>
+                            </div>
+                        </div>
+                    }
+                }
+                <div class="form-group">
+                    <button class="btn btn-link add-paper-order-incoming" type="button">Добавить приход</button>
+                </div>
+            </div>
+        </div>
+
+        <div>
+            <a asp-action="Index">Назад к списку</a>
+        </div>
+
+        <div class="modal fade add-incoming-modal" tabindex="-1" role="dialog">
+            <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Добавление прихода</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+
+                    <div class="modal-body" style="display: flex;flex-flow: column;">
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary add-incoming-modal_save">Сохранить</button>
+                        <button type="button" class="btn btn-outline-dark modal-close" data-dismiss="modal">Закрыть</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="tab-pane fade" id="report" role="tabpanel" aria-labelledby="payment-tab">
+        @await Html.PartialAsync("_PaperOrderReport", Model)
+    </div>
+</div>
+
+
+<script src="~/js/paperOrder.js"></script>
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
+

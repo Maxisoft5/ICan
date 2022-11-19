@@ -1,0 +1,103 @@
+﻿@model ICan.Common.Models.Opt.ProductListModel
+@inject SignInManager<ApplicationUser> SignInManager
+@{
+	ViewData["Title"] = "Товары";
+
+	bool.TryParse(ViewData["IsAdmin"]?.ToString(), out var isAdmin);
+	bool.TryParse(ViewData["IsStoreKeeper"]?.ToString(), out var isStoreKeeper);
+	bool.TryParse(ViewData["IsOperator"]?.ToString(), out var isOperator);
+	bool.TryParse(ViewData["IsAssembler"]?.ToString(), out var isAssembler);
+	var isClient = !isAdmin && !isOperator && !isStoreKeeper && !isAssembler;
+
+	int.TryParse(ViewData["ClientType"]?.ToString(), out var clientType);
+	var showWarning = clientType == 0 && SignInManager.IsSignedIn(User) && isClient;
+}
+<link rel="stylesheet" href="~/css/html-hint.min.css" />
+<h2>Товары</h2>
+
+<span class="text-success">@TempData["StatusMessage"]</span>
+<span class="alert-danger">@TempData["ErrorMessage"]</span>
+
+@if (isAdmin || isOperator)
+{
+	<p>
+		<a asp-action="Create">Создать</a>
+		| <a href="#" class="import-link" data-toggle="modal" data-target="#uploadModal">
+			Импорт<i class="fas fa-file-excel"></i>
+		</a>
+		@*| <a href="#" id="order-link">
+			Сделать заказ
+		</a>*@
+	</p>
+	<p>
+		<div class="form-group client" display="none">
+			@Html.Label("selectedClient", "Клиент")
+			<sup><i class="fas fa-asterisk" style="font-size: 10px; color: red"></i></sup>
+			@Html.DropDownList("clientDropDown", Model.Clients, new { id = "clientId",@class="form-control",  onchange = "getProducts(this)" })
+			<span id="clientIdWarning" class="text-danger" style=""></span>
+		</div>
+	</p>
+}
+
+
+@if (SignInManager.IsSignedIn(User))
+{
+	if (showWarning)
+	{
+		<br />
+		<br />
+		<br />
+		<br />
+		<p style="font: bolder; font-size:larger"> Для оформления заказа напишите, пожалуйста,  письмо на адрес <a href="mailto:opt@yamogu.ru">opt@yamogu.ru</a> </p>
+		<br />
+		<br />
+		<br />
+		<br />
+	}
+	else
+	{
+		<div id="product-model">
+			@await Html.PartialAsync("_ProductList", Model)
+
+		</div>
+	}
+}
+else
+{
+	<p>
+		<h5 style="text-align:center">Для просмотра товаров, пожалуйста, авторизуйтесь на сайте</h5>
+		<img src="~/images/baner-v-pisma.jpg" alt="Наши тетради" style="align-self: center; max-width: 100%; max-height: 100%;" />
+	</p>
+}
+<intput type="hidden" class="active-discount-event" value="@Model?.ActiveEvent?.EventId" />
+
+@await Html.PartialAsync("_PriceListUpload")
+@section Scripts{
+	<script src="~/js/order.js" type="text/javascript" asp-append-version="true"></script>
+
+	<script>
+		var showOrder = "@(isAdmin||isOperator)".toLowerCase() == "false";
+		setVisibility(showOrder);
+
+		var discount = "@(Model?.ActiveEvent?.DiscountPercent)";
+		$(".client").toggle();
+
+		//$("#order-link").on("click", function () {
+		//				showOrder ="true";
+		//				setVisibility(showOrder);
+		//				$(".client").toggle();
+		//});
+
+		function getProducts(e) {
+			var elm = $(e);
+			var clientId = elm.val();
+			$.get('@Url.Action("GetModel","Product")' + "?clientId=" + clientId, function (html) {
+
+				$("#product-model").html(html);
+				$(".order-num").show();
+				$(".order-amount").show();
+			});
+			}
+	</script>
+
+}

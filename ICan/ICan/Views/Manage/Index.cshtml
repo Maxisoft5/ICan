@@ -1,0 +1,106 @@
+﻿@using ICan.Common.Models.Enums
+@model ClientModel
+@{
+	ViewData["Title"] = "Учётная запись";
+	ViewData.AddActivePage(ManageNavPages.Index);
+	bool.TryParse(ViewData["IsAdmin"]?.ToString(), out var isAdmin);
+	bool.TryParse(ViewData["IsStoreKeeper"]?.ToString(), out var isStoreKeeper);
+	bool.TryParse(ViewData["IsOperator"]?.ToString(), out var isOperator);
+	var canSetShop = isAdmin || isOperator;
+	var returnUrl = @Context.Request.Query["returnurl"];
+}
+<br />
+<h4>@ViewData["Title"]</h4>
+@await Html.PartialAsync("_StatusMessage", Model.StatusMessage)
+<div class="row">
+	<div class="col-md-6">
+        <form method="post" asp-route-returnirl="@returnUrl">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input asp-for="Id" hidden />
+            <div class="form-group">
+                <label asp-for="Username"></label>
+                <input asp-for="Username" class="form-control" disabled />
+                <input asp-for="Username" type="hidden" />
+            </div>
+            <div class="form-group">
+                <label asp-for="LastName"></label>
+                <input asp-for="LastName" class="form-control" />
+            </div>
+            <div class="form-group">
+                <label asp-for="FirstName"></label>
+                <input asp-for="FirstName" class="form-control" />
+            </div>
+            <div class="form-group">
+                <label asp-for="Email"></label>
+                @if (Model.IsEmailConfirmed)
+                {
+                    <div class="input-group">
+                        <input asp-for="Email" class="form-control" />
+                        <span class="input-group-addon" aria-hidden="true"><span class="glyphicon glyphicon-ok text-success"></span></span>
+                    </div>
+                }
+                else
+                {
+                    <input asp-for="Email" class="form-control" />
+                    <button asp-action="SendManualRegisterEmail"
+                            type="submit" class="btn btn-link">
+                        Повторить письмо о регистрации
+                    </button>
+                }
+                <span asp-validation-for="Email" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="PhoneNumber"></label>
+                <input asp-for="PhoneNumber" class="form-control" />
+                <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="DateRegistration"></label>
+                <input asp-for="DateRegistration" class="form-control" disabled/>
+                <span asp-validation-for="DateRegistration" class="text-danger"></span>
+            </div>
+
+            @if (isAdmin || isOperator)
+            {
+                <div class="form-group">
+                    <label asp-for="ClientType"></label>
+                    <select id="clientType" asp-for="ClientType" class="form-control" asp-items="Html.GetEnumSelectList<ClientType>()"></select>
+                </div>
+            }
+            else
+            {
+                <input type="hidden" asp-for="ClientType" />
+            }
+            @if (canSetShop)
+            {
+                <div class="shopList">
+                    <div class="form-group">
+                        <label asp-for="ShopIds"></label><br />
+                        @if (Model.ApplicationUserShopRelations != null && Model.ApplicationUserShopRelations.Any())
+                        {
+                            foreach (var shop in Model.ApplicationUserShopRelations.Select(x => x.Shop))
+                            {
+                                <div class="form-group">
+                                    <input class="existing-shop" value="@shop.ShopId" hidden />
+                                    <span style="width:calc(100% - 50px); display:inline-block">@shop.Name</span>
+                                    <a href="#" class="unbind-shop" data-shopId="@shop.ShopId">
+                                        <i class="index far fa-times-circle" style="color:rgb(0, 123, 255)"></i>
+                                    </a>
+                                </div>
+                            }
+                        }
+                    </div>
+                </div>
+
+                <div class="form-group" style="margin-top:20px">
+                    <button class="btn btn-link add-shop" type="button">Добавить магазин</button>
+                </div>
+            }
+            <button asp-action="Index" type="submit" class="btn btn-default">Сохранить</button>
+        </form>
+	</div>
+</div>
+@section Scripts {
+	@await Html.PartialAsync("_ValidationScriptsPartial")
+}
+<script src="~/js/manage.js"></script>

@@ -1,0 +1,92 @@
+﻿@model IEnumerable<ICan.Common.Models.Opt.NotchOrderModel>
+
+@{
+	var title = "Заказ надсечки";
+	ViewData["Title"] = title;
+}
+<h2>@title</h2>
+
+<span class="text-success">@TempData["StatusMessage"]</span>
+<span class="alert-danger">@TempData["ErrorMessage"]</span>
+
+<p>
+	<a asp-action="Create">Создать</a>
+</p>
+
+<table class="table"
+	   data-toggle="table"
+	   data-search="true"
+	   data-filter-control="true"
+	   data-show-search-clear-button="true">
+	<thead>
+		<tr>
+			<th data-field="NotchOrderNumber" data-sortable="true"
+				data-filter-control="input" data-sorter="datesSorter"
+				class="narrow-200">
+				@Html.DisplayNameFor(model => model.NotchOrderNumber)
+			</th>
+
+			<th data-field="OrderDate"
+				data-sortable="true"
+				data-sorter="datesTimeSorter"
+				data-filter-control="input">
+				@Html.DisplayNameFor(model => model.OrderDate)
+			</th>
+			<th data-field="NotchOrderItemsDisplay"
+				data-sortable="true"
+				data-filter-control="input">
+
+				@Html.DisplayNameFor(model => model.NotchOrderItemsDisplay)
+			</th>
+			<th data-field="OrderSum"
+				data-sortable="true"
+				data-filter-control="input">
+				@Html.DisplayNameFor(model => model.OrderSum)
+			</th>
+			<th data-field="ShipmentSum"
+				data-sortable="true"
+				data-filter-control="input">
+
+				@Html.DisplayNameFor(model => model.ShipmentSum)
+			</th>
+			<th data-field="ShipmentDate"
+				data-sortable="true"
+				data-filter-control="input" 
+				data-sorter="datesSorter">
+				@Html.DisplayNameFor(model => model.ShipmentDateFormatted)
+			</th>
+			<th></th>
+		</tr>
+	</thead>
+	<tbody>
+		@foreach (var item in Model)
+		{
+			<tr>
+				<td>
+					@Html.DisplayFor(modelItem => item.NotchOrderNumber)
+				</td>
+				<td>
+					@Html.DisplayFor(modelItem => item.OrderDate)
+				</td>
+				<td>
+					@Html.Raw(item.NotchOrderItemsDisplay)
+				</td>
+				<td class="number-cell">
+					@Html.Raw(item.OrderSum)
+				</td>
+				<td class="number-cell">
+					@Html.Raw(item.ShipmentSum)
+				</td>
+				<td>
+					@Html.Raw(item.ShipmentDateFormatted)
+				</td>
+				<td>
+					<a asp-action="Edit" asp-route-id="@item.NotchOrderId" class="buttons"><i class="far fa-edit"></i></a>
+					<form asp-action="Delete" asp-route-id="@item.NotchOrderId" style="display: inline">
+						<i class="submit index far fa-times-circle" style="color:rgb(0, 123, 255)"></i>
+					</form>
+				</td>
+			</tr>
+		}
+	</tbody>
+</table>

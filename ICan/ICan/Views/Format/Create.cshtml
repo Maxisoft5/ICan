@@ -1,0 +1,39 @@
+﻿@model ICan.Common.Models.Opt.FormatModel
+
+@{
+	ViewData["Title"] = "Формат";
+}
+
+<h2>Создание записи</h2>
+
+<hr />
+<div class="row">
+	<div class="col-md-4">
+		<form asp-action="Create">
+			<div asp-validation-summary="ModelOnly" class="text-danger"></div>
+			<div class="form-group">
+				<label asp-for="Name" class="control-label"></label>
+				<sup><i class="fas fa-asterisk" style="font-size: 10px; color: red"></i></sup>
+				<input asp-for="Name" class="form-control" />
+				<span asp-validation-for="Name" class="text-danger"></span>
+			</div>
+		   
+			<div class="form-group">
+				<label asp-for="Description" class="control-label"></label>
+				@Html.TextAreaFor(model => model.Description, new { @class = "form-control" })
+				<span asp-validation-for="Description" class="text-danger"></span>
+			</div>
+			<div class="form-group">
+				<input type="submit" value="Создать" class="btn btn-default" />
+			</div>
+		</form>
+	</div>
+</div>
+
+<div>
+	<a asp-action="Index">Назад к списку</a>
+</div>
+
+@section Scripts {
+	@{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

@@ -1,0 +1,50 @@
+﻿@model IEnumerable<ICan.Common.Models.Opt.PaperModel>
+
+@{ ViewData["Title"] = "Бумага"; }
+
+<h2>Бумага</h2>
+
+<span class="text-success">@TempData["StatusMessage"]</span>
+<span class="alert-danger">@TempData["ErrorMessage"]</span>
+
+<p>
+	<a asp-action="Create">Создать</a>
+</p>
+<table class="table">
+	<thead>
+		<tr>
+			<th style="max-width:200px">
+				@Html.DisplayNameFor(model => model.Name)
+			</th>
+			<th style="max-width:220px">
+				@Html.DisplayNameFor(model => model.TypeOfPaperDisplayName)
+			</th>
+			<th style="max-width:220px">
+				@Html.DisplayNameFor(model => model.Description)
+			</th>
+			<th></th>
+		</tr>
+	</thead>
+	<tbody>
+		@foreach (var item in Model)
+		{
+<tr>
+	<td>
+		@Html.DisplayFor(modelItem => item.Name)
+	</td>	<td>
+		@Html.DisplayFor(modelItem => item.TypeOfPaperDisplayName)
+	</td>
+
+	<td style="max-width:250px">
+		@Html.DisplayFor(modelItem => item.Description)
+	</td>
+	<td>
+		<a asp-action="Edit" asp-route-id="@item.PaperId"><i class="far fa-edit"></i></a> |
+		<a asp-controller="PaperWarehouse" asp-action="PaperWarehouseState" asp-route-id="@item.PaperId"><i class="fas fa-warehouse"></i></a> |
+		<form asp-action="Delete" style="display: inline" asp-route-id="@item.PaperId">
+			<i class="submit index far fa-times-circle" style="color:rgb(0, 123, 255)"></i>
+		</form>
+	</td>
+</tr>}
+	</tbody>
+</table>

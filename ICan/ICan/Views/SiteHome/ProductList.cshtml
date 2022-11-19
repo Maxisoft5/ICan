@@ -1,0 +1,74 @@
+﻿@model Dictionary<ICan.Common.Domain.OptProductseries, List<ICan.Common.Models.Opt.SiteProductModel>>
+
+@{
+	var title = "Тетради на сайте";
+	ViewData["Title"] = title;
+}
+<br />
+<span class="text-success">@TempData["StatusMessage"]</span>
+<span class="alert-danger">@TempData["ErrorMessage"]</span>
+
+<div class="row">
+	<div class="col-2">
+		<a href="@Url.Action("Index")" target='_blank'>Превью сайта</a>
+
+	</div>
+	<div class="col-3">
+		<a href="#" class="upload-marketplace-file">
+			Загрузить файл с информацией о маркетплейсах
+		</a>
+	</div>
+	
+	<div class="col-3">
+		<form method="post" asp-action="RunWbParseJob">
+			<button class="btn btn-link" run-wb-job">
+				Запустить сбор цен на WB
+			</button>
+		</form>		
+	</div>
+	<div class="col-3">
+		<form method="post" asp-action="RunOzonParseJob">
+			<button class="btn btn-link" run-wb-job">
+				Запустить сбор цен на Ozon
+			</button>
+		</form>		
+	</div>
+</div>
+
+<hr />
+<table class="table table-responsive-md" style="margin-top:10px;">
+	<thead>
+		<tr>
+			<th scope="col">Товар</th>
+			<th scope="col">@*Служебное**@</th>
+		</tr>
+	</thead>
+	<tbody>
+		@foreach (var group in Model)
+		{
+			<tr>
+				<td style="cursor: pointer; background-color: #dee2e6" colspan="2"
+					data-toggle="collapse" aria-expanded="true"
+					data-target=".multi-collapse@(group.Key.ProductSeriesId)">
+					@group.Key.Name
+				</td>
+			</tr>
+			foreach (var item in group.Value)
+			{
+				<tr class="multi-collapse@(group.Key.ProductSeriesId) collapse show"
+					aria-expanded="true" style="width:98%;">
+					<td>
+						<a href="@Url.Action("Edit", "SiteHome", new { id = item.ProductId})" target="_blank" title="Редактировать">
+							@item.ForeignDisplayName
+						</a>
+					</td>
+					<td style="text-align: right;">
+						<a asp-controller="SiteHome" asp-action="Edit" asp-route-id="@item.ProductId" class="buttons"><i class="far fa-edit"></i></a>
+					</td>
+				</tr>
+			}
+		}
+	</tbody>
+</table>
+<script src="~/js/siteProductList.js" asp-append-version="true"></script>
+<partial name="_UniversalModal" />

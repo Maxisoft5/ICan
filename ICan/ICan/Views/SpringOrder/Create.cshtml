@@ -1,0 +1,71 @@
+﻿@using ICan.Common.Models.Enums
+@model ICan.Common.Models.Opt.SpringOrderModel
+@{
+	var title = "Создание заказа пружины";
+	ViewData["Title"] = title;
+	var springList = (IEnumerable<SelectListItem>)ViewData["SpringList"];
+}
+
+<h2>@title</h2>
+<hr />
+<span class="text-success">@TempData["StatusMessage"]</span>
+<span class="alert-danger">@TempData["ErrorMessage"]</span>
+
+<div class="row">
+	<div class="col-md-4">
+		<form asp-action="Create">
+			<div asp-validation-summary="ModelOnly" class="text-danger"></div>
+			<div class="form-group">
+				<label asp-for="SpringId" class="control-label"></label>
+				<sup><i class="fas fa-asterisk" style="font-size: 10px; color: red"></i></sup>
+				@Html.DropDownList("SpringId", springList, new { @class = "form-control" })
+				<span asp-validation-for="SpringId" class="text-danger"></span>
+			</div>
+			<div class="form-group">
+				<label asp-for="OrderDate" class="control-label"></label>
+				<sup><i class="fas fa-asterisk" style="font-size: 10px; color: red"></i></sup>
+				<input name="OrderDate" value="@DateTime.Now" class="form-control" type="datetime" />
+				<span asp-validation-for="OrderDate" class="text-danger"></span>
+			</div>
+			<div class="form-group">
+				<label asp-for="InvoiceNumber" class="control-label"></label>
+				<input asp-for="InvoiceNumber" class="form-control" />
+				<span asp-validation-for="InvoiceNumber" class="text-danger"></span>
+			</div>
+			<div class="form-group">
+				<label asp-for="UPDNumber" class="control-label"></label>
+				<input asp-for="UPDNumber" class="form-control" />
+				<span asp-validation-for="UPDNumber" class="text-danger"></span>
+			</div>
+			<div class="form-group">
+				<label asp-for="Cost" class="control-label"></label>
+				<input asp-for="Cost" class="form-control" />
+				<span asp-validation-for="Cost" class="text-danger"></span>
+			</div>
+			<div class="form-group">
+				<label asp-for="Provider" class="control-label"></label>
+				<sup><i class="fas fa-asterisk" style="font-size: 10px; color: red"></i></sup>
+				<input asp-for="Provider" class="form-control" />
+				<span asp-validation-for="Provider" class="text-danger"></span>
+			</div>
+			<div class="form-group">
+				<label asp-for="SpoolCount" class="control-label"></label>
+				<sup><i class="fas fa-asterisk" style="font-size: 10px; color: red"></i></sup>
+				<input asp-for="SpoolCount" class="form-control" />
+				<span asp-validation-for="SpoolCount" class="text-danger"></span>
+			</div>
+			<div class="form-group">
+				<label asp-for="IsAssembled" class="control-label"></label>
+				<input asp-for="IsAssembled" class="form-control" style="max-width:44px" />
+				<span asp-validation-for="IsAssembled" class="text-danger"></span>
+			</div>
+			<div class="form-group">
+				<input type="submit" value="Сохранить" class="btn btn-default" />
+			</div>
+		</form>
+	</div>
+</div>
+
+<div>
+	<a asp-action="Index">Назад к списку</a>
+</div>

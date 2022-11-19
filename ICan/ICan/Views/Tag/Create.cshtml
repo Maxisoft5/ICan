@@ -1,0 +1,38 @@
+﻿@using ICan.Common.Models.Enums
+@model ICan.Common.Models.Opt.TagModel
+@{
+    var actionType = (ActionType)ViewBag.Action;
+    var action = actionType == ActionType.Creation ? "Create" : "Edit";
+    var title = (actionType == ActionType.Creation ? "Создание" : "Редактирование") + " тега";
+    ViewData["Title"] = title;
+}
+
+<h2>@title</h2>
+<hr />
+<span class="text-success">@TempData["StatusMessage"]</span>
+<span class="alert-danger">@TempData["ErrorMessage"]</span>
+
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="@action">
+            @if (actionType == ActionType.Edition)
+            {
+                @Html.HiddenFor(t => t.TagId)
+            }
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="TagName" class="control-label"></label>
+                <sup><i class="fas fa-asterisk" style="font-size: 10px; color: red"></i></sup>
+                <input asp-for="TagName" class="form-control" />
+                <span asp-validation-for="TagName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Сохранить" class="btn btn-default" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Назад к списку</a>
+</div>

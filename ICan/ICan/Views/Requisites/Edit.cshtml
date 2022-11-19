@@ -1,0 +1,69 @@
+﻿@using ICan.Common.Models.Enums
+@model ICan.Common.Models.Opt.RequisitesModel
+
+@{
+	var actionType = ActionType.Edition;
+	ActionType.TryParse(ViewData["ActionType"]?.ToString(), out actionType);
+
+	var title = actionType ==  ActionType.Creation ?  "Создание" : "Редактирование";
+	var formAction  = actionType ==  ActionType.Creation ?  "Create" : "Edit";
+	ViewData["Title"] = title;
+	var selectItems = Html.GetEnumSelectList<ClientType>()
+		.Where(item => item.Value != ((int)ClientType.Unknown).ToString());
+
+}
+<script src="~/lib/tinymce/tinymce.js"></script>
+<script>
+	$(function () {
+		tinymce.init(
+			{
+				selector: 'textarea',
+				plugins: ['autolink lists link preview textcolor colorpicker image code paste'],
+				menubar: false,
+				toolbar: ' undo redo |  formatselect | bold italic backcolor forecolor | alignleft aligncenter alignright alignjustify | bullist numlist image | removeformat | preview code',
+			});
+	})
+</script>
+<h2>@title</h2>
+
+<hr />
+<span class="text-success">@TempData["StatusMessage"]</span>
+<span class="alert-danger">@TempData["ErrorMessage"]</span>
+<div class="row">
+    <div class="col-8">
+		<form asp-action="@formAction">
+			<div asp-validation-summary="All" class="text-danger"></div>
+			<input asp-for="RequisitesId" class="form-control" type="hidden" />
+			<div class="form-group">
+				<label asp-for="Owner" class="control-label"></label>
+				<sup><i class="fas fa-asterisk" style="font-size: 10px; color: red"></i></sup>
+				<input asp-for="Owner" class="form-control" />
+
+			</div>
+			<div class="form-group">
+				<label asp-for="RequisitesText" class="control-label"></label>
+				<sup><i class="fas fa-asterisk" style="font-size: 10px; color: red"></i></sup>
+				@Html.TextAreaFor(t => t.RequisitesText, new { @class = "form-control", rows = 15, cols = 600 })
+
+			</div>
+			<div class="form-group">
+				<label asp-for="ClientType"></label>
+				<sup><i class="fas fa-asterisk" style="font-size: 10px; color: red"></i></sup>
+				<select id="clientType" asp-for="ClientType" class="form-control" asp-items="@selectItems"></select>
+				<span asp-validation-for="ClientType" class="text-danger"></span>
+			</div>
+
+			<div class="form-group">
+				<input type="submit" value="Сохранить" class="btn btn-default" />
+			</div>
+		</form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Назад к списку</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

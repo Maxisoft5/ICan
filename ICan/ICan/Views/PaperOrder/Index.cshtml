@@ -1,0 +1,125 @@
+﻿@model IEnumerable<ICan.Common.Models.Opt.PaperOrderModel>
+
+@{
+	var title = "Заказ бумаги";
+	ViewData["Title"] = title;
+}
+
+<h2>@title</h2>
+
+<span class="text-success">@TempData["StatusMessage"]</span>
+<span class="alert-danger">@TempData["ErrorMessage"]</span>
+
+<p>
+	<a asp-action="Create">Создать</a>
+</p>
+<table class="table"
+	   data-toggle="table"
+	   data-search="true"
+	   data-filter-control="true"
+	   data-show-search-clear-button="true">
+	<thead>
+		<tr>
+			<th data-field="OrderDate" data-sortable="true"
+				data-filter-control="input" data-sorter="datesSorter"
+				class="narrow-200">
+				@Html.DisplayNameFor(model => model.OrderDate)
+			</th>
+
+			<th data-field="PaperName" data-sortable="true"
+				data-filter-control="input">
+				@Html.DisplayNameFor(model => model.PaperName)
+			</th>
+
+			<th data-field="OrderSum" data-sortable="true"
+				data-sorter="formattedNumberSorter"
+				data-filter-control="input">
+				@Html.DisplayNameFor(model => model.OrderSumFormatted)
+			</th>
+			<th data-field="SheetCount" data-sortable="true"
+				data-filter-control="input"
+				class="narrow-150">
+				@Html.DisplayNameFor(model => model.SheetCount)
+			</th>
+			<th data-field="SheetPriceRounded" data-sortable="true" data-sorter="formattedNumberSorter"
+				data-filter-control="input" class="narrow-150">
+				@Html.DisplayNameFor(model => model.SheetPriceRoundedFormatted)
+			</th>
+			<th data-field="InvoiceNum" 
+				data-filter-control="input">
+				Счёт
+			</th>
+			<th data-field="IsPaid">
+				@Html.DisplayNameFor(model => model.IsPaid)
+			</th>
+			<th data-field="SheetsTakenAmount" data-sortable="true"
+				data-filter-control="input">
+				@Html.DisplayNameFor(model => model.SheetsTakenAmount)
+			</th>
+			<th data-field="SheetsLeftAmount" data-sortable="true"
+				data-filter-control="input">
+				@Html.DisplayNameFor(model => model.SheetsLeftAmount)
+			</th>
+
+			<th data-field="SupplierReciever" data-sortable="true"
+				data-filter-control="input">
+				@Html.DisplayNameFor(model => model.SupplierReciever)
+			</th>
+			<th class="narrow-150"></th>
+		</tr>
+	</thead>
+	<tbody>
+		@foreach (var item in Model)
+		{
+			<tr>
+				<td>
+					@Html.DisplayFor(modelItem => item.OrderDate)
+				</td>
+				<td>
+					@Html.DisplayFor(modelItem => item.PaperName)
+				</td>
+				<td class="number-cell">
+					@Html.DisplayFor(modelItem => item.OrderSumFormatted)
+				</td>
+				<td class="number-cell">
+					@(item.SheetCount.ToString("N0"))
+				</td>
+				<td class="number-cell narrow-150">
+					@Html.DisplayFor(modelItem => item.SheetPriceRoundedFormatted)
+				</td>
+				<td>
+					@Html.DisplayFor(modelItem => item.InvoiceNum)<span>&nbsp;от</span>
+					@Html.DisplayFor(modelItem => item.InvoiceDate)
+				</td>
+				 
+				<td class="checkbox-cell">
+					@if (item.IsPaid)
+					{
+						<i class="fas fa-check"></i><br />
+					}	
+					else { 
+						<i class="fas fa-times"></i>
+					}
+					@Html.DisplayFor(modelItem => item.PaymentDate)
+					@(item.PaidSum?.ToString("N"))
+				</td>
+				<td class="number-cell">
+					@(item.SheetsTakenAmount?.ToString("N0"))
+				</td>
+				<td class="number-cell">
+					@(item.SheetsLeftAmount?.ToString("N0"))
+				</td>
+				<td>
+					@Html.DisplayFor(modelItem => item.SupplierReciever)
+				</td>
+				<td>
+					<a asp-action="Edit" asp-route-id="@item.PaperOrderId" class="buttons"><i class="far fa-edit"></i></a>
+
+					<form asp-action="Delete" style="display: inline" asp-route-id="@item.PaperOrderId">
+						<i class="submit index far fa-times-circle" style="color:rgb(0, 123, 255)"></i>
+					</form>
+				</td>
+			</tr>
+		}
+	</tbody>
+</table>

@@ -1,0 +1,98 @@
+﻿@model IEnumerable<ICan.Common.Models.Opt.AssemblyModel>
+
+@{ 
+	var title = "Сборка тетрадей и навивка календарей";
+	ViewData["Title"] = title;
+	bool.TryParse(ViewData["IsAdmin"]?.ToString(), out var isAdmin);
+	bool.TryParse(ViewData["IsOperator"]?.ToString(), out var isOperator);
+	bool.TryParse(ViewData["IsStorekeeper"]?.ToString(), out var isStoreKeeper);
+	bool.TryParse(ViewData["IsAssembler"]?.ToString(), out var isAssembler); }
+
+<h2>@title</h2>
+@if (isAdmin || isAssembler)
+{
+<p>
+	<a asp-action="Create" asp-route-assemblyType="@ICan.Common.Models.Enums.AssemblyType.Assembly" style="display:inline-block; margin-right: 20px;">Создать сборку тетрадей</a>
+	<a asp-action="Create" asp-route-assemblyType="@ICan.Common.Models.Enums.AssemblyType.Wind">Создать навивку календарей</a>
+</p>}
+<style>
+	.no-padding{
+		padding : 0px;
+	}
+</style>
+
+<span class="text-success">@TempData["StatusMessage"]</span>
+<span class="alert-danger">@TempData["ErrorMessage"]</span>
+<table class="table table-responsive-md assembly-table" data-toggle="table"
+	   data-pagination="true" data-search="true"
+	   data-filter-control="true"
+	   data-page-size="100"
+	   data-sort-order="desc"
+	   data-show-search-clear-button="true">
+	<thead>
+		<tr>
+			<th style="max-width:200px"
+				data-field="Date"
+				data-sortable="true"
+				data-sorter="datesTimeSorter"
+				data-filter-control="input">
+				@Html.DisplayNameFor(model => model.Date)
+			</th>
+			<th data-field="AssemblyTypeName" data-sortable="true" data-filter-control="select">
+				@Html.DisplayNameFor(model => model.AssemblyTypeName)
+			</th>
+			<th data-field="ProductName" data-sortable="true" data-filter-control="select">
+				@Html.DisplayNameFor(model => model.ProductDisplayName)
+			</th>
+			<th data-field="Amount" data-sortable="true" data-filter-control="input">
+				@Html.DisplayNameFor(model => model.Amount)
+			</th>
+			<th data-field="WarehouseDateAdd" data-sortable="true" data-filter-control="input">
+				@Html.DisplayNameFor(model => model.WarehouseDateAdd)
+			</th>
+			<th></th>
+		</tr>
+	</thead>
+	<tbody>
+		@foreach (var item in Model.ToList())
+		{
+		<tr>
+			<td>
+				@Html.DisplayFor(modelItem => item.Date)
+			</td>
+			<td>
+				@Html.DisplayFor(modelItem => item.AssemblyTypeName)
+			</td>
+			<td>
+				@Html.DisplayFor(modelItem => item.ProductDisplayName)
+			</td>
+			<td>
+				@Html.DisplayFor(modelItem => item.Amount)
+			</td>
+			<td>
+				@Html.DisplayFor(modelItem => item.WarehouseDateAdd)
+			</td>
+
+			<td class="no-padding" style="padding: 0px">
+				@if (isAdmin || isAssembler)
+				{
+					<a href="@Url.Action("Edit", "Assembly", new { id = item.AssemblyId})">
+						@if (item.CanEdit) {
+						<i class="far fa-edit"></i>
+						}
+						else {
+							<i class="far fa-file-alt"></i><span>&nbsp;</span>
+						}
+					</a>  
+					@if (item.CanEdit) 
+					{ 
+						<form asp-action="Delete" style="display: inline;" asp-route-id="@item.AssemblyId">
+								<i class="submit index far fa-times-circle" style="color:rgb(0, 123, 255)"></i>
+							</form>
+					}
+				}
+			</td>
+		</tr>
+	}
+	</tbody>
+</table>

@@ -1,0 +1,53 @@
+﻿@model LoginViewModel
+@inject SignInManager<ApplicationUser> SignInManager
+
+@{
+	ViewData["Title"] = "Войти";
+	bool.TryParse(ViewData["UseCaptcha"]?.ToString(), out var useCaptcha);
+}
+
+<h2>@ViewData["Title"]</h2>
+<div class="row">
+	<div class="col-md-4">
+		<section>
+			<form asp-route-returnurl="@ViewData["ReturnUrl"]" method="post">
+
+				<hr />
+				<div asp-validation-summary="ModelOnly" class="text-danger"></div>
+				<div class="form-group">
+					<label asp-for="Email"></label>
+					<input asp-for="Email" class="form-control" />
+					<span asp-validation-for="Email" class="text-danger"></span>
+				</div>
+				<div class="form-group">
+					<label asp-for="Password"></label>
+					<input asp-for="Password" class="form-control" />
+					<span asp-validation-for="Password" class="text-danger"></span>
+				</div>
+				 
+				@if (useCaptcha)
+				{
+					<div class="form-group">
+						<div class="g-recaptcha" data-sitekey="@ViewData["Public"]"></div>
+					</div>
+				}
+				<div class="form-group">
+					<button type="submit" class="btn btn-default">Войти</button>
+				</div>
+				<div class="form-group">
+					<p>
+						<a asp-action="ForgotPassword">Забыли пароль?</a>
+					</p>
+					@*<p>
+						<a asp-action="Register" asp-route-returnurl="@ViewData["ReturnUrl"]">Зарегистрироваться?</a>
+					</p>*@
+				</div>
+
+			</form>
+		</section>
+	</div>
+</div>
+
+@section Scripts {
+	@await Html.PartialAsync("_ValidationScriptsPartial")
+}

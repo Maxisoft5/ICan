@@ -1,0 +1,74 @@
+﻿@model IEnumerable<ICan.Common.Domain.OptUtmStatistics>
+
+@{
+    var title = "Статистика";
+    ViewData["Title"] = title;
+}
+@*<script src="https://unpkg.com/tableexport.jquery.plugin/tableExport.min.js"></script>
+    <script src="https://unpkg.com/tableexport.jquery.plugin/libs/jsPDF/jspdf.min.js"></script>
+    <script src="https://unpkg.com/tableexport.jquery.plugin/libs/jsPDF-AutoTable/jspdf.plugin.autotable.js"></script>
+    <script src="https://unpkg.com/bootstrap-table@1.16.0/dist/extensions/export/bootstrap-table-export.min.js"></script>*@
+
+<h2>@title</h2>
+
+<form action="Download" method="post">
+    <p >
+        <button type="submit" class="btn btn-link">Скачать отчёт</button>
+    </p>
+</form>
+
+<table class="table table-responsive-md" data-toggle="table"
+       data-pagination="true" data-search="true"
+       data-filter-control="true"
+       data-page-size="100"
+       data-sort-order="desc"
+       data-show-search-clear-button="true">
+    <thead>
+
+        <tr>
+            <th data-field="Date" data-sortable="true" data-filter-control="input">
+                Дата
+            </th>
+            <th data-field="UtmSource" data-sortable="true" data-filter-control="select">
+                utm_source
+            </th>
+            <th data-field="UtmMedium" data-sortable="true" data-filter-control="select">
+                utm_medium
+            </th>
+            <th data-field="UtmCampaign" data-sortable="true" data-filter-control="select">
+                utm_campaign
+            </th>
+            <th data-field="UtmContent" data-sortable="true" data-filter-control="select">
+                utm_content
+            </th>
+            <th data-field="UtmTerm" data-sortable="true" data-filter-control="select">
+                utm_term
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    <span>@item.Date.ToShortDateString()</span>
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.UtmSource)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.UtmMedium)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.UtmCampaign)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.UtmContent)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.UtmTerm)
+                </td>
+            </tr>
+}
+    </tbody>
+</table>

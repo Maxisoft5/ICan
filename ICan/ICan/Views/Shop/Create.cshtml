@@ -1,0 +1,72 @@
+﻿@model ICan.Common.Models.Opt.ShopModel
+
+@{ 
+	var title = "Создание магазина";
+
+	ViewData["Title"] = title;
+	Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>@title</h2>
+
+
+<hr />
+<div class="row">
+	<div class="col-md-4">
+		<form asp-action="Create">
+			<div asp-validation-summary="ModelOnly" class="text-danger"></div>
+			<div class="form-group">
+				<label asp-for="Name" class="control-label"></label>
+				<input asp-for="Name" class="form-control" />
+				<span asp-validation-for="Name" class="text-danger"></span>
+			</div>
+			<div class="form-group">
+				<label asp-for="INN" class="control-label"></label>
+				<input asp-for="INN" class="form-control" />
+				<span asp-validation-for="INN" class="text-danger"></span>
+			</div>
+
+			<div class="form-group">
+				<label asp-for="IsMarketPlace" class="control-label"></label>
+				<input asp-for="IsMarketPlace" class="form-control" />
+				<span asp-validation-for="IsMarketPlace" class="text-danger"></span>
+			</div>
+
+			<div class="form-group">
+				<label asp-for="NonResident" class="control-label"></label>
+				<input asp-for="NonResident" class="form-control" />
+				<span asp-validation-for="NonResident" class="text-danger"></span>
+			</div>
+			<div class="form-group">
+				<label asp-for="IgnoreInWarehouseCalc" class="control-label"></label>
+				<input asp-for="IgnoreInWarehouseCalc" class="form-control" />
+				<span asp-validation-for="IgnoreInWarehouseCalc" class="text-danger"></span>
+			</div>
+			<div class="form-group">
+				<label asp-for="ShopUrl" class="control-label"></label>
+				<input asp-for="ShopUrl" class="form-control" />
+				<span asp-validation-for="ShopUrl" class="text-danger"></span>
+			</div>
+			<div class="form-group">
+				<label asp-for="Postponement" class="control-label"></label>
+				<input asp-for="Postponement" class="form-control" />
+				<span asp-validation-for="Postponement" class="text-danger"></span>
+			</div>
+			<div class="form-group">
+				<label class="control-label">Скан договора</label>
+				<input class="form-control" type="file" name="ScanFile" id="reportFile" />
+			</div>
+			<div class="form-group">
+				<input type="submit" value="Сохранить" class="btn btn-default" />
+			</div>
+		</form>
+	</div>
+</div>
+
+<div>
+	<a asp-action="Index">Назад к списку</a>
+</div>
+
+@section Scripts {
+	@{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

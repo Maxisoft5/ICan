@@ -1,0 +1,69 @@
+﻿@using ICan.Common.Models.Opt;
+@model CalcUniversalWhjDetails
+@{
+	var title = $"Состояние склада для клеевых подушек";
+	ViewData["Title"] = title;
+}
+<h2> @title</h2>
+<hr />
+
+
+@if (Model != null)
+{
+	<div class="form-group">
+		<label asp-for="Current" class="control-label"></label>
+		<span>@Model.Current</span>
+	</div>
+
+	<div class="form-group">
+		<strong><label class="control-label">Инвентаризация</label></strong>
+		<span>@Model.InventoryAmount</span> <br />
+		<span>Дата: @(Model.InventoryDate?.ToShortDateString())</span>
+	</div>
+
+	<div class="form-group">
+		<strong><label asp-for="IncomeSum" class="control-label"></label></strong>
+		<span>@Model.IncomeSum</span> <br />
+	</div>
+		@if (Model.IncomingItems != null && Model.IncomingItems.Any())
+		{
+	<div class="form-group">
+		<strong> <label asp-for="IncomingItems" class="control-label"></label></strong>
+	
+			<ul>
+				@foreach (var income in Model.IncomingItems)
+				{
+					<li>
+						<span>Дата: @(income.ActionDate), количество: @(income.Amount), действие: @(income.ActionExtendedTypeName) дополнительная информация: @(income.Comment)</span>
+						<br />
+					</li>
+				}
+			</ul>
+	</div>
+		}
+	<div class="form-group">
+		<strong><label asp-for="OutcomeSum" class="control-label"></label></strong>
+		<span>@Model.OutcomeSum</span> <br />
+	</div>
+	@if (Model.OutcomeItems != null && Model.OutcomeItems.Any())
+	{
+		<div class="form-group">
+			<strong> <label asp-for="OutcomeItems" class="control-label"></label></strong>
+
+			<ul>
+				@foreach (var outcome in Model.OutcomeItems)
+				{
+					<li>
+						<span>Дата: @(outcome.ActionDate), количество: @(outcome.Amount), действие: @(outcome.ActionExtendedTypeName)  дополнительная информация: @(outcome.Comment)</span>
+						<br />
+					</li>
+				}
+			</ul>
+		</div>
+	}
+}
+
+
+<div>
+	<a asp-action="Index">Назад к списку</a>
+</div>

@@ -1,0 +1,74 @@
+﻿@model IEnumerable<ICan.Common.Models.Opt.CounterpartyModel>
+
+@{
+	var title = "Контрагенты";
+	ViewData["Title"] = title;
+}
+
+<h2>@title</h2>
+<p>
+	<a asp-action="Create">Создать</a>
+</p>
+<table class="table table-responsive-md assembly-table" data-toggle="table"
+	   data-pagination="true" data-search="true"
+	   data-filter-control="true"
+	   data-page-size="100"
+	   data-sort-order="desc"
+	   data-show-search-clear-button="true">
+	<thead>
+		<tr>		 
+			<th style="max-width:200px" data-sortable="true" 
+				data-filter-control="input">
+				@Html.DisplayNameFor(model => model.Name)
+			</th>
+			<th style="max-width:200px" data-sortable="true"
+				data-filter-control="input">
+				@Html.DisplayNameFor(model => model.Inn)
+			</th>
+			<th style="max-width:200px" data-sortable="true"
+				data-filter-control="select">
+				@Html.DisplayNameFor(model => model.PaperOrderRoleName)
+			</th>
+			<th style="max-width:100px">
+				@Html.DisplayNameFor(model => model.Enabled)
+			</th>
+			<th style="max-width:100px" data-sortable="true"
+				data-filter-control="input">
+				@Html.DisplayNameFor(model => model.PaymentDelay)
+			</th>
+
+			<th></th>
+		</tr>
+	</thead>
+	<tbody>
+		@foreach (var item in Model)
+		{
+<tr>
+	<td>
+		@Html.DisplayFor(modelItem => item.Name)
+	</td>
+	<td>
+		@Html.DisplayFor(modelItem => item.Inn)
+	</td>
+	<td>
+		@Html.DisplayFor(modelItem => item.PaperOrderRoleName)
+	</td>
+
+
+	<td class="text-center" style="max-width:250px">
+		@if (item.Enabled)
+		{
+<i class="fas fa-check"></i>}
+	</td>
+	<td>
+		@Html.DisplayFor(modelItem => item.PaymentDelay)
+	</td>
+	<td>
+		<a asp-action="Edit" asp-route-id="@item.CounterpartyId"><i class="far fa-edit"></i></a> |
+		<form asp-action="Delete" style="display: inline" asp-route-id="@item.CounterpartyId">
+			<i class="submit index far fa-times-circle" style="color:rgb(0, 123, 255)"></i>
+		</form>
+	</td>
+</tr>}
+	</tbody>
+</table>

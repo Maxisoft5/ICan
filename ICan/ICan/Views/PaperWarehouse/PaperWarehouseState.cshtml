@@ -1,0 +1,61 @@
+﻿@using ICan.Common.Models.Opt;
+@model IEnumerable<PaperWarehouseDetail>
+@{
+	var title = "Состояние склада бумаги";
+	ViewData["Title"] = title;
+	var wareshouses = (IEnumerable<WarehouseTypeModel>)ViewData["Warehouses"];
+}
+
+<h2> @title</h2>
+<hr />
+
+
+@if (Model != null)
+{
+	<table class="table table-responsive-md">
+		<thead>
+			<tr>
+				<th scope="col">Бумага</th>
+				@foreach (var wh in wareshouses)
+				{
+					<th scope="col">@(wh.Name)</th>
+				}
+
+				<th scope="col" style="text-align:right;">Количество </th>
+			</tr>
+		</thead>
+		<tbody>
+			@foreach (var paper in Model)
+			{
+				<tr>
+					<td>
+						@Html.DisplayFor(modelItem => paper.Name)
+						<a asp-action="PaperWarehouseState" asp-route-id="@paper.PaperId" class="buttons"><i class="fas fa-warehouse"></i></a>
+					</td>
+					@foreach (var wh in wareshouses)
+					{
+						var whAmount = paper.Warehouses?.FirstOrDefault(paperWh => (int)paperWh.WarehouseType == wh.WarehouseTypeId);
+
+						<td style="text-align:right;">
+							@whAmount.Current
+						</td>
+					}
+					<td style="text-align:right;">
+						@Html.DisplayFor(modelItem => paper.Amount)
+					</td>
+
+				</tr>
+			}
+		</tbody>
+	</table>
+}
+else
+{
+	<p>
+		<span>Нет данных для отображения</span>
+	</p>
+}
+
+<div>
+	<a asp-action="Index" asp-route-objectType="@ICan.Common.Models.Enums.WhJournalObjectType.Paper">Назад к списку</a>
+</div>

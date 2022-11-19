@@ -1,0 +1,25 @@
+﻿@{
+	var title = "Отчёты";
+	ViewData["Title"] = title;
+}
+
+<h2>@title</h2>
+<span class="alert-danger">@TempData["ErrorMessage"]</span>
+<span class="text-success">@TempData["StatusMessage"]</span>
+<br />
+<br />
+<br />
+<form class="upload-form" asp-action="UploadReport" enctype="multipart/form-data" method="post">
+    <div class="form-group">
+        <label class="control-label">Загрузить отчёты</label>
+
+        <input class="form-control" type="file" multiple name="files" />
+    </div>
+    <button class="btn btn-primary btn-upload">Загрузить</button>
+</form>
+<br />
+<br />
+<br />
+<form asp-action="DownloadConsolidatedReport" enctype="multipart/form-data" method="post">
+    <button class="btn btn-primary btn-upload">Скачать сводный отчёт</button>
+</form>

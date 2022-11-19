@@ -1,0 +1,53 @@
+﻿@model IEnumerable<ICan.Common.Models.Opt.WarehouseTypeModel>
+
+@{
+	var title = "Тип склада";
+	ViewData["Title"] = title;
+}
+
+<h2>@title</h2>
+ 
+<table class="table table-responsive-md" data-toggle="table"
+	   data-pagination="true" data-search="true"
+	   data-filter-control="true"
+	   data-page-size="100"
+	   data-show-search-clear-button="true">
+	<thead>
+		<tr>
+			<th data-field="Name" data-sortable="true" data-filter-control="input">
+				@Html.DisplayNameFor(model => model.Name)
+			</th>
+			<th  data-field="WarehouseObjectTypeDisplayName" data-sortable="true" data-filter-control="select">
+				@Html.DisplayNameFor(model => model.WarehouseObjectTypeDisplayName)
+			</th>
+			<th  data-field="CounterpartyName" data-sortable="true" data-filter-control="input">
+				@Html.DisplayNameFor(model => model.CounterpartyName)
+			</th>
+			<th  data-field="ReadyToUse">
+				@Html.DisplayNameFor(model => model.ReadyToUse)
+			</th>
+		</tr>
+	</thead>
+	<tbody>
+		@foreach (var item in Model)
+		{
+			<tr>
+				<td>
+					@Html.DisplayFor(modelItem => item.Name)
+				</td>
+				<td>
+					@Html.DisplayFor(modelItem => item.WarehouseObjectTypeDisplayName)
+				</td>
+				<td>
+					@Html.DisplayFor(modelItem => item.CounterpartyName)
+				</td>
+				<td class="checkbox-cell">
+					@if (item.ReadyToUse)
+					{
+						<i class="fas fa-check"></i>
+					}
+				</td>
+			</tr>
+		}
+	</tbody>
+</table>

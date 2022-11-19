@@ -1,0 +1,38 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Context\ApplicationDbContextFactory.cs" />
+    <Compile Remove="Migrations\20210321114827_set_ClientId_for_Shops.cs" />
+    <Compile Remove="Migrations\20210321114827_set_ClientId_for_Shops.Designer.cs" />
+    <Compile Remove="Migrations\20210321120934_set_ClientId_for_Shops_and_delete_shopId_column.cs" />
+    <Compile Remove="Migrations\20210321120934_set_ClientId_for_Shops_and_delete_shopId_column.Designer.cs" />
+    <Compile Remove="Migrations\20210327215441_remove_Client_from_Shops.cs" />
+    <Compile Remove="Migrations\20210327215441_remove_Client_from_Shops.Designer.cs" />
+    <Compile Remove="Migrations\20210503145320_add_spring_and_numberOfTurns_tables.cs" />
+    <Compile Remove="Migrations\20210503145320_add_spring_and_numberOfTurns_tables.Designer.cs" />
+    <Compile Remove="Migrations\20210505175725_add_spring_and_numberOfTurns_tables.cs" />
+    <Compile Remove="Migrations\20210505175725_add_spring_and_numberOfTurns_tables.Designer.cs" />
+    <Compile Remove="Migrations\20210513195514_add_dateTime_for_springOrder.cs" />
+    <Compile Remove="Migrations\20210513195514_add_dateTime_for_springOrder.Designer.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Hangfire.MySql.Core" Version="2.2.5" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="5.0.5" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="5.0.5">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="5.0.5" />
+    <PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="5.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\ICan.DomainModel\ICan.Common.csproj" />
+  </ItemGroup>
+
+</Project>

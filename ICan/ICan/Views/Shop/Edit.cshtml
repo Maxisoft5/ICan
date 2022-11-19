@@ -1,0 +1,100 @@
+﻿@model ICan.Common.Models.Opt.ShopModel
+@{ 
+	ViewData["Title"] = "Редактирование магазинв";
+	bool.TryParse(ViewData["IsAdmin"]?.ToString(), out var isAdmin);
+	bool.TryParse(ViewData["IsStoreKeeper"]?.ToString(), out var isStoreKeeper);
+	bool.TryParse(ViewData["IsOperator"]?.ToString(), out var isOperator); 
+}
+
+<h2>Редактирование</h2>
+<h4>Магазин</h4>
+<hr />
+<span class="text-success">@TempData["StatusMessage"]</span>
+<span class="alert-danger">@TempData["ErrorMessage"]</span>
+<div class="row">
+	<div class="col-md-6">
+		<form asp-action="Edit" enctype="multipart/form-data">
+			<div asp-validation-summary="ModelOnly" class="text-danger"></div>
+			<input type="hidden" asp-for="ShopId" />
+			<div class="form-group">
+				<label asp-for="Name" class="control-label"></label>
+				<input asp-for="Name" class="form-control" />
+				<span asp-validation-for="Name" class="text-danger"></span>
+			</div>
+			<div class="form-group">
+				<label asp-for="IsMarketPlace" class="control-label"></label>
+				<input asp-for="IsMarketPlace" class="form-control" />
+				<span asp-validation-for="IsMarketPlace" class="text-danger"></span>
+			</div>
+			<div class="form-group">
+				<label asp-for="NonResident" class="control-label"></label>
+				<input asp-for="NonResident" class="form-control" />
+				<span asp-validation-for="NonResident" class="text-danger"></span>
+			</div>
+			<div class="form-group">
+					<label asp-for="IgnoreInWarehouseCalc" class="control-label"></label>
+					<input asp-for="IgnoreInWarehouseCalc" class="form-control" />
+					<span asp-validation-for="IgnoreInWarehouseCalc" class="text-danger"></span>
+				</div>
+			<div class="form-group">
+				<label asp-for="ShopUrl" class="control-label"></label>
+				<input asp-for="ShopUrl" class="form-control" />
+				<span asp-validation-for="ShopUrl" class="text-danger"></span>
+			</div>
+			<div class="form-group">
+				<label asp-for="Postponement" class="control-label"></label>
+				<input asp-for="Postponement" class="form-control" />
+				<span asp-validation-for="Postponement" class="text-danger"></span>
+			</div>
+			<div class="form-group">
+				<input asp-for="ScanFileName" type="hidden" class="form-control" />
+				<input asp-for="MimeType" type="hidden" class="form-control" />
+			</div>
+			<div class="form-group">
+				<label class="control-label">Скан договора</label>
+				<input class="form-control" type="file" name="ScanFile" id="reportFile" />
+			</div>
+			@if (!string.IsNullOrWhiteSpace(Model.ScanFileName) &&
+					!string.IsNullOrWhiteSpace(Model.MimeType))
+			{
+				<div class="form-group">
+					<input data-filesrc="@Model.ScanFileName"
+						   data-mimetype="@Model.MimeType"
+						   type="button" class="btn btn-link show-contractFile" value="Посмотреть договор" />
+					<input data-shopId="@Model.ShopId"
+						   type="button" class="btn btn-link delete-contractFile" value="Удалить договор" />
+					<label class="text-success success-deteled" style="display:none">Файл успешно удален</label>
+				</div>
+			}
+			<div class="form-group">
+				<input type="submit" value="Сохранить" class="btn btn-default" />
+			</div>
+		</form>
+	</div>
+	<div class="col-md-6">
+
+		@await Html.PartialAsync("_ShopNames", Model.ShopNames, new ViewDataDictionary(this.ViewData) { { "shopId", Model.ShopId } })
+	</div>
+</div>
+<div>
+	<a asp-action="Index">Вернуться к списку</a>
+</div>
+<div class="modal fade document-preview-modal" tabindex="-1" role="dialog" style="width:100%;height:100%;">
+	<div class="modal-dialog" role="document" style="width: 100%; height: 90%;">
+		<div class="modal-content" style="width: 100%; height: 90%;">
+			<div class="modal-body" style="display: flex;flex-flow: column;">
+				<iframe class="document-frame" style="width: 100%; height: 100%; flex-grow: 1"></iframe>
+			</div>
+		</div>
+	</div>
+</div>
+@section Scripts {
+	@{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
+<script src="~/js/shop.js"></script>
+<style>
+	.modal-dialog {
+		max-width: 90%;
+		width: auto !important;
+	}
+</style>

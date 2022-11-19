@@ -1,0 +1,85 @@
+﻿@model ICan.Common.Models.AccountViewModels.EmployeeModel
+@{
+    bool.TryParse(ViewData["IsAdmin"]?.ToString(), out bool isAdmin);
+    ViewData["Title"] = "Редактирование учётной записи";
+    var roleList = (List<RoleDescription>)ViewBag.Roles;
+}
+
+<br />
+<h4>@ViewData["Title"]</h4>
+<span class="text-success">@TempData["StatusMessage"]</span>
+<span class="alert-danger">@TempData["ErrorMessage"]</span>
+<hr />
+
+<form method="post" style="width: 100%;">
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    <div class="row">
+        <div class="col-md-5">
+            <div class="form-group">
+                <input asp-for="Id" class="form-control" value="@Model.Id" hidden />
+            </div>
+            <div class="form-group">
+                <label asp-for="FirstName"></label>
+                <input asp-for="FirstName" class="form-control" />
+                <span asp-validation-for="FirstName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="LastName"></label>
+                <input asp-for="LastName" class="form-control" />
+                <span asp-validation-for="LastName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Email"></label>
+                <input asp-for="Email" class="form-control" />
+                <span asp-validation-for="Email" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Phone"></label>
+                <input asp-for="Phone" class="form-control" />
+                <span asp-validation-for="Phone" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="DateRegistration"></label>
+                <input asp-for="DateRegistration" class="form-control" disabled/>
+                <span asp-validation-for="DateRegistration" class="text-danger"></span>
+            </div>
+            @if (isAdmin)
+            {
+                <div class="form-group">
+                    <label asp-for="Roles"></label>
+                    @for (var i = 0; i < ViewBag.Roles.Count; i++)
+                    {
+                        <div class="form-group check-group">
+                            @if (Model.Roles.Contains(ViewBag.Roles[i]))
+                            {
+                                <input id="Role[@i]" name="CheckedRoles" value="@ViewBag.Roles[i].NameEn" class="form-control left-aligned-checkbox" type="checkbox" checked />
+                            }
+                            else
+                            {
+                                <input id="Role[@i]" name="CheckedRoles" value="@ViewBag.Roles[i].NameEn" class="form-control left-aligned-checkbox" type="checkbox" />
+                            }
+                            <label for="Role[@i]" class="control-label">@ViewBag.Roles[i].Name</label>
+                        </div>
+                    }
+                </div>
+            }
+        </div>
+    </div>
+    <div class="row">
+        <button type="submit" class="btn btn-default" style="margin-left: 15px;">Сохранить</button>
+    </div>
+</form>
+
+<style>
+    .check-group {
+        display: flex;
+        align-items: center;
+    }
+
+    .check-group label {
+        margin-bottom: 0;
+        margin-left: 10px;
+        font-weight: normal;
+    }
+</style>
+

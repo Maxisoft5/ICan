@@ -1,0 +1,83 @@
+﻿@using ICan.Common.Models.Enums;
+@model IEnumerable<ICan.Common.Models.Opt.WarehouseModel>
+@{
+    var title = "Склад бумаги";
+    ViewData["Title"] = title;
+    bool.TryParse(ViewData["IsAssembler"]?.ToString(), out var isAssembler);
+}
+
+<h2>@title</h2>
+<br />
+<span class="text-success">@TempData["StatusMessage"]</span>
+<span class="alert-danger">@TempData["ErrorMessage"]</span>
+
+<div class="row">
+    <div class="col-2">
+        <a asp-action="Create">Создать</a>
+    </div>
+    <div class="col-2">
+        <form method="post" asp-action="CalculateWhj" style="margin-top: -7px;" target="_blank">
+            <button class=" btn btn-link">Состояние склада</button>
+        </form>
+    </div>
+</div>
+
+<table class="table table-responsive-md" data-toggle="table"
+       data-pagination="true" data-search="true"
+       data-filter-control="true"
+       data-page-size="100"
+       data-sort-order="desc"
+       data-show-search-clear-button="true">
+    <thead>
+        <tr>
+            <th data-field="WarehouseActionTypeName" data-sortable="true" data-filter-control="select">
+                @Html.DisplayNameFor(model => model.WarehouseActionTypeName)
+            </th>
+            <th data-field="DateAdd" data-sortable="true" data-filter-control="input"
+                data-sorter="datesTimeSorter">
+                @Html.DisplayNameFor(model => model.DateAdd)
+            </th>  
+            
+            <th data-field="WarehouseTypeName" data-sortable="true" data-filter-control="select"
+               >
+                @Html.DisplayNameFor(model => model.WarehouseTypeName)
+            </th>
+            <th data-field="Comment" data-sortable="true" data-filter-control="input" style="max-width:300px">
+                @Html.DisplayNameFor(model => model.Comment)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+		<tr>
+			<td class="narrow-130">
+				@Html.DisplayFor(modelItem => item.WarehouseActionTypeName)
+			</td>
+			<td class="narrow-130">
+				@Html.DisplayFor(modelItem => item.DateAdd)
+			</td>
+			<td class="narrow-200">
+				@item.WarehouseTypeName
+			</td>
+			<td class="narrow-250">
+				@item.Comment
+			</td>
+			<td class="narrow-100">
+				@if (item.WarehouseActionTypeId == (int)WarehouseActionType.Inventory && !isAssembler)
+				{
+		<a asp-action="Edit" asp-route-id="@item.WarehouseId"><i class="far fa-edit"></i></a>
+							<span>|</span>}
+				<a asp-action="Details" asp-route-id="@item.WarehouseId"><i class="far fa-file-alt"></i></a>
+				@if (!isAssembler)
+				{
+		<span>|</span>
+							<form asp-action="Delete" style="display: inline" asp-route-id="@item.WarehouseId">
+								<i class="submit index far fa-times-circle" style="color:rgb(0, 123, 255)"></i>
+							</form>}
+			</td>
+		</tr>
+        }
+    </tbody>
+</table>

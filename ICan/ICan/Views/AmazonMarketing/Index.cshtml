@@ -1,0 +1,14 @@
+﻿@{
+	var title =   "Парсинг слов для Амазон";
+	ViewData["Title"] = title;
+}
+
+<h2>@title</h2>
+<br />
+
+<form asp-action="ParseAmazonFile" method="post" class="upload-form" enctype="multipart/form-data">
+	<input type="file" title="Загрузить файл" name="file"/>
+	<button type="button" class="btn btn-primary save-button"> Разобрать файл Амазона со стоп словами</button>
+</form> 
+
+ 

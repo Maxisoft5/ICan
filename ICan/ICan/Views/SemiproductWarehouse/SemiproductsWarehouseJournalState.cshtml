@@ -1,0 +1,99 @@
+﻿@using ICan.Common.Models.Opt;
+@model IEnumerable<CalcSemiproductsWhjDetails>
+@{
+	var title = "Состояние склада полуфабрикатов";
+	ViewData["Title"] = title;
+}
+
+<h2>@title</h2>
+<style>
+	.td-grey {
+		cursor: pointer;
+		background-color: #dee2e6
+	}
+</style>
+
+@if (Model != null && Model.Any())
+{
+	<table class="table table-responsive-md"
+		   data-toggle="table"
+		   data-search="true"
+		   data-show-search-clear-button="true"
+		 >
+		<thead>
+			<tr>
+				<th scope="col" data-field="ProductName" data-filter-control="select">
+					Тетрадь
+				</th>
+				<th scope="col" data-filter-control="input">Блоков </th>
+				<th scope="col" data-filter-control="input">Наклеек </th>
+				<th scope="col" data-filter-control="input">Обложек </th>
+				<th scope="col" data-filter-control="input">Коробок (крышка) </th>
+				<th scope="col" data-filter-control="input">Коробок (дно) </th>
+				<th scope="col" data-filter-control="input">Курсоров </th>
+				<th scope="col" data-filter-control="input">Пойнтеров </th>
+				<th scope="col"></th>
+			</tr>
+		</thead>
+		<tbody>
+			@{
+				var rowNum = 0;
+				var seriesName = "";
+			}
+
+			@foreach (var item in Model)
+			{
+				if (!string.Equals(seriesName, item.SeriesName))
+				{
+					seriesName = item.SeriesName;
+					<tr>
+						<td colspan="8" class="td-grey">
+							@seriesName
+						</td>
+					</tr>
+				}
+				<tr>
+					<td>
+						@Html.DisplayFor(modelItem => item.ProductName)
+					</td>
+					<td class="number-cell">
+						<span>@item.SemiproductList.FirstOrDefault(x => x.SemiproductType == (int)SemiProductType.Block)?.CurrentAmount</span>
+					</td>
+					<td class="number-cell">
+						<span>@item.SemiproductList.FirstOrDefault(x => x.SemiproductType == (int)SemiProductType.Stickers)?.CurrentAmount</span>
+					</td>
+					<td class="number-cell">
+						<span>@item.SemiproductList.FirstOrDefault(x => x.SemiproductType == (int)SemiProductType.Covers)?.CurrentAmount</span>
+					</td>
+					<td class="number-cell">
+						<span>@item.SemiproductList.FirstOrDefault(x => x.SemiproductType == (int)SemiProductType.Box && x.IsBack == false)?.CurrentAmount</span>
+					</td>
+					<td class="number-cell">
+						<span>@item.SemiproductList.FirstOrDefault(x => x.SemiproductType == (int)SemiProductType.Box && x.IsBack == true)?.CurrentAmount</span>
+					</td>
+					<td class="number-cell">
+						<span>@item.SemiproductList.FirstOrDefault(x => x.SemiproductType == (int)SemiProductType.Cursor)?.CurrentAmount</span>
+					</td>	
+					<td class="number-cell">
+						<span>@item.SemiproductList.FirstOrDefault(x => x.SemiproductType == (int)SemiProductType.Pointer)?.CurrentAmount</span>
+					</td>
+					<td>
+						<a asp-action="SemiproductState" asp-controller="SemiproductWarehouse"
+						   asp-route-productId="@item.ProductId"><i class="fas fa-warehouse"></i></a>
+					</td>
+				</tr>
+				rowNum++;
+			}
+		</tbody>
+	</table>
+}
+else
+{
+	<p>
+		<span>Нет данных для отображения</span>
+	</p>
+}
+
+<div>
+	<a asp-action="Index">Назад к списку</a>
+</div>

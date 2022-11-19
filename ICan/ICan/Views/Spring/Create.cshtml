@@ -1,0 +1,57 @@
+﻿@using ICan.Common.Models.Enums
+@model ICan.Common.Models.Opt.SpringModel
+@{ var actionType = (ActionType)ViewBag.Action;
+				var action = actionType == ActionType.Creation ? "Create" : "Edit";
+				var title = (actionType == ActionType.Creation ? "Создание" : "Редактирование") + " пружины";
+				ViewData["Title"] = title;
+				var numberOfTurnsList = (IEnumerable<SelectListItem>)ViewData["NumberOfTurnsList"];
+				var stepList = (IEnumerable<SelectListItem>)ViewData["StepList"]; }
+
+<h2>@title</h2>
+<hr />
+<span class="text-success">@TempData["StatusMessage"]</span>
+<span class="alert-danger">@TempData["ErrorMessage"]</span>
+
+<div class="row">
+	<div class="col-md-4">
+		<form asp-action="@action">
+			@if (actionType == ActionType.Edition)
+			{
+@Html.HiddenFor(t => t.SpringId)}
+			<div asp-validation-summary="ModelOnly" class="text-danger"></div>
+			<div class="form-group">
+				<label asp-for="SpringName" class="control-label"></label>
+				<sup><i class="fas fa-asterisk" style="font-size: 10px; color: red"></i></sup>
+				<input asp-for="SpringName" class="form-control" />
+				<span asp-validation-for="SpringName" class="text-danger"></span>
+			</div>
+			<div class="form-group">
+				<label asp-for="BlockThickness" class="control-label"></label>
+				<sup><i class="fas fa-asterisk" style="font-size: 10px; color: red"></i></sup>
+				<select class="form-control" asp-for="BlockThickness">
+					<option>5</option>
+					<option>6</option>
+					<option>8</option>
+				</select>
+				<span asp-validation-for="BlockThickness" class="text-danger"></span>
+			</div>
+			<div class="form-group">
+				<label asp-for="Step" class="control-label"></label>
+				<sup><i class="fas fa-asterisk" style="font-size: 10px; color: red"></i></sup>
+				@Html.DropDownList("Step", Html.GetEnumSelectList(typeof(StepEnum)), new { @class = "form-control" })
+				<span asp-validation-for="Step" class="text-danger"></span>
+			</div>
+			<div class="form-group">
+				<label asp-for="NumberOfTurns" class="control-label"></label>
+				@Html.DropDownList("NumberOfTurnsId", numberOfTurnsList, new { @class = "form-control" })
+			</div>
+			<div class="form-group">
+				<input type="submit" value="Сохранить" class="btn btn-default" />
+			</div>
+		</form>
+	</div>
+</div>
+
+<div>
+	<a asp-action="Index">Назад к списку</a>
+</div>

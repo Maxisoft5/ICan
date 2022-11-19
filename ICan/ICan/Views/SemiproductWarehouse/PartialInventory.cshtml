@@ -1,0 +1,59 @@
+﻿@model PartialInventoryModel
+@{ var title = "Склад полуфабрикатов. Единичная инвентаризация";
+				ViewData["Title"] = title;
+				var selectList = new SelectList(Model.SemiproductList, "SemiproductId", "DisplayName");
+				var series = (IEnumerable<SelectListItem>)ViewData["ProductSeries"]; }
+
+
+<h2>@title</h2>
+<hr />
+<span class="alert-danger">@TempData["ErrorMessage"]</span>
+<span class="text-success">@TempData["StatusMessage"]</span>
+
+
+<div class="row">
+	<form class="col-md-4" asp-action="PartialInventory" method="post">
+		<div class="form-group">
+				<label asp-for="WarehouseTypeId" class="control-label">Склад</label>
+				<sup><i class="fas fa-asterisk" style="font-size: 10px; color: red"></i></sup> 
+		 
+				@Html.DropDownList("WarehouseTypeId", (IEnumerable<SelectListItem>)ViewData["WarehouseTypeId"],
+													 null, new
+													 {
+														 @class = "form-control warehouse-type",
+														 style = "width:500px",
+														 id = "WarehouseTypeId"
+													 })
+		</div>
+
+		<div class="form-group">
+			<label class="control-label">Серия</label>
+			@Html.DropDownList("ProductSeries", series, "-", new { style = "width:500px", @class = "form-control productSeries-list" })
+		</div>
+		<div class="form-group">
+			<label class="control-label">Полуфабрикат</label>
+			<select class="form-control select_productId"  style = "width: 500px" 
+					name="SemiproductId"
+					asp-items="@selectList">
+			</select>
+		</div>
+		<div class="form-group">
+			<label class="control-label">Количество</label>
+			<input class="form-control" type="number" min="0" name="Amount" />
+		</div>
+
+		<div class="form-group">
+			<input type="button" value="Сохранить" class="btn btn-default save-button" />
+		</div>
+	</form>
+</div>
+
+
+<script src="~/js/semiproductPartialWarehouse.js" asp-append-version="true"></script>
+@section Scripts {
+	@{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
+
+<div>
+	<a asp-action="Index">Назад к списку</a>
+</div>

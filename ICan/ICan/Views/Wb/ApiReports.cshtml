@@ -1,0 +1,105 @@
+﻿@using ICan.Common.Models.WB;
+@model ICan.Common.Models.WB.WbFilterModel
+@{ 
+	var title = "Отчеты по ВБ";
+	ViewData["Title"] = title;
+}
+
+<script src="~/lib/highcharts/highcharts.js"></script>
+<script src="~/lib/highcharts/modules/exporting.js"></script>
+<script src="~/lib/highcharts/modules/export-data.src.js"></script>
+<script src="~/lib/highcharts/modules/accessibility.js"></script>
+<script src="~/lib/highcharts/modules/series-label.js"></script>
+
+<style>
+	.graphics-container {
+		margin: 30px auto 0;
+		width: 1200px;
+		height: 600px;
+	}
+</style>
+
+<h2>@title</h2>
+<span class="alert-danger">@TempData["ErrorMessage"]</span>
+<span class="text-success">@TempData["StatusMessage"]</span>
+<br />
+<br />
+@*<form asp-action="GatherWarehouseData" method="post">
+		<button class="btn btn-outline-primary download-report" type="button">Скачать отчет по складу и заказам</button>
+	</form>*@
+<form method="post" asp-action="GetGraphicsData" class="graph-form">
+
+	<label for="notebook">Тетрадь</label>
+	@{
+		var size = Model.Products.Count();
+		var i = 0;
+		 
+		<div class="row">
+			@for (int col = 0; col <  3; col++)
+			{
+			<div class="col-4">
+
+				@for (int row = 0; row < size / 3 + 1; row++)
+				{
+					@if(i< size)
+					{ 
+				<div class="row">
+					<div class="col-12">
+						<input type="checkbox" asp-for="@Model.Products[i].IsSelected" />
+						<label asp-for="@Model.Products[i].IsSelected">@Model.Products[i].DisplayName</label>
+						<input type="hidden" asp-for="@Model.Products[i].ProductId" />
+						<input type="hidden" asp-for="@Model.Products[i].DisplayName" />
+
+					</div>
+					</div>
+					}
+					i++;
+					}
+				</div>				
+			}
+		</div> 
+	}
+
+	<div class="row" style="margin-top:10px;">
+		<div class="col-3">
+			<label>Склад</label>
+				@for (i = 0; i < Model.WarehouseNames.Count(); i++)
+				{
+				<div>
+					<input type="checkbox" asp-for="@Model.WarehouseNames[i].IsSelected" />
+					<label asp-for="@Model.WarehouseNames[i].IsSelected">@Model.WarehouseNames[i].DisplayName</label>
+					<input type="hidden" asp-for="@Model.WarehouseNames[i].DisplayName" />
+				</div>
+				}
+		</div>
+		<div class="col-3">
+			<label for="city">Вид отчёта</label>
+				@for (i = 0; i < Model.ReportTypes.Count(); i++)
+				{
+				<div>
+					<input type="checkbox" asp-for="@Model.ReportTypes[i].IsSelected" />
+					<label asp-for="@Model.ReportTypes[i].IsSelected">@Model.ReportTypes[i].DisplayName</label>
+					<input type="hidden" asp-for="@Model.ReportTypes[i].ReportType" />
+				</div>
+				}
+			 
+		</div>
+		<div class="col-2">
+			<label for="days">Дата начала</label>
+			<input type="date" class="form-control days" asp-for="StartDate" />
+		</div>
+		<div class="col-2">
+			<label for="days">Дата начала</label>
+			<input type="date" class="form-control days" asp-for="EndDate" />
+		</div>
+		<div class="col-2">
+			<button class="btn btn-outline-primary get-data" type="button">Отобразить графики по заказам и продажам </button>
+		</div>
+	</div>
+</form>
+<div class="row">
+	<div id="graphics-container" class="graphics-container"></div>
+</div>
+
+
+<script src="~/js/wbapireport.js" asp-append-version="true"></script>

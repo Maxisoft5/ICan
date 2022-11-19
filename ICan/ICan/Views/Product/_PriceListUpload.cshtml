@@ -1,0 +1,34 @@
+﻿
+<div class="modal" tabindex="-1" role="dialog" id="import-Excel">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title">Импорт из Excel</h5>
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+			</div>
+			<div class="modal-body">
+				<input type="hidden" id="import-Excel-clientId" />
+				<div class="client"
+					 style="display:none; margin-bottom:10px;">
+					Импорт цен для клиента
+					<span class="client" style="display:none"  id="import-Excel-client"></span>
+				</div>
+				
+				<form asp-action="ImportPrices" enctype="multipart/form-data" id="import-form">
+					<input type="file" id="priceFile" name="file" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" value="Выберите файл" />
+				</form>
+			</div>
+			<div class="modal-footer">
+				<div class="form-group">
+					<input id="import-button" type="button" value="Сохранить" class="btn btn-outline-secondary" />
+				</div>
+				<div class="form-group">
+					<input type="reset" value="Отменить" data-dismiss="modal" class="btn btn-outline-dark" />
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<script src="~/js/importPrices.js" type="text/javascript" asp-append-version="true"> </script>

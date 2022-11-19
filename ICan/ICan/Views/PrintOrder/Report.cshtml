@@ -1,0 +1,74 @@
+﻿@using ICan.Common.Models.Opt
+@model ICan.Common.Models.Opt.PrintOrderModel
+
+@{ var title = "Заказ печати. Отчёт";
+    ViewData["Title"] = title; 
+}
+
+<h2>@Html.ActionLink("Заказ", "Edit", "PrintOrder", new { id = Model.PrintOrderId }, new { target = "_blank" }) печати. Отчёт</h2>
+
+<div class="row">
+    <div class="col-12">
+        <div class="form-group">
+            <label asp-for="OrderDate" class="control-label"></label>
+            <br />
+            @Html.DisplayFor(m => m.OrderDate)
+        </div>
+
+        <div class="form-group">
+            <label asp-for="PrintingHouseOrderNum" class="control-label"></label>
+            <br />
+            @Html.DisplayFor(m => m.PrintingHouseOrderNum)
+        </div>
+
+        <div class="form-group">
+            <label asp-for="Printing" class="control-label"></label>
+            <br />
+            @Html.DisplayFor(m => m.Printing)
+        </div>
+
+        @foreach (var printOrder in Model.PrintOrderSemiproducts)
+        {
+            <div class="row">
+                <div class="col-12">
+                    <h5>@printOrder.SemiProduct.DisplayName</h5>
+                </div>
+            </div>
+            if (printOrder.SemiProduct.SemiproductTypeId != (int)SemiProductType.Stickers)
+            {
+                if (Model.Assemblies != null && Model.Assemblies.Any())
+                {
+                    @foreach (var assembly in Model.Assemblies
+                                                    .Where(x => x.AssemblySemiproducts.Any(x => x.PrintOrderSemiproductId == printOrder.PrintOrderSemiproductId)))
+                    {
+                        <div class="row">
+                            <div class="col-6">
+                                <div class="form-group">
+                                    <a href="@Url.Action("Edit","Assembly", new { id = assembly.AssemblyId })">Сборка от @(assembly.Date)</a>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                }
+            }
+            else
+            {
+                if (Model.NotchOrders != null && Model.NotchOrders.Any())
+                {
+                    @foreach (var notchOrder in Model.NotchOrders.Where(x => x.NotchOrderItems.Select(x => x.PrintOrderId).Contains(printOrder.PrintOrderId)))
+
+                    {
+                        <div class="row">
+                            <div class="col-6">
+                                <div class="form-group">
+                                    <a href="@Url.Action("Edit","NotchOrder", new { id = notchOrder.NotchOrderId })">Заказ надсечки №(@notchOrder.NotchOrderNumber) от @(notchOrder.OrderDate)</a>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                }
+            }
+        }
+    </div>
+</div>
+

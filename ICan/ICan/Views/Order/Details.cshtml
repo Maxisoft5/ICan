@@ -1,0 +1,218 @@
+﻿@model ICan.Common.Models.Opt.OrderModel
+@using ICan.Common.Utils;
+@{
+	ViewData["Title"] = "Заказ";
+	bool.TryParse(ViewData["IsAdmin"]?.ToString(), out var isAdmin);
+	bool.TryParse(ViewData["isOperator"]?.ToString(), out var isOperator);
+	bool.TryParse(ViewData["IsStoreKeeper"]?.ToString(), out var isStoreKeeper);
+	var shortOrderNum = Model.ShortOrderId > 0 ? Model.ShortOrderId.ToString() : Util.GetShortNum(Model.OrderId);
+	var isClient = !isAdmin && !isOperator && !isStoreKeeper;
+}
+
+<div style="margin-top:35px;">
+	<h4>Заказ № @shortOrderNum</h4>
+</div>
+<div class="row">
+	<div class="col-12">
+		<div style="text-align: center">@Html.Raw(@Model.Promo)</div>
+	</div>
+</div>
+<div class="row">
+	<div class="col-md-4">
+		<dl class="dl-horizontal">
+			<dt>
+				@Html.LabelFor(model => model.Client.FullName, new { @class = "control-label" })
+			</dt>
+			<dd>
+				@Html.DisplayFor(model => model.Client.FullName)
+			</dd>
+			@if ((isOperator || isAdmin) && Model.Client != null && Model.Client.ApplicationUserShopRelations.Any())
+			{
+				<dt>
+					@Html.LabelFor(model => model.ShopName, new { @class = "control-label" })
+				</dt>
+				<dd>
+					@Html.DisplayFor(t => t.ShopName)
+				</dd>
+
+			}
+			<dt>
+				<label class="control-label">Телефон</label>
+			</dt>
+			<dd>
+				@Html.DisplayFor(model => model.Client.PhoneNumber)
+			</dd>
+			<dt>
+				<label class="control-label">Email клиента</label>
+			</dt>
+			<dd>
+				@Html.DisplayFor(model => model.Client.Email)
+			</dd>
+
+			<dt>
+				@Html.LabelFor(model => model.OrderDate, new { @class = "control-label" })
+			</dt>
+			<dd>
+				@Html.Label("orderDate", Model.OrderDate.ToShortDateString())
+			</dd>
+			<dt>
+				@Html.LabelFor(model => model.OrderStatus, new { @class = "control-label" })
+			</dt>
+			<dd>
+				@Html.DisplayFor(model => model.OrderStatus)
+			</dd>
+			@if (!isClient)
+			{
+				<dt>
+					@Html.LabelFor(model => model.AssemblyDate, new { @class = "control-label" })
+				</dt>
+				<dd>
+					@Html.DisplayFor(model => model.AssemblyDate)
+				</dd>
+			}
+			@if (Model.OrderStatusId != 1 || Model.DoneDate.HasValue)
+			{
+				<dt>
+					@Html.LabelFor(model => model.DoneDate, new { @class = "control-label" })
+				</dt>
+				<dd>
+					@Html.DisplayFor(model => model.DoneDate)
+				</dd>
+			}
+			@if (Model.OrderStatusId != 1 || !string.IsNullOrWhiteSpace(Model.TrackNo))
+			{
+				<dt>
+					@Html.LabelFor(model => model.TrackNo, new { @class = "control-label" })
+				</dt>
+				<dd>
+					@Html.DisplayFor(model => model.TrackNo)
+				</dd>
+			}
+			<dt>
+				@Html.LabelFor(model => model.ClientAddress, new { @class = "control-label" })
+			</dt>
+			<dd>
+				@if (!string.IsNullOrWhiteSpace(Model.ClientAddress))
+				{
+					@Html.DisplayFor(model => model.ClientAddress);
+				}
+				else
+				{
+					<br />
+				}
+			</dd>
+			@if (!string.IsNullOrWhiteSpace(Model.DeliveryPointAddress))
+			{
+				<dt>
+					@Html.LabelFor(model => model.DeliveryPointAddress, new { @class = "control-label" })
+				</dt>
+				<dd>
+					@Html.DisplayFor(model => model.DeliveryPointAddress);
+				</dd>
+			}
+				<dt>
+					@Html.LabelFor(model => model.IsPaid, new { @class = "control-label" })
+				</dt>
+				<dd>
+					@Html.DisplayFor(model => model.IsPaidString)
+				</dd>
+
+				<dt>
+					@Html.LabelFor(model => model.NoteBookAmount, new { @class = "control-label" })
+				</dt>
+				<dd>
+					@Html.DisplayFor(model => model.NoteBookAmount)
+				</dd>
+
+				<dt>
+					@Html.LabelFor(model => model.TotalWeight, new { @class = "control-label" })
+				</dt>
+				<dd>
+					@Math.Round(Model.TotalWeight, 1)
+				</dd>
+				@if (Model.TotalDiscountedPercent > 0)
+				{
+					<dt>
+						<label class="control-label">Исходная сумма</label>
+					</dt>
+					<dd>
+						@Model.TotalSum.ToString("N")
+					</dd>
+					@if (Model.OrderSizeDiscountPercent.HasValue)
+					{
+						<dt>
+							@Html.LabelFor(model => model.OrderSizeDiscountPercent, new { @class = "control-label" })
+						</dt>
+						<dd>
+							@Model.OrderSizeDiscountPercent
+						</dd>
+					}
+					@if (Model.EventDiscountPercent.HasValue)
+					{
+						<dt>
+							@Html.LabelFor(model => model.EventDiscountPercent, new { @class = "control-label" })
+						</dt>
+						<dd>
+							@Model.EventDiscountPercent
+						</dd>
+					}
+
+					if (isAdmin || isOperator)
+					{
+						<dt>
+							@Html.LabelFor(model => model.PersonalDiscountPercent, new { @class = "control-label" })
+						</dt>
+						<dd>
+							@Html.DisplayFor(model => model.PersonalDiscountPercent)
+						</dd>
+					}
+					<dt>
+						@Html.LabelFor(model => model.TotalDiscountedPercent, new { @class = "control-label" })
+					</dt>
+					<dd>
+						@Html.DisplayFor(model => model.TotalDiscountedPercent)
+					</dd>
+				}
+				<dt>
+					@Html.LabelFor(model => model.DiscountedSum, new { @class = "control-label" })
+				</dt>
+				<dd>
+					@Model.DiscountedSum.ToString("N")
+				</dd>
+				@if (!isClient)
+				{
+					<dt>
+						@Html.LabelFor(model => model.RequisitesOwner, new { @class = "control-label" })
+					</dt>
+					<dd>
+						@Html.DisplayFor(model => model.RequisitesOwner)
+					</dd>
+					<dt>
+						@Html.LabelFor(model => model.UpdNum, new { @class = "control-label" })
+					</dt>
+					<dd>
+						@Html.DisplayFor(model => model.UpdNum)
+					</dd>
+				}
+				<dt>
+					@Html.LabelFor(model => model.Comment, new { @class = "control-label" })
+				</dt>
+				<dd>
+					@Html.DisplayFor(model => model.Comment)
+				</dd>
+			</dl>
+	</div>
+	<div class="col-8">
+		<a asp-action="Export" asp-route-id="@Model.OrderId" title="Экспортировать в Excel">Экспортировать в Excel&nbsp;<i class="far fa-file-excel"></i></a> <br />
+		@await Html.PartialAsync("_OrderDetails", Model.OrderProducts)
+	</div>
+</div>
+<div class="row">
+	<div class="col-12">
+		@if (isAdmin)
+		{
+			<a asp-action="Edit" asp-route-id="@Model.OrderId">Редактировать</a> <span>|</span>
+		}
+		<a asp-action="Index">К списку заказов</a>
+	</div>
+</div>

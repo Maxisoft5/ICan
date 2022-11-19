@@ -1,0 +1,134 @@
+﻿@using ICan.Common.Models.Enums
+@model IEnumerable<ICan.Common.Models.Opt.ProductpriceModel>
+@{ bool.TryParse(ViewData["IsAdmin"]?.ToString(), out bool isAdmin);
+                var actionType = ActionType.Details;
+                ActionType.TryParse(ViewData["ActionType"]?.ToString(), out actionType);
+                var canEdit = isAdmin && actionType == ActionType.Edition; }
+
+<script>
+	$(function () {
+
+		$(".fa-check-circle.price-submit").click(
+		function () {
+			$.post('@Url.Action("AddPrice")', $(this).closest('form').serialize(),
+				function (html) {
+					$("#content").html(html);
+				}
+			);
+
+		});
+
+		$(".fa-times-circle.price-cancel").click(
+			function () {
+				if ($("#price").val() != "" &&
+					confirm("Внимание! Информация не будет сохранена.")) {
+
+					$("#price").val("");
+				}
+				$(".empty-row").toggle();
+			});
+
+		$(".fa-times-circle.submit.price-delete").click(
+			function () {
+				if (confirm("Удалить?")) {
+
+
+					$.post('@Url.Action("DeletePrice")', $(this).closest('form').serialize(),
+						function (html) {
+							$("#content").html(html);
+						});
+				}
+			});
+	});
+</script>
+<div id="content">
+	<h4>Цены</h4>
+	@if (canEdit)
+	{
+		<p>
+			<a href="#" class="add-price">Добавить</a>
+		</p>}
+
+	<div class="row">
+		<div class="col-6">
+			<strong>@Html.DisplayNameFor(model => model.DateStart)</strong>
+		</div>
+		<div class="col-2">
+			<strong>@Html.DisplayNameFor(model => model.DateEnd)</strong>
+		</div>
+		<div class="col-2">
+			<strong>@Html.DisplayNameFor(model => model.Price)</strong>
+		</div>
+		<div class="col-2">
+
+		</div>
+	</div>
+
+	@foreach (var item in Model)
+	{
+
+		<div class="row">
+			<div class="col-6">
+				@Html.DisplayFor(model => item.DateStart)
+			</div>
+			<div class="col-2">
+				@Html.DisplayFor(model => item.DateEnd)
+			</div>
+			<div class="col-2">
+				@Html.DisplayFor(model => item.Price)
+			</div>
+
+			<div class="col-2">
+				@if (canEdit)
+				{
+					<form asp-action="DeletePrice" style="display: inline">
+						<input type="hidden" id="id" name="id" value="@item.ProductPriceId" />
+						<i class="submit price-delete far fa-times-circle"></i>
+					</form>}
+			</div>
+		</div>}
+	<div class=" row empty-row" style="display:none">
+
+		<form asp-action="AddPrice" style="width: 100%; display: flex;">
+			<input type="hidden" id="id" name="id" value="@ViewBag.ProductId" />
+			<div class="col-3">
+			</div>
+			<div class="col-3">
+				<input type="number" id="price" name="price" min="1" class="form-control" />
+			</div>
+			<div class="col-2" style="">
+				<i class="price-submit blue-circle far fa-check-circle"></i>|<i class=" price-cancel blue-circle far fa-times-circle"></i>
+			</div>
+		</form>
+
+	</div>
+
+	@if (isAdmin)
+	{
+		@Html.ActionLink("Архив цен", "Archive", "Productprices", new { id = @ViewBag.ProductId })}
+	<script src="~/lib/jquery/dist/jquery.min.js"></script>
+	<script>
+		$(".add-price").click(
+			function () {
+				$(".empty-row").toggle();
+			});
+
+
+							//$(".fa-times-circle.submit").click(
+							//function () {
+							//	if (confirm("Внимание! Инорфмация не будет сохранена.")) {
+
+							//		$(".empty-row").toggle();
+							//	}
+							//});
+
+						//$(document).ready(function () {
+						//	var iSubmit = $('i.submit.delete');
+
+						//	iSubmit.on('click', function () {
+						//		if (confirm("Вы уверены, что хотите удалить элемент?"))
+						//			$(this).closest('form').submit();
+						//	});
+						//});
+	</script>
+</div>

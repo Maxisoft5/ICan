@@ -1,0 +1,292 @@
+﻿@using ICan.Common.Models.Enums
+@model ICan.Common.Models.Opt.ProductListModel
+@inject SignInManager<ApplicationUser> SignInManager
+@{
+	bool.TryParse(ViewData["IsMobileBrowser"]?.ToString(), out bool isMobileBrowser);
+	var mobileDontDisplay = isMobileBrowser ? "none" : "table-cell";
+	var desktopDontDisplay = isMobileBrowser ? "table-cell" : "none";
+	if (Model.ReadOnly)
+	{
+		mobileDontDisplay = desktopDontDisplay = "none";
+	}
+	bool.TryParse(ViewData["IsAdmin"]?.ToString(), out var isAdmin);
+	bool.TryParse(ViewData["IsStoreKeeper"]?.ToString(), out var isStoreKeeper);
+	bool.TryParse(ViewData["IsOperator"]?.ToString(), out var isOperator);
+	bool.TryParse(ViewData["IsAssembler"]?.ToString(), out var isAssembler);
+	bool.TryParse(ViewData["IsClient"]?.ToString(), out var isClient);
+
+	var canEditProduct = (isAdmin || isOperator);
+	var additionalCols = canEditProduct ? 8 : 7;
+	int.TryParse(ViewData["ClientType"]?.ToString(), out var clientType);
+
+}
+<style>
+	.disabled {
+		color: dimgray;
+		font-style: italic;
+	}
+</style>
+<div style="text-align: center">@Html.Raw(@Model.Promo)</div>
+<div class="bg-warning" style="text-align: center">@Model.ActiveEventAnnouncement</div>
+<br />
+
+<input type="hidden" class="client-type" value="@clientType" />
+
+@if (SignInManager.IsSignedIn(User))
+{
+	<div class="row">
+		<div class="col-5">
+			@if (Model.OrderSizeDiscounts != null && isClient)
+			{
+				//Добавляем поверку типа юзера и выводим только его скидку
+
+				try
+				{
+					var discounts = Model.OrderSizeDiscounts.Where(dic => (int)dic.ClientType == clientType).OrderBy(dic => dic.From).ToArray();
+					<span>Величина скидки:</span>
+					for (int i = 0; i < discounts.Length; i++)
+					{
+						var orderSizeDiscounct = discounts[i];
+						var to = Math.Round(orderSizeDiscounct.To / 10000, 2) * 10000;
+						var range = i != discounts.Length - 1
+							? $"От {orderSizeDiscounct.From.ToString("N0")} до {to.ToString("N0")}"
+							: $"От {orderSizeDiscounct.From.ToString("N0")}";
+						var percent = $"{orderSizeDiscounct.DiscountPercent} %";
+						<div class="row">
+							<div class="col-4">
+								@range
+							</div>
+							<div class="col-8">@percent</div>
+						</div>
+					}
+				}
+				catch
+				{
+					//TODO добавить
+				}
+
+			}
+		</div>
+		<div class="col-7">
+			<div class="order-amount" style="display:none; text-align:right">
+				<div class="row">
+					<div class="col-10">
+						Общее число тетрадей в заказе
+					</div>
+					<div class="col-2">
+						<span class="order-amount-num" style="font-weight:700;">0</span>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-10">
+						Сумма заказа
+					</div>
+					<div class="col-2">
+						<span class="order-sum" style="font-weight:700;">0</span>
+					</div>
+				</div>
+				@if (Model.ActiveEvent != null)
+				{
+					<div class="row">
+						<div class="col-10">
+							Скидка по акции
+						</div>
+						<div class="col-2">
+							<input type="hidden" id="event-discount-percent" value="@Model.ActiveEvent.DiscountPercent" />
+							<span class="order-discount" style="font-weight:700;">@(Model.ActiveEvent.DiscountPercent)%</span>
+						</div>
+					</div>
+				}
+				<div class="row">
+					<div class="col-10">
+						Текущая скидка в зависимости от суммы заказа
+					</div>
+					<div class="col-2" style="padding-left: 3em;">
+						<span class="order-size-discount" style="font-weight:700; text-align:right;">0</span>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-10">
+						Сумма с учётом всех скидок
+					</div>
+					<div class="col-2">
+						<span class="order-sum-discounted" style="font-weight:700;">0</span>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+}
+
+<table class="table table-responsive-md" style="margin-top:10px;">
+	<thead>
+		<tr>
+			<th scope="col">Товар</th>
+			<th scope="col" style="text-align:center; display: @desktopDontDisplay">Количество </th>
+			@*<th scope="col" style="text-align:center">Вес, кг</th>*@
+			<th scope="col" style="text-align:center;">Базовая цена</th>
+			<th scope="col" style="text-align:center;">Вес, кг</th>
+			<th scope="col" style="text-align:center; display: @mobileDontDisplay">Количество</th>
+			<th scope="col" style="text-align:center;">Цена с учётом скидки</th>
+			<th scope="col" style="text-align:right; display: @mobileDontDisplay">Общий вес, кг</th>
+			<th scope="col" style="text-align:center;">Итоговая цена</th>
+			@if (!Model.ReadOnly && canEditProduct)
+			{
+				<th scope="col">@*Служебное**@</th>
+			}
+		</tr>
+	</thead>
+	<tbody>
+		@foreach (var group in Model.ProductGroups)
+		{
+			<tr>
+				<td colspan="@(additionalCols)" style="cursor: pointer; background-color: #dee2e6"
+					data-toggle="collapse" aria-expanded="true"
+					data-target=".multi-collapse@(group.Key.ProductSeriesId)">
+					@group.Key.Name
+				</td>
+			</tr>
+			foreach (var item in group.Value)
+			{
+				<tr class="multi-collapse@(group.Key.ProductSeriesId) collapse show @(item.Enabled? "" : "disabled")"
+					aria-expanded="true" style="width:98%;">
+					<td class="narrow-470">
+						@if (isAdmin || isOperator)
+						{
+							<a href="@Url.Action("Edit", "Product", new { id = item.ProductId})" class="@(item.Enabled? "" : "disabled")" target="_blank" title="Редактировать">
+								@item.ForeignDisplayName
+							</a>
+						}
+						else
+						{
+							@Html.DisplayFor(modelItem => item.ForeignDisplayName)
+						}
+						<a href="@Url.Action("Notebook", "SiteHome", new { id = item.ProductId })" target="_blank" title="Посмотреть на сайте">
+							&nbsp;
+							<i class="fas fa-external-link-alt"></i>
+						</a>
+					</td>
+					@if (isMobileBrowser)
+					{
+						<td style="text-align:right;">
+							@await Html.PartialAsync("_ProductModel", model: item)
+						</td>
+					}
+					@{
+						var price = item.Price?.ToString("N0") ?? "-";
+						var previousprice = item.PreviousPrice?.ToString("N0");
+
+					}
+				<td align="center">
+
+					@if (item.ShowPreviousPrice && item.PreviousPrice.HasValue)
+					{
+						<span class="orderSize itemPrice" style="color: red; font-weight: bolder" data-price="@item.Price">@price</span>
+						<span class="" style="text-decoration:line-through;">@previousprice</span>
+					}
+					else {
+				<span class="orderSize itemPrice" data-price="@item.Price">@price</span>
+					}
+				</td>
+					<td style="text-align:center;">
+						@Html.DisplayFor(modelItem => item.Weight)
+					</td>
+					@if (!isMobileBrowser)
+					{
+						<td style="text-align:right;">
+							@await Html.PartialAsync("_ProductModel", model: item)
+						</td>
+					}
+					<td style="text-align:center;">
+						<span class="item-price-with-discount">@price</span>
+					</td>
+					<td style="text-align:right; display: @mobileDontDisplay">
+						<span id="w@(item.ProductId)">0</span>
+					</td>
+					<td style="text-align:center;"><span class="item-total-with-discount">0</span></td>
+					@if (!Model.ReadOnly && canEditProduct)
+					{
+						<td>
+							<a asp-action="ProductState" asp-controller="Warehouse" asp-route-productId="@item.ProductId" class="buttons" target="_blank"><i class="fas fa-warehouse"></i></a>
+							<a asp-action="Edit" asp-route-id="@item.ProductId" class="buttons"><i class="far fa-edit"></i></a>
+							<form asp-action="Delete" style="display: inline" asp-route-id="@item.ProductId" class="buttons">
+								<i class="submit index far fa-times-circle"></i>
+							</form>
+						</td>
+					}
+				</tr>
+			}
+		}
+	</tbody>
+</table>
+
+<div class="order-amount" style="display:none; text-align:right">
+	<div class="row">
+		<div class="col-10">
+			Общее число тетрадей в заказе
+		</div>
+		<div class="col-2">
+			<span class="order-amount-num" style="font-weight:700;">0</span>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-10">
+			Сумма заказа
+		</div>
+		<div class="col-2">
+			<span class="order-sum" style="font-weight:700;">0</span>
+		</div>
+	</div>
+	@if (Model.ActiveEvent != null)
+	{
+		<div class="row">
+			<div class="col-10">
+				Скидка по акции
+			</div>
+			<div class="col-2">
+				<input type="hidden" id="event-discount-percent" value="@Model.ActiveEvent.DiscountPercent" />
+				<span class="order-discount" style="font-weight:700;">@(Model.ActiveEvent.DiscountPercent)%</span>
+			</div>
+		</div>
+	}
+	<div class="row">
+		<div class="col-10">
+			Текущая скидка в зависимости от суммы заказа
+		</div>
+		<div class="col-2" style="padding-left: 3em;">
+			<span class="order-size-discount" style="font-weight:700; text-align:right;">0</span>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-10">
+			Сумма с учётом всех скидок
+		</div>
+		<div class="col-2">
+			<span class="order-sum-discounted" style="font-weight:700;">0</span>
+		</div>
+	</div>
+</div>
+@if (!Model.ReadOnly)
+{
+	<div class="row order-address">
+		<div class="col-12">
+			<label>Адрес доставки/Комментарий к заказу</label>
+			<sup><i class="fas fa-asterisk" style="font-size: 10px; color: red"></i></sup>
+		</div>
+		<div class="col-12">
+			<span>Для регионов - терминал ПЭК <strong>(не ПВЗ)</strong>, для Москвы  - доставка до <strong>подъезда</strong> </span>
+		</div>
+		
+	</div>
+	<div class="row order-address">
+		<div class="col-12">
+			<textarea class="order-address-text" rows="6" minlength="5" style="width:100%"></textarea>
+			<div class="order-address-error alert-danger"></div>
+		</div>
+	</div>
+
+	<button align="right" type="button" class="btn btn-make-order"
+			disabled style="visibility: visible">
+		Сделать заказ
+	</button>
+}

@@ -1,0 +1,9 @@
+﻿@model ICan.Common.Models.Opt.ProductModel
+	<input id="n@(Model.ProductId)" @(Model.Enabled?"": "disabled") type ="number" step="1" min="0" max="9999"
+							 placeholder="" value="@Model.Amount" onchange="orderNumChange(this)"
+							 data-weight="@Model.Weight.ToString()"
+							 data-price="@Model.Price"
+							 data-assembles-as-kit="@Model.AssemblesAsKit" data-acting-amount="@Model.ActingAmount"
+							 class="order-num @(Model.IsNoteBook ? "book-order-num" : "")"
+							 oninput="checkValidLetters(this)" onfocus="removeZero(this)" />
+

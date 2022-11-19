@@ -1,0 +1,58 @@
+﻿@model IEnumerable<ICan.Common.Models.Opt.MarketplaceModel>
+@{
+	var title = "Маркетплейсы";
+	ViewData["Title"] = title;
+	bool.TryParse(ViewData["IsAdmin"]?.ToString(), out var isAdmin);
+}
+
+<h2>@title</h2>
+
+
+<span class="text-success">@TempData["StatusMessage"]</span>
+<span class="alert-danger">@TempData["ErrorMessage"]</span>
+
+@if (isAdmin)
+{
+<p>
+	<a asp-action="Create">Добавить</a>
+</p>
+}
+
+<table class="table">
+	<thead>
+		<tr>
+			<th style="max-width:200px">
+				@Html.DisplayNameFor(model => model.Name)
+			</th>
+			<th style="max-width:220px">
+				@Html.DisplayNameFor(model => model.ImageName)
+			</th>
+			<th style="max-width:220px">
+				@Html.DisplayNameFor(model => model.Url)
+			</th>
+			<th></th>
+		</tr>
+	</thead>
+	<tbody>
+		@foreach (var item in Model)
+		{
+<tr>
+	<td>
+		@Html.DisplayFor(modelItem => item.Name)
+	</td>
+	<td>
+		<img src="@Html.DisplayFor(modelItem => item.ImagePath)" />
+	</td>
+	<td>
+		@Html.DisplayFor(modelItem => item.Url)
+	</td>
+	<td>
+		@if (isAdmin) 
+		{ 
+			<a asp-action="Edit" asp-route-id="@item.MarketplaceId"><i class="far fa-edit"></i></a>
+		}
+	</td>
+</tr>
+}
+	</tbody>
+</table>

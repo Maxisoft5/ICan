@@ -1,0 +1,56 @@
+﻿@model IEnumerable<ICan.Common.Models.Opt.ProductSeriesModel>
+
+@{ 
+	ViewData["Title"] = "Серия";
+	bool.TryParse(ViewData["IsAdmin"]?.ToString(), out var isAdmin);
+}
+
+<h2>Серия</h2>
+@if (isAdmin)
+{
+	<p>
+		<a asp-action="Create">Создать</a>
+	</p>
+}
+<span class="alert-danger">@TempData["ErrorMessage"]</span>
+<table class="table table-responsive-md">
+	<thead>
+		<tr>
+			<th>
+				@Html.DisplayNameFor(model => model.Name)
+			</th><th>
+				@Html.DisplayNameFor(model => model.SiteName)
+			</th>
+			<th>
+				@Html.DisplayNameFor(model => model.Order)
+			</th>
+			<th></th>
+		</tr>
+	</thead>
+	<tbody>
+		@foreach (var item in Model)
+		{
+		<tr>
+			<td>
+				@Html.DisplayFor(modelItem => item.Name)
+			</td>	
+			<td>
+				@Html.DisplayFor(modelItem => item.SiteName)
+			</td>
+			<td>
+				@Html.DisplayFor(modelItem => item.Order)
+			</td>
+			<td>
+				<a asp-action="Edit" asp-route-id="@item.ProductSeriesId"><i class="far fa-edit"></i></a>
+				@if (isAdmin)
+				{
+					<span>|</span>	
+					<form asp-action="Delete" style="display: inline" asp-route-id="@item.ProductSeriesId">
+						<i class="submit index far fa-times-circle" style="color:rgb(0, 123, 255)"></i>
+					</form>				
+				}
+			</td>
+		</tr>
+		}
+	</tbody>
+</table>

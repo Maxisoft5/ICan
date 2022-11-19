@@ -1,0 +1,35 @@
+﻿@model ICan.Common.Models.Opt.SiteFilterModel
+
+
+<a href="#" class="add-filter-product">Добвить тетрадь</a>
+@if (Model.Products != null && Model.Products.Any())
+{
+	<div class="row">
+		<div class="col-10"><b>Тетрадь</b></div>
+		<div class="col-1"><b>Порядок</b></div>
+		<div class="col-1"> </div>
+	</div>
+ foreach (var product in Model.Products)
+{
+<div class="row site-filter-product">
+	<div class="col-10">
+		@product.Product.DisplayName
+	</div>
+	<div class="col-1">
+		@product.Order
+	</div>
+	<div class="col-1">
+		<a class="edit-filter-product" data-filter-product-id="@product.SiteFilterProductId"
+		   data-filter-id="@product.SiteFilterId" href="#"><i class="far fa-edit"></i></a>
+		<form method="post" asp-action="DeleteProduct" style="display:inline-block">
+			<input value="@product.SiteFilterProductId" name="siteFilterProductId" type="hidden" />
+			<input asp-for="@Model.SiteFilterId" type="hidden" />
+			<button class="btn btn-link" type="button">
+				<i class="submit index far fa-times-circle" style="color:rgb(0, 123, 255)"></i>
+			</button>
+		</form>
+	</div>
+</div>}
+}
+
+<partial name="_UniversalModal" />

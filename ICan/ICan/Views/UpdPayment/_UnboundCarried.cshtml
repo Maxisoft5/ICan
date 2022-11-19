@@ -1,0 +1,67 @@
+﻿@model IEnumerable<ICan.Common.Models.Opt.UpdPaymentModel>
+
+@{
+	var title = "Подтверждённые оплаты, не соотнесённые с УПД";
+	Layout = null;
+}
+<style>
+	.unbound-upd-payments td, h3{
+		color: red;
+	}
+
+	h3 {
+		margin-top:40px;
+	}
+</style>
+@if (Model != null && Model.Any())
+{
+	<h3>@title</h3>
+
+	<table class="table unbound-upd-payments"
+		   data-toggle="table"
+		>
+		<thead>
+			<tr>
+				<th data-field="ShopName"
+					data-sortable="true"
+					data-sorter="datesTimeSorter"
+					data-filter-control="input"
+					class="narrow-200">
+					@Html.DisplayNameFor(model => model.ShopName)
+				</th>
+				<th data-field="Date" data-sortable="true"
+					data-filter-control="select" class="narrow-150">
+					@Html.DisplayNameFor(model => model.Date)
+				</th>
+				<th data-field="UpdNumber" data-sortable="true"
+					data-filter-control="input">
+					@Html.DisplayNameFor(model => model.UpdNumber)
+				</th>
+				<th data-field="ReportDate" data-sortable="true"
+					data-filter-control="select">
+					@Html.DisplayNameFor(model => model.ReportDate)
+				</th>
+			</tr>
+		</thead>
+		<tbody>
+			@foreach (var item in Model)
+			{
+				<tr>
+					<td>
+						@Html.DisplayFor(modelItem => item.ShopName)
+					</td>
+					<td>
+						@Html.DisplayFor(modelItem => item.Date)
+					</td>
+
+					<td>
+						@Html.DisplayFor(modelItem => item.UpdNumber)
+					</td>
+					<td>
+						@Html.DisplayFor(modelItem => item.ReportDate)
+					</td>
+				</tr>
+			}
+		</tbody>
+	</table>
+}

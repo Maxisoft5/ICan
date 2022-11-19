@@ -1,0 +1,245 @@
+﻿@using ICan.Common.Models.Enums
+@model ICan.Common.Models.Opt.ProductModel
+
+@{
+	var actionType = ActionType.Details;
+	ActionType.TryParse(ViewData["ActionType"]?.ToString(), out actionType);
+
+	var header = actionType == ActionType.Details ? "Просмотр" : "Редактирование";
+	ViewData["Title"] = header;
+
+	bool.TryParse(ViewData["IsAdmin"]?.ToString(), out var isAdmin);
+	bool.TryParse(ViewData["IsStoreKeeper"]?.ToString(), out var isStoreKeeper);
+	bool.TryParse(ViewData["IsOperator"]?.ToString(), out var isOperator);
+	var userCanEdit = isAdmin || isOperator;
+}
+
+<h2>@header</h2>
+
+<hr />
+<span class="alert-danger">@TempData["ErrorMessage"]</span>
+<span class="text-success">@TempData["StatusMessage"]</span>
+
+
+<div class="row">
+	<div class="col-md-5">
+		<form asp-action="Edit">
+			<div asp-validation-summary="ModelOnly" class="text-danger"></div>
+			<input type="hidden" asp-for="ProductId" />
+			<input type="hidden" asp-for="ProductKindId" />
+
+			<div class="form-group">
+				<label asp-for="Name" class="control-label"></label>
+				<sup><i class="fas fa-asterisk" style="font-size: 10px; color: red"></i></sup>
+				@if (actionType == ActionType.Details || !userCanEdit)
+				{
+					<input asp-for="Name" class="form-control" disabled />
+				}
+				else
+				{
+					<input asp-for="Name" class="form-control" />
+				}
+				<span asp-validation-for="Name" class="text-danger"></span>
+			</div>
+
+			<div class="form-group">
+				<label asp-for="CountryId" class="control-label"></label><br/>
+				@if (actionType == ActionType.Details || !userCanEdit)
+				{
+					<select asp-for="CountryId" class="form-control" disabled
+							asp-items="ViewBag.CountryId"></select>
+				}
+				else
+				{
+					@Html.DropDownListFor(it=> it.CountryId, (IEnumerable<SelectListItem>
+					)ViewBag.CountryId, "--", new {@class="form-control"})
+				}
+			<span asp-validation-for="CountryId" class="text-danger"></span>
+		</div>
+
+			<div class="form-group regional-name">
+				<label asp-for="RegionalName" class="control-label"></label>
+				@if (actionType == ActionType.Details || !userCanEdit)
+				{
+					<input asp-for="RegionalName" class="form-control" disabled />
+				}
+				else
+				{
+					<input asp-for="RegionalName" class="form-control" />
+				}
+				<span asp-validation-for="RegionalName" class="text-danger"></span>
+			</div>
+
+
+			<div class="form-group">
+				<label asp-for="ProductSeriesId" class="control-label"></label>
+				@if (actionType == ActionType.Details || !userCanEdit)
+				{
+					<select asp-for="ProductSeriesId" class="form-control" disabled
+							asp-items="ViewBag.ProductSeriesId"></select>
+				}
+				else
+				{
+					@Html.DropDownListFor(model => model.ProductSeriesId,
+					  (IEnumerable<SelectListItem>)ViewBag.ProductSeriesId, "-",
+							new
+							{
+								@class = "form-control select-product-series"
+							})
+				}
+				<span asp-validation-for="ProductSeriesId" class="text-danger"></span>
+			</div>
+
+			@if (Model.IsNoteBook)
+			{
+				<div class="form-group">
+					<label asp-for="ISBN" class="control-label"></label>
+					@if (actionType == ActionType.Details || !userCanEdit)
+					{
+						<input asp-for="ISBN" class="form-control" disabled />
+					}
+					else
+					{
+						<input asp-for="ISBN" class="form-control" />
+					}
+
+					<span asp-validation-for="ISBN" class="text-danger"></span>
+				</div>
+			
+				<div class="form-group">
+					<label asp-for="ArticleNumber" class="control-label"></label>
+					@if (actionType == ActionType.Details || !userCanEdit)
+					{
+						<input asp-for="ArticleNumber" class="form-control" disabled />
+					}
+					else
+					{
+						<input asp-for="ArticleNumber" class="form-control" />
+					}
+
+					<span asp-validation-for="ArticleNumber" class="text-danger"></span>
+				</div>
+				<div class="form-group">
+					<label asp-for="IsKit" class="control-label"></label>
+					@if (actionType == ActionType.Details || !userCanEdit)
+					{
+						@Html.CheckBoxFor(model => model.IsKit,
+						new { @class = "form-control is", disabled = "disabled" })
+					}
+					else
+					{
+						@Html.CheckBoxFor(model => model.IsKit,
+							new { @class = "form-control is" })
+
+					}
+					<span asp-validation-for="IsKit" class="text-danger"></span>
+				</div>
+			}
+
+			<div class="form-group">
+				<label asp-for="Enabled" class="control-label"></label>
+				@if (actionType == ActionType.Details || !userCanEdit)
+				{
+					@Html.CheckBoxFor(model => model.Enabled,
+					new { @class = "form-control left-aligned-checkbox", disabled = "disabled" })
+				}
+				else
+				{
+					@Html.CheckBoxFor(model => model.Enabled,
+						new { @class = "form-control is" })
+
+				}
+				<span asp-validation-for="Enabled" class="text-danger"></span>
+			</div>			
+			
+			<div class="form-group">
+				<label asp-for="ShowPreviousPrice" class="control-label"></label>
+				@if (actionType == ActionType.Details || !userCanEdit)
+				{
+					@Html.CheckBoxFor(model => model.ShowPreviousPrice,
+					new { @class = "form-control left-aligned-checkbox", disabled = "disabled" })
+				}
+				else
+				{
+					@Html.CheckBoxFor(model => model.ShowPreviousPrice,
+						new { @class = "form-control is" })
+
+				}
+				<span asp-validation-for="ShowPreviousPrice" class="text-danger"></span>
+			</div>
+
+			<div class="form-group">
+				<label asp-for="Weight" class="control-label"></label>
+				<sup><i class="fas fa-asterisk" style="font-size: 10px; color: red"></i></sup>
+				@if (actionType == ActionType.Details || !userCanEdit)
+				{
+					<input asp-for="Weight" class="form-control" disabled />
+				}
+				else
+				{
+					<input asp-for="Weight" class="form-control" />
+				}
+				<span asp-validation-for="Weight" class="text-danger"></span>
+			</div>
+
+			 
+			<div class="form-group">
+				<label asp-for="DisplayOrder" class="control-label"></label>
+				@if (actionType == ActionType.Details || !userCanEdit)
+				{
+					<input asp-for="DisplayOrder" class="form-control" disabled />
+				}
+				else
+				{
+					<input asp-for="DisplayOrder" class="form-control" />
+				}
+				<span asp-validation-for="DisplayOrder" class="text-danger"></span>
+			</div>
+			@if (actionType == ActionType.Edition && userCanEdit)
+			{
+				<div class="form-group">
+					<input type="submit" value="Сохранить" class="btn btn-default" />
+				</div>
+			}
+		</form>
+	</div>
+
+	<div class="col-md-7" id="partial">
+		@await Html.PartialAsync("_ProductPrice", Model.ProductPrices)
+		<br />
+		@if (Model.IsKit)
+		{
+			@await Html.PartialAsync("_KitProducts", Model.KitProducts)
+		}
+	</div>
+</div>
+
+
+<div class="row">
+	@if (actionType == ActionType.Details && userCanEdit)
+	{
+		<a asp-action="Edit" asp-route-id="@Model.ProductId">Редактировать</a> <span>|</span>
+	}
+
+</div>
+<div class="row">
+	<a asp-action="Index">Назад к списку</a>
+</div>
+
+@section Scripts {
+
+	@{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
+
+<script>
+	$(function () {
+		checkCountryValue();
+        $('#CountryId').change(checkCountryValue);
+		function checkCountryValue() {
+            if ($('#CountryId').children("option:selected").text() == '--')
+                $('.regional-name').hide();
+            else
+                $('.regional-name').show();
+        }
+	});
+</script>

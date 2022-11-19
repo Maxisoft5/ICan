@@ -1,0 +1,42 @@
+﻿@model ICan.Common.Models.Opt.MarketplaceModel
+@{ 
+	var title = "Редактирование маркетплейса";
+	ViewData["Title"] = title; 
+}
+
+<h2>@title</h2>
+<hr />
+<span class="text-success">@TempData["StatusMessage"]</span>
+<span class="alert-danger">@TempData["ErrorMessage"]</span>
+<div class="row">
+	<div class="col-md-4">
+		<form asp-action="Edit" enctype="multipart/form-data">
+			<input name="MarketplaceId" value="@Model.MarketplaceId" hidden>
+			<div asp-validation-summary="ModelOnly" class="text-danger"></div>
+			<div class="form-group">
+				<label asp-for="Name" class="control-label"></label>
+				<sup><i class="fas fa-asterisk" style="font-size: 10px; color: red"></i></sup>
+				<input asp-for="Name" class="form-control" value="@Model.Name" />
+				<span asp-validation-for="Name" class="text-danger"></span>
+			</div>
+			<div class="form-group">
+				<label asp-for="ImageName" class="control-label"></label> <hr />
+				<img src="@Html.DisplayFor(modelItem => Model.ImagePath)" />
+				<input asp-for="ImageName" class="form-control" value="@Model.ImageName" hidden />
+				<input type="file" name="image" class="form-control" accept="image/png, image/svg" />
+			</div>
+			<div class="form-group">
+				<label asp-for="Url" class="control-label"></label>
+				<input asp-for="Url" class="form-control" value="@Model.Url" />
+				<span asp-validation-for="Url" class="text-danger"></span>
+			</div>
+			<div class="form-group">
+				<input type="submit" value="Сохранить" class="btn btn-default" />
+			</div>
+		</form>
+	</div>
+</div>
+
+<div>
+	<a asp-action="Index">Назад к списку</a>
+</div>

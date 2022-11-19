@@ -1,0 +1,283 @@
+﻿body {
+	min-height: 100vh;
+	position: relative;
+}
+
+/* Wrapping element */
+/* Set some basic padding to keep content from hitting the edges */
+
+.fixed-table-body thead th .th-inner {
+	white-space: pre-line;
+}
+
+.narrow-40 {
+	width: 40px;
+	max-width: 40px;
+}
+
+.narrow-50 {
+	width: 50px;
+	max-width: 50px;
+}
+
+.narrow-60 {
+	width: 60px;
+	max-width: 60px;
+}
+
+.narrow-70 {
+	width: 70px;
+	max-width: 70px;
+}
+
+.narrow-80 {
+	width: 80px;
+	max-width: 80px;
+}
+
+.narrow-90 {
+	width: 90px;
+	max-width: 90px;
+}
+
+.narrow-100 {
+	width: 100px;
+	max-width: 100px;
+}
+
+.narrow-110 {
+	width: 110px;
+	max-width: 110px;
+}
+.narrow-130 {
+	width: 130px;
+	text-overflow: ellipsis;
+}
+.narrow-150 {
+	max-width: 150px;
+	text-overflow: ellipsis;
+}
+
+.narrow-170 {
+	max-width: 170px;
+	text-overflow: ellipsis;
+}
+
+.narrow-200 {
+	max-width: 200px;
+	text-overflow: ellipsis;
+}
+
+.narrow-250 {
+	min-width: 250px;
+	text-overflow: ellipsis;
+}
+
+.narrow-280 {
+	min-width: 280px;
+	text-overflow: ellipsis;
+}
+
+.narrow-300 {
+	min-width: 300px;
+	max-width: 300px;
+	text-overflow: ellipsis;
+}
+
+.narrow-470 {
+	min-width: 470px;
+	max-width: 470px;
+	text-overflow: ellipsis;
+}
+
+.number-cell {
+	text-align: right;
+}
+
+.checkbox-cell {
+	text-align: center;
+}
+
+
+h2 {
+	margin-top: 15px;
+}
+
+.black-text {
+	color: #201E00;
+}
+
+.green-text {
+	color: #9EC411;
+	font-weight: bolder;
+}
+
+.control-label {
+	font-weight: 600;
+}
+
+.gr {
+	background-color: #9EC411;
+	border-color: #9EC411;
+}
+
+.delete-photo, .show-hide {
+	margin-left: 10px;
+	color: rgb(0, 123, 255);
+}
+
+.submit, .delete-order {
+	color: rgb(0, 123, 255);
+}
+
+.blue-circle {
+	color: rgb(0, 123, 255);
+}
+
+.fas.fa-box {
+	color: rgb(0, 123, 255);
+}
+
+.fa-times-circle {
+	cursor: pointer;
+}
+
+
+.btn-default, .btn-primary {
+	background-color: #9EC411;
+	border-color: #9EC411;
+}
+
+.btn-outline-primary {
+	border-color: #9EC411;
+	color: #000;
+	background-color: rgba(158,196,17, 0.416)
+}
+
+	.btn-outline-primary.focus {
+		box-shadow: 0 0 0 0.2rem rgba(158, 196, 17, 0.5);
+	}
+
+	.btn-outline-primary:hover, .btn-outline-default:hover {
+		color: #fff;
+		background-color: #9EC411;
+		border-color: #9EC411;
+	}
+
+.red {
+	color: #ff0000;
+}
+
+.is {
+	width: 5%;
+}
+
+.info {
+	background-color: #dee2e6;
+}
+
+#loading {
+	position: fixed;
+	z-index: 99999999;
+	left: 0;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	background: #fff;
+	margin: 0 auto;
+	text-align: center;
+	opacity: 0.7;
+	display:none;
+}
+
+	#loading img {
+		position: absolute;
+		left: 0;
+		right: 0;
+		top: 20%;
+		text-align: center;
+		top: 45%;
+		margin: 0 auto;
+	}
+
+.body-content {
+	/*padding-left: 15px;
+	padding-right: 15px;*/
+	padding-left: 5px;
+	padding-right: 5px;
+	display: flex;
+	flex-flow: column;
+	min-height: calc(100vh - 130px);
+}
+
+/* Carousel */
+.carousel-caption p {
+	font-size: 20px;
+	line-height: 1.4;
+}
+
+/* Make .svg files in the carousel display properly in older browsers */
+.carousel-inner .item img[src$=".svg"] {
+	width: 100%;
+}
+
+/* QR code generator */
+#qrCode {
+	margin: 15px;
+}
+
+.order-paperorder select {
+	display: inline-block;
+	max-width: 35vw;
+}
+
+.order-semiproduct select {
+	width: 100%;
+}
+
+.order-paperorders {
+	margin-top: 50px;
+}
+
+.footer {
+	display: flex;
+	justify-content: space-around;
+	align-items: center;
+	max-width: 85%;
+	margin: 0 auto;
+	height: 54px;
+}
+
+.order-address label {
+	font-weight: bold;
+}
+
+.bootstrap-table .fixed-table-container .table thead th .th-inner {
+	white-space: normal;
+}
+
+form.upload-form {
+	border-color: gainsboro;
+	border-style: groove;
+	border-radius: 20px;
+	padding: 10px;
+}
+
+.form-control {
+	height: calc(1.5em + 0.75rem + 8px);
+}
+
+.far.fa-times-circle {
+	color: rgb(0, 123, 255)
+}
+
+.left-aligned-checkbox {
+	width:5%;
+}
+/* Hide/rearrange for smaller screens */
+@media screen and (max-width: 767px) {
+	/* Hide captions */
+	.carousel-caption {
+		display: none;
+	}
+}

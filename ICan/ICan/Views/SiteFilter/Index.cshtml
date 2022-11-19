@@ -1,0 +1,66 @@
+﻿@model IEnumerable<ICan.Common.Models.Opt.SiteFilterModel>
+
+@{ ViewData["Title"] = "Фильтры на сайте"; }
+
+<h2>@ViewData["Title"] </h2>
+
+<span class="text-success">@TempData["StatusMessage"]</span>
+<span class="alert-danger">@TempData["ErrorMessage"]</span>
+
+<div class="row">
+	<div class="col-2">
+		<a asp-action="Create">Создать</a>
+	</div>
+</div>
+
+
+<table class="table">
+	<thead>
+		<tr>
+			<th style="max-width:200px">
+				@Html.DisplayNameFor(model => model.Name)
+			</th>
+			<th style="max-width:200px">
+				@Html.DisplayNameFor(model => model.SiteName)
+			</th>
+			<th>@Html.DisplayNameFor(model => model.ProductNames)</th>
+			<th></th>
+		</tr>
+	</thead>
+	<tbody>
+		@foreach (var item in Model)
+		{
+			<tr>
+				<td>
+					@Html.DisplayFor(modelItem => item.Name)
+				</td>
+				<td>
+					@Html.DisplayFor(modelItem => item.SiteName)
+				</td>
+				<td>
+					@if (item.ProductNames != null && item.ProductNames.Any())
+					{
+						foreach (var productName in item.ProductNames)
+						{
+							<div>@productName</div>
+						}
+					}
+				</td>
+				<td>
+					<a href="#" class="copy-route" data-filter="@item.SiteFilterId"><i class="far fa-copy"></i></a>	<span class="src-copied" style="display:none; color:#9EC411"><i class="far fa-check-circle"></i></span>
+
+					<a asp-action="Edit" asp-route-id="@item.SiteFilterId"><i class="far fa-edit"></i></a>
+					@if (!item.IsInternal)
+					{
+						<form asp-action="Delete" style="display: inline" class="buttons"
+							  asp-route-id="@item.SiteFilterId">
+							<i class="submit index far fa-times-circle" style="color:rgb(0, 123, 255)"></i>
+						</form>
+					}
+				</td>
+			</tr>
+		}
+	</tbody>
+</table>
+
+<script src="~/js/siteFilterView.js" asp-append-version="true"></script>

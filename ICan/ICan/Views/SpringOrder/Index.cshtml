@@ -1,0 +1,86 @@
+﻿@model IEnumerable<ICan.Common.Models.Opt.SpringOrderModel>
+
+@{ var title = "Заказ пружины";
+				ViewData["Title"] = title; }
+
+<h2>@title</h2>
+
+<span class="text-success">@TempData["StatusMessage"]</span>
+<span class="alert-danger">@TempData["ErrorMessage"]</span>
+
+<p>
+	<a asp-action="Create">Создать</a>
+</p>
+
+<table class="table">
+	<thead>
+		<tr>
+			<th style="max-width:200px">
+				@Html.DisplayNameFor(model => model.OrderDate)
+			</th>
+			<th style="max-width:200px">
+				@Html.DisplayNameFor(model => model.SpringName)
+			</th>
+			<th style="max-width:200px">
+				@Html.DisplayNameFor(model => model.InvoiceNumber)
+			</th>
+			<th style="max-width:220px">
+				@Html.DisplayNameFor(model => model.UPDNumber)
+			</th>
+			<th style="max-width:220px">
+				@Html.DisplayNameFor(model => model.Cost)
+			</th>
+			<th style="max-width:220px">
+				@Html.DisplayNameFor(model => model.Provider)
+			</th>
+			<th style="max-width:220px">
+				@Html.DisplayNameFor(model => model.SpoolCount)
+			</th>
+			<th style="max-width:220px">
+				@Html.DisplayNameFor(model => model.IsAssembled)
+			</th>
+			<th></th>
+		</tr>
+	</thead>
+	<tbody>
+		@foreach (var item in Model)
+		{
+		<tr>
+			<td>
+				@Html.DisplayFor(modelItem => item.OrderDate)
+			</td>
+			<td>
+				@Html.DisplayFor(modelItem => item.SpringName)
+			</td>
+			<td>
+				@Html.DisplayFor(modelItem => item.InvoiceNumber)
+			</td>
+			<td>
+				@Html.DisplayFor(modelItem => item.UPDNumber)
+			</td>
+			<td class="number-cell">
+				@Html.DisplayFor(modelItem => item.Cost)
+			</td>
+			<td class="text-center">
+				@Html.DisplayFor(modelItem => item.Provider)
+			</td>
+			<td class="number-cell">
+				@Html.DisplayFor(modelItem => item.SpoolCount)
+			</td>
+			<td class="text-center">
+				@if (item.IsAssembled)
+				{
+		<i class="fas fa-check"></i><br /> }
+	else
+	{
+		<i class="fas fa-times"></i>}
+			</td>
+			<td>
+				<a asp-action="Edit" asp-route-id="@item.SpringOrderId"><i class="far fa-edit"></i></a> |
+				<form asp-action="Delete" asp-route-id="@item.SpringOrderId" style="display: inline">
+					<i class="submit index far fa-times-circle" style="color:rgb(0, 123, 255)"></i>
+				</form>
+			</td>
+		</tr>}
+	</tbody>
+</table>

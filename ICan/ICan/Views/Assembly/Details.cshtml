@@ -1,0 +1,83 @@
+﻿@using ICan.Common.Models.Enums
+@model ICan.Common.Models.Opt.AssemblyModel
+
+@{ var actionType = (ActionType)ViewBag.Action;
+	bool.TryParse(ViewData["IsAdmin"]?.ToString(), out var isAdmin);
+	bool.TryParse(ViewData["IsOperator"]?.ToString(), out var isOperator);
+	bool.TryParse(ViewData["IsStorekeeper"]?.ToString(), out var isStoreKeeper);
+	bool.TryParse(ViewData["IsAssembler"]?.ToString(), out var isAssembler);
+	var products = (IEnumerable<SelectListItem>)ViewData["ProductId"];
+	var title = "Просмотр сборки";
+	ViewData["Title"] = title;
+}
+
+<h2>@title</h2>
+
+<hr />
+
+
+<div class="row">
+	<div class="col-md-4">
+		<input asp-for="AssemblyId" hidden />
+		<input asp-for="AssemblyType" hidden />
+		<div class="form-group">
+			<label asp-for="Date" class="control-label"></label>
+			<sup><i class="fas fa-asterisk" style="font-size: 10px; color: red"></i></sup>
+
+			<br />
+			<span>@Model.Date.ToString("dd.MM.yyyy HH:mm")</span>
+			<input asp-for="Date" hidden />
+		</div>
+		<div class="form-group">
+			<label asp-for="ProductId" class="control-label"></label>
+			<sup><i class="fas fa-asterisk" style="font-size: 10px; color: red"></i></sup>
+			@Html.DisplayFor(m=> m.ProductDisplayName)
+
+			<span asp-validation-for="ProductId" class="text-danger"></span>
+		</div>
+		<div class="form-group">
+			<label asp-for="Amount" class="control-label"></label>
+			<sup><i class="fas fa-asterisk" style="font-size: 10px; color: red"></i></sup>
+			@Html.DisplayFor(m => m.Amount)
+		</div>
+	</div>
+	<div class="col-md-4 semiprods-orders">
+		@if (Model.SemiproductsWithPrintOrders != null && Model.SemiproductsWithPrintOrders.Any())
+		{
+			var counter = 0;
+
+			foreach (var assemblySemiprods in Model.AssemblySemiproducts)
+			{
+				var keyValue = assemblySemiprods.PrintOrderSemiproductId;
+				var name = assemblySemiprods.PrintOrderSemiproduct?.SemiProduct.SemiproductTypeName;
+				var displayName = assemblySemiprods.PrintOrderSemiproduct?.DisplayName;
+				if (!assemblySemiprods.PrintOrderSemiproductId.HasValue)
+				{
+					name = "Наклейки";
+					keyValue = assemblySemiprods.NotchOrderId.Value;
+					var stickersId = Model.SemiproductsWithPrintOrders.Keys
+					.FirstOrDefault(t => t.SemiproductTypeId == (int)ICan.Common.Models.Opt.SemiProductType.Stickers)
+					?.SemiproductId ?? 0;
+					displayName = assemblySemiprods.NotchOrder?.GetDisplayForAssembly();
+				}
+
+				<div class="form-group">
+					<label class="control-label semiproductName">@name</label>
+					<select class="form-control list-orders[@counter]" disabled>
+						<option value="@keyValue">@displayName</option>
+					</select>
+				</div>
+				counter++;
+			}
+		}
+	</div>
+</div>
+
+
+<div>
+	<a asp-action="Index">Назад к списку</a>
+</div>
+<script src="~/js/assembly.js" asp-append-version="true"></script>
+@section Scripts {
+	@{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

@@ -1,0 +1,71 @@
+﻿@model IEnumerable<ICan.Common.Models.Opt.ReportModel>
+
+<table class="table table-responsive-md" data-toggle="table"
+	   data-search="true"
+	   data-filter-control="true"
+	   data-sort-name="ReportMonth" data-sort-order="desc"
+	   data-show-search-clear-button="true"
+	   id="reportTable">
+	<thead>
+		<tr>
+			<th data-field="Shop" data-sortable="true" data-filter-control="input">
+				Магазин
+			</th>
+			<th data-field="ReportKind" data-sortable="true" data-filter-control="select">
+				@Html.DisplayNameFor(model => model.ReportKindName)
+			</th>
+			<th data-field="ReportNum" data-sortable="true" data-filter-control="select">
+				@Html.DisplayNameFor(model => model.ReportNum)
+			</th>
+			<th data-field="ReportDate" data-sortable="true" data-filter-control="input"
+				data-sorter="datesSorter">
+				@Html.DisplayNameFor(model => model.ReportDate)
+			</th>
+			<th data-field="ReportMonth" data-sortable="true" data-filter-control="select">
+				@Html.DisplayNameFor(model => model.Month)
+			</th>
+			<th data-field="ReportYear" data-sortable="true" data-filter-control="select">
+				@Html.DisplayNameFor(model => model.ReportYear)
+			</th>
+			<th data-field="TotalSum" data-sortable="true" data-sorter="formattedNumberSorter">
+				@Html.DisplayNameFor(model => model.TotalSumFormatted)
+			</th>
+			<th></th>
+		</tr>
+	</thead>
+	<tbody>
+		@foreach (var item in Model)
+		{
+<tr>
+	<td>
+		@item.ShopName
+
+	</td>
+	<td>
+		@Html.DisplayFor(modelItem => item.ReportKindName)
+	</td>
+	<td>
+		@Html.DisplayFor(modelItem => item.ReportNum)
+	</td>
+	<td>
+		@(item.ReportDate?.ToShortDateString())
+	</td>
+	<td>
+		@Html.DisplayFor(modelItem => item.Month)
+	</td>
+	<td>
+		@Html.DisplayFor(modelItem => item.ReportYear)
+	</td>
+	<td class="number-cell">
+		@Html.DisplayFor(modelItem => item.TotalSumFormatted)
+	</td>
+	<td>
+		<a asp-action="Details" asp-route-id="@item.ReportId"><i class="far fa-file-alt"></i></a> |
+
+		<form asp-action="Delete" style="display: inline" class="buttons" asp-route-id="@item.ReportId">
+			<i class="submit index far fa-times-circle" style="color:rgb(0, 123, 255)"></i>
+		</form>
+	</td>
+</tr>}
+	</tbody>
+</table>

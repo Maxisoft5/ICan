@@ -1,0 +1,104 @@
+﻿@model IEnumerable<ICan.Common.Models.Opt.CampaignModel>
+<h2>Рассылки</h2>
+
+<div class="row">
+    <div class="col-2">
+        <a asp-action="ExportContacts">Экспортировать контакты</a>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-2">
+        <a asp-action="Create">Создать кампанию</a>
+    </div>
+</div>
+
+<br />
+<span class="alert-danger">@TempData["ErrorMessage"]</span>
+<span class="text-success">@TempData["StatusMessage"]</span>
+<br />
+
+<table class="table">
+    <thead>
+        <tr>
+            <th style="max-width:200px">
+                @Html.DisplayNameFor(model => model.CampaignName)
+            </th>
+            <th style="max-width:200px">
+                @Html.DisplayNameFor(model => model.CampaignType)
+            </th>
+            <th style="max-width:220px">
+                @Html.DisplayNameFor(model => model.Date)
+            </th>
+            <th style="max-width:220px">
+                @Html.DisplayNameFor(model => model.Title)
+            </th>
+            <th style="max-width:220px">
+                @Html.DisplayNameFor(model => model.IsSent)
+            </th>
+            <th></th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.CampaignName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.CampaignType)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Date)
+                </td>
+                <td style="max-width:250px">
+                    @Html.DisplayFor(modelItem => item.Title)
+                </td>
+                <td style="max-width:250px; text-align:center;">
+                    @if (item.IsSent)
+                    {
+                        <i class="fas fa-check"></i><br />
+                    }
+                    else
+                    {
+                        <i class="fas fa-times"></i>
+                    }
+                </td>
+                <td>
+                    @if (item.IsSent)
+                    {
+                        <a asp-action="Details" asp-route-id="@item.CampaignId"><i class="fas fa-file-medical-alt"></i></a>
+                        <form asp-action="Delete" style="display: inline" asp-route-id="@item.CampaignId">
+                            <i class="submit index far fa-times-circle" style="color:rgb(0, 123, 255)"></i>
+                        </form>
+                    }
+                    else
+                    {
+                        <a asp-action="Edit" asp-route-id="@item.CampaignId"><i class="far fa-edit"></i></a>
+                        <form asp-action="Delete" style="display: inline" asp-route-id="@item.CampaignId">
+                            <i class="submit index far fa-times-circle" style="color:rgb(0, 123, 255)"></i>
+                        </form>
+                    }
+                </td>
+                <td>
+                    @if (item.IsSent)
+                    {
+                        <span class="btn btn-secondary">Отправить</span>
+                    }
+                    else
+                    {
+                        <form asp-action="PrepareCampaign" asp-route-id="@item.CampaignId" >
+                            <button class="btn btn-default">Подготовить кампанию</button>
+                        </form>
+                        <br />
+                        <form asp-action="SendCampaing" asp-route-id="@item.CampaignId" >
+                            <button class="btn btn-default">Отправить</button>
+                        </form>
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

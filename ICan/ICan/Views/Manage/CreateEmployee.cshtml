@@ -1,0 +1,66 @@
+﻿@model ICan.Common.Models.AccountViewModels.EmployeeModel
+@{
+    ViewData["Title"] = "Создание нового сотрудника";
+    bool.TryParse(ViewData["IsAdmin"]?.ToString(), out bool isAdmin);
+}
+<br />
+<h4>@ViewData["Title"]</h4>
+<hr />
+<form method="post" style="width: 100%;">
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    <div class="row">
+        <div class="col-md-5">
+            <div class="form-group">
+                <label asp-for="FirstName"></label>
+                <sup><i class="fas fa-asterisk" style="font-size: 10px; color: red"></i></sup>
+                <input asp-for="FirstName" class="form-control" />
+                <span asp-validation-for="FirstName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="LastName"></label>
+                <sup><i class="fas fa-asterisk" style="font-size: 10px; color: red"></i></sup>
+                <input asp-for="LastName" class="form-control" />
+                <span asp-validation-for="LastName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Email"></label>
+                <sup><i class="fas fa-asterisk" style="font-size: 10px; color: red"></i></sup>
+                <input asp-for="Email" class="form-control" />
+                <span asp-validation-for="Email" class="text-danger"></span>
+            </div>
+            @if (isAdmin)
+            {
+                <div class="form-group">
+                    <label asp-for="Roles"></label>
+                    @for(var i = 0; i < Model.Roles.Count; i++)
+                    {
+                        <div class="form-group check-group">
+                            <input id="Role[@i]" name="CheckedRoles" value="@Model.Roles[i].NameEn" class="form-control left-aligned-checkbox" type="checkbox" />
+                            <label for="Role[@i]" class="control-label">@Model.Roles[i].Name</label>                            
+                        </div>
+                    }
+                </div>
+            }
+        </div>
+    </div>
+    <div class="row">
+        <button type="submit" class="btn btn-default" style="margin-left: 15px;">Отправить приглашение на почту</button>
+    </div>
+</form>
+
+<div style="margin-top:20px;">
+	<a asp-action="List">Назад к списку</a>
+</div>
+
+<style>
+    .check-group{
+        display:flex;
+        align-items: center;
+    }
+    .check-group label{
+        margin-bottom: 0;
+        margin-left: 10px;
+        font-weight: normal;
+    }
+</style>
+

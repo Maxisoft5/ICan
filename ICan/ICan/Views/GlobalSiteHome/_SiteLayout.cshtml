@@ -1,0 +1,80 @@
+﻿@using System.Text.Encodings.Web;
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
+<!DOCTYPE html>
+<html lang="@ViewData["Language"]">
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<meta name="google-site-verification" content="BZfZEauptg-o4B6hq6DqDJ824SaRKYMzjR1J-duIFlo	">
+	<meta name="facebook-domain-verification" content="7z14klhxduhl9s1uel8fspr177pq8f" />
+	<link rel="icon" type="image/x-icon" href="~/favicon.ico">
+	<title>YAMOGU - @ViewData["Title"]</title>
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+	<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.touchswipe/1.6.19/jquery.touchSwipe.min.js"></script>
+	<link rel="preconnect" href="https://fonts.gstatic.com">
+	<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+	<link href="~/css/main.css" rel="stylesheet" asp-append-version="true" />
+	<script>
+		window.applicationBaseUrl = '@Html.Raw(JavaScriptEncoder.Default.Encode(Url.Content("~/")))';
+		window.siteUrls = {
+			filterProducts: "@Url.Action("Index", "SiteHome")"
+		}
+	</script>
+</head>
+<body>
+	@{
+		var showFilter = false;
+		bool.TryParse(ViewData["ShowFilter"]?.ToString(), out showFilter);
+		var selectedFilter = int.TryParse(ViewData["SelectedFilter"]?.ToString(), out var ser)
+			? $"{ser}-filter"
+			: string.Empty;
+		var selectedTag = int.TryParse(ViewData["selectedTag"]?.ToString(), out var tg)
+			? $"{tg}-tag"
+			: string.Empty;
+
+	}
+	<header class="header">
+		<div class="header-nav-wrapper">
+			<nav class="header-nav">
+				<a class="i-can" href="/AboutUs">
+					<img class="logo-rocket--foreign" src="~/assets/yamogu-int-logo.svg">
+				</a>
+				<a class="catalog" href="/">
+					<picture>
+						<source srcset="~/assets/desk-katalog-40-34.png" media="(min-width: 1024px)">
+						<img class="logo-catalog" src="~/assets/catalog.png">
+					</picture>
+					@*<div class="catalog-link">Our books</div>*@
+				<div class="catalog-link">@Localizer["Our books"]</div>
+				</a>
+				<a class="contacts" href="/Contacts">
+					<picture>
+						<source srcset="~/assets/desk-kontakty-40-29.png" media="(min-width: 1024px)">
+						<img class="logo-contacts" src="~/assets/contacts.png">
+					</picture>
+					<div class="contacts-link @Localizer["contact-link-class-name"]">@Localizer["Contact us"]</div>
+				</a>
+			</nav>
+		</div>
+		@if (showFilter)
+		{
+			<section class="filters filters--uk">
+				<div class="filters-series filters-series--uk" onClick='onSelectSeries(event)'>
+					<button type="button" class="filter-series filter-series--uk @(selectedFilter.Equals("2-filter") ?"selected" : string.Empty)" id="2-filter">2-3</button>
+					<button type="button" class="filter-series filter-series--uk @(selectedFilter.Equals("3-filter") ?"selected" : string.Empty)" id="3-filter">3-4</button>
+				</div>
+				<div class="filters-tag filters-tag--uk" onClick='onSelectTag(event)'>
+					<button type="button" class="filter-tag filter-tag--uk @(selectedTag.Equals("1-tag") ? "selected" : string.Empty)" id="1-tag">@Localizer["Cutting"]</button>
+					<button type="button" class="filter-tag filter-tag--uk @(selectedTag.Equals("2-tag") ? "selected" : string.Empty)" id="2-tag">@Localizer["Drawing"]</button>
+					<button type="button" class="filter-tag filter-tag--uk @(selectedTag.Equals("4-tag") ? "selected" : string.Empty)" id="4-tag">@Localizer["Creative skills"]</button>
+				</div>
+			</section>
+		}
+	</header>
+	@RenderBody()
+	<script src="~/js/sitehome/catalog.js" asp-append-version="true"></script>
+</body>
+</html>

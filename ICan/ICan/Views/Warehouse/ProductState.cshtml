@@ -1,0 +1,99 @@
+﻿@using ICan.Common.Models.Opt;
+@model CalcWhjDetails
+@{
+	var title = $"Состояние склада для {Model.ProductKindDisplayName} {Model.Name}";
+	ViewData["Title"] = title;
+}
+<h2> @title</h2>
+<hr />
+
+
+@if (Model != null)
+{
+	<div class="form-group">
+		<label asp-for="Current" class="control-label"></label>
+		<span>@Model.Current</span>
+	</div>
+
+	<div class="form-group">
+		<strong><label asp-for="Inventory" class="control-label"></label></strong>
+		<span>@Model.Inventory</span> <br />
+		<span>Дата: @(Model.InventoryDate?.ToShortDateString())</span>
+	</div>
+	<div class="form-group">
+		<strong><label asp-for="SingleInventory" class="control-label"></label></strong>
+		<span>@Model.SingleInventory</span> <br />
+		<span>Дата: @(Model.SingleInventoryDate?.ToShortDateString())</span>
+	</div>
+	@if (!Model.AssemblesAsKit)
+	{
+		<div class="form-group">
+			<strong> <label asp-for="Arrived" class="control-label"></label></strong>
+			<span>@Model.Arrived</span>
+			<partial name="_JournalDetails" model="Model.ArrivedItems" />
+		</div>
+		<div class="form-group">
+			<strong> <label class="control-label">Участвует в сборке комплектов(только для обычной тетради, не комплекта)</label></strong>
+			<span>@Model.KitAssemblyPart</span>
+			<partial name="_JournalDetails" model="Model.KitAssemblyPartItems" />
+		</div>
+	}
+	else
+	{
+		<div class="form-group">
+			<strong> <label class="control-label">Сборка комплектов(только для комплектов)</label></strong>
+			<span>@Model.KitAssembly</span>
+			<partial name="_JournalDetails" model="Model.KitAssemblyItems" />
+		</div>
+	}
+
+	<div class="form-group">
+		<strong> <label asp-for="UPD" class="control-label"></label></strong>
+		<span>@Model.UPD</span>
+		@if (Model.UPDItems != null && Model.UPDItems.Any())
+		{
+			<ul>
+				@foreach (var orderItem in Model.UPDItems)
+				{
+					<li>
+						<span>Дата УПД: @(orderItem.ActionDate), количество: @(orderItem.Amount), дополнительная информация: @(orderItem.Comment)</span>
+						<br />
+					</li>
+				}
+			</ul>}
+	</div>
+
+	<div class="form-group">
+		<strong><label asp-for="Marketing" class="control-label"></label></strong>
+		<span>@Model.Marketing</span>
+		<partial name="_JournalDetails" model="Model.MarketingItems" />
+	</div>
+	<div class="form-group">
+		<strong><label asp-for="Return" class="control-label"></label></strong>
+		<span>@Model.Return</span>
+		<partial name="_JournalDetails" model="Model.ReturnItems" />
+	</div>
+
+	<div class="form-group">
+		<strong> <label asp-for="OrderProduct" class="control-label"></label></strong>
+		<span>@Model.OrderProduct</span>
+	</div>
+
+	@if (Model.OrderProductItems != null && Model.OrderProductItems.Any())
+	{
+		<ul>
+			@foreach (var orderItem in Model.OrderProductItems)
+			{
+				<li>
+					<span>Дата заказа: @(orderItem.ActionDate), количество: @(orderItem.Amount), дополнительная информация: @(orderItem.Comment), </span>
+					<a href="@Url.Action("Details","Order", new { id = orderItem.ActionId })">ссылка</a>
+					<br />
+				</li>
+			}
+		</ul>
+	}
+}
+
+<div>
+	<a asp-action="Index">Назад к списку</a>
+</div>

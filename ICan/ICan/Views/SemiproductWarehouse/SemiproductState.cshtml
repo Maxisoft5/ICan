@@ -1,0 +1,149 @@
+﻿@using ICan.Common.Models.Opt;
+@model IEnumerable<SemiproductCalcDetails>
+@{ var title = $"Состояние склада готовых полуфабрикатов для {ViewData["ProductName"]}";
+	ViewData["Title"] = title;
+}
+<h2> @title</h2>
+<hr />
+
+@if (Model != null)
+{
+	foreach (var semiProduct in Model)
+	{
+		<div class="form-group">
+			<h4>
+				@Html.DisplayFor(t => semiProduct.SemiproductDisplayName)
+			</h4>
+		</div>
+
+		<div class="form-group">
+			<label asp-for="@semiProduct.Current" class="control-label"></label>
+			@Html.DisplayFor(t => semiProduct.Current)
+		</div>
+
+		<div class="form-group">
+			<label asp-for="@semiProduct.InventoryDate" class="control-label"></label>
+			@Html.DisplayFor(t => semiProduct.InventoryDate)
+
+		</div> <div class="form-group">
+			<label asp-for="@semiProduct.Inventory" class="control-label"></label>
+			@Html.DisplayFor(t => semiProduct.Inventory)
+		</div>
+
+		<div class="form-group">
+			<label asp-for="@semiProduct.SingleInventoryDate" class="control-label"></label>
+			@Html.DisplayFor(t => semiProduct.SingleInventoryDate)
+
+		</div> <div class="form-group">
+			<label asp-for="@semiProduct.SingleInventory" class="control-label"></label>
+			@Html.DisplayFor(t => semiProduct.SingleInventory)
+		</div>
+
+		<div class="form-group">
+			<label asp-for="@semiProduct.PrintOrderSum" class="control-label"></label>
+			@Html.DisplayFor(t => @semiProduct.PrintOrderSum)
+		</div>
+
+		@if (semiProduct.PrintOrderIncomingItems != null && @semiProduct.PrintOrderIncomingItems.Any())
+		{
+			<div class="form-group">
+				<ul>
+					@foreach (var incomintItem in semiProduct.PrintOrderIncomingItems)
+					{
+						<li>
+							@{
+								var explanation = string.IsNullOrWhiteSpace(incomintItem.Comment)
+									? $"Дата прихода: {incomintItem.ActionDate}, количество {incomintItem.Amount}"
+									: incomintItem.Comment;
+							}
+							<span>@explanation</span>
+						</li>
+					}
+				</ul>
+			</div>
+		}
+
+		@if (semiProduct.SemiproductTypeId == (int)SemiProductType.Stickers)
+		{
+			<div class="form-group">
+				<label asp-for="@semiProduct.StickersUnNotchedSum" class="control-label"></label>
+				@Html.DisplayFor(t => semiProduct.StickersUnNotchedSum)
+			</div>
+			 
+			<div class="form-group">
+				<label asp-for="@semiProduct.StickersNotchingSum" class="control-label"></label>
+				@Html.DisplayFor(t => semiProduct.StickersNotchingSum)
+			</div>
+		}
+		<div class="form-group">
+			<label asp-for="@semiProduct.AssemblySum" class="control-label"></label>
+			@Html.DisplayFor(t => semiProduct.AssemblySum)
+		</div>
+
+		@if (semiProduct.Assemblies != null && semiProduct.Assemblies.Any())
+		{
+			<div class="form-group">
+				<ul>
+					@foreach (var assembly in semiProduct.Assemblies)
+					{
+						<li>
+							@($"Дата сборки: {assembly.Date}, количество {assembly.Amount}")
+						</li>
+
+					}
+				</ul>
+			</div>
+		}
+
+
+		@if (semiProduct.SemiproductTypeId == (int)SemiProductType.Stickers
+			 || semiProduct.SemiproductTypeId == (int)SemiProductType.Box
+			|| semiProduct.SemiproductTypeId == (int)SemiProductType.Cursor)
+
+		{
+			<div class="form-group">
+				<label asp-for="@semiProduct.KitAssemblySum" class="control-label"></label>
+				@Html.DisplayFor(t => semiProduct.KitAssemblySum)
+			</div>
+			if (semiProduct.KitAssemblies != null && semiProduct.KitAssemblies.Any())
+			{
+				<div class="form-group">
+					<ul>
+						@foreach (var assembly in semiProduct.KitAssemblies)
+						{
+							<li>
+								@($"Дата {assembly.WarehouseDateAdd}, количество {assembly.Amount}")
+							</li>
+						}
+					</ul>
+				</div>
+			}
+		}
+
+		<div class="form-group">
+			<label asp-for="@semiProduct.PrintingInProcess" class="control-label"></label>
+			@Html.DisplayFor(t => semiProduct.PrintingInProcess)
+		</div>
+
+		@if (semiProduct.PrintOrders != null && semiProduct.PrintOrdersInProgress.Any())
+		{
+			<div class="form-group">
+				<ul>
+					@foreach (var printOrder in semiProduct.PrintOrdersInProgress)
+					{
+						<li>
+							@($"Заказ печати: {printOrder.OrderDate}, номер заказа печати {printOrder.PrintingHouseOrderNum}, ВЕСЬ тираж {printOrder.Printing}, осталось: {printOrder.RestAmount}")
+							@Html.ActionLink("ссылка", "Edit","PrintOrder", new { id= printOrder.PrintOrderId })
+						</li>
+
+					}
+				</ul>
+			</div>
+		}
+		<br />
+
+	}
+}
+<div>
+	<a asp-action="#" onClick="history.go(-1); return false;">Назад к списку</a>
+</div>

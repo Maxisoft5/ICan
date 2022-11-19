@@ -1,0 +1,65 @@
+﻿@model IEnumerable<ICan.Common.Models.Opt.PrintOrderPaymentModel>
+@using ICan.Common.Models.Enums
+@{
+	bool.TryParse(ViewData["IsAdmin"]?.ToString(), out var isAdmin);
+	bool.TryParse(ViewData["IsAssembler"]?.ToString(), out var isAssembler);
+	Enum.TryParse<ActionType>(ViewData["Action"]?.ToString(), out var actionType);
+}
+
+<h4>Платежи</h4>
+@if (actionType == ActionType.Edition)
+{
+	<p>
+		<a href="#" id="add-print-order-payment" data-toggle="modal" data-target="#addPrintOrderPayment">
+			Добавить платёж
+		</a>
+	</p>
+}
+
+<table class="table print-order-payments">
+	<thead>
+		<tr>
+			<th>
+				@Html.DisplayNameFor(model => model.Date)
+			</th>
+			<th>
+				@Html.DisplayNameFor(model => model.Amount)
+			</th>
+			<th></th>
+		</tr>
+	</thead>
+	<tbody>
+		@if (Model != null && Model.Any())
+		{
+			@foreach (var item in Model)
+			{
+				<tr data-amount="@item.Amount">
+					<td>
+						@item.DisplayDate
+					</td>
+					<td>
+						@item.DisplayAmount
+					</td>
+					<td>
+						@if (isAdmin || isAssembler)
+						{
+							<button data-print-order-payment-id="@item.PrintOrderPaymentId" class="btn btn-link delete-print-order-payment">
+								<i class="far fa-times-circle "></i>
+							</button>
+						}
+					</td>
+				</tr>
+			}
+		}
+		else
+		{
+			<tr class="empty-row"><td colspan="3" style="text-align:center">Нет данных для отображения</td></tr>
+		}
+	</tbody>
+</table>
+
+
+@if (actionType == ActionType.Edition)
+{
+	@await Html.PartialAsync("_PrintOrderAddPayment", new ICan.Common.Models.Opt.PrintOrderPaymentModel())
+}

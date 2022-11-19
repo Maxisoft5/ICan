@@ -1,0 +1,114 @@
+﻿@model IEnumerable<ICan.Common.Models.Opt.ShopModel>
+@{ ViewData["Title"] = "Магазины";
+	bool.TryParse(ViewData["IsAdmin"]?.ToString(), out var isAdmin);
+	bool.TryParse(ViewData["IsStoreKeeper"]?.ToString(), out var isStoreKeeper);
+	bool.TryParse(ViewData["IsOperator"]?.ToString(), out var isOperator); }
+<h2>Магазины</h2>
+<div class="row">
+	<div class="col-2">
+		<a asp-action="Create">Создать</a>
+	</div>
+</div>
+
+<span class="alert-danger">@TempData["ErrorMessage"]</span>
+<span class="text-success">@TempData["StatusMessage"]</span>
+
+<table class="table" style="width:700px">
+	<thead>
+		<tr>
+			<th>
+				@Html.DisplayNameFor(model => model.Name)
+			</th>
+			<th>
+				@Html.DisplayNameFor(model => model.ShopNames)
+			</th>
+			<th>
+				@Html.DisplayNameFor(model => model.IsMarketPlace)
+			</th>
+			<th>
+				@Html.DisplayNameFor(model => model.NonResident)
+			</th>
+			<th style="max-width:15%">
+				@Html.DisplayNameFor(model => model.ShopUrl)
+			</th>
+			<th>
+				@Html.DisplayNameFor(model => model.Postponement)
+			</th>
+			<th>
+				@Html.DisplayNameFor(model => model.ScanFileName)
+			</th>
+			<th></th>
+		</tr>
+	</thead>
+	<tbody>
+		@foreach (var item in Model)
+		{
+<tr>
+	<td>
+		@Html.DisplayFor(modelItem => item.Name)
+	</td>
+	<td>
+		@foreach (var shopName in item.ShopNames)
+		{
+<span>@(shopName.Name)</span><br />}
+	</td>
+	<td class="checkbox-cell">
+		@if (item.IsMarketPlace)
+		{
+<i class="fas fa-check"></i>}
+	</td>
+	<td class="checkbox-cell">
+		@if (item.NonResident)
+		{
+<i class="fas fa-check"></i>}
+	</td>
+	<td>
+		<a href="@Html.DisplayFor(modelItem => item.ShopUrl)" target="_blank" style="text-overflow:ellipsis; overflow:hidden">
+			Ссылка
+		</a>
+	</td>
+	<td>
+		@Html.DisplayFor(modelItem => item.Postponement)
+	</td>
+	<td>
+		@if (!string.IsNullOrWhiteSpace(item.ScanFileName) &&
+	  !string.IsNullOrWhiteSpace(item.MimeType))
+		{
+<div class="form-group">
+	<input data-filesrc="@item.ScanFileName"
+		   data-mimetype="@item.MimeType"
+		   type="button" class="btn btn-link show-contractFile" value="Посмотреть договор" />
+</div>}
+	</td>
+	<td>
+		<a asp-action="Edit" asp-route-id="@item.ShopId" class="buttons"><i class="far fa-edit"></i></a>
+		@if (item.CanDeleteShop)
+		{
+<form asp-action="Delete" style="display: inline" class="buttons" asp-route-id="@item.ShopId">
+	<i class="submit index far fa-times-circle" style="color:rgb(0, 123, 255)"></i>
+</form>
+		}
+	</td>
+</tr>
+}
+	</tbody>
+</table>
+
+<script src="~/js/shop.js"></script>
+
+<div class="modal fade document-preview-modal" tabindex="-1" role="dialog" style="width:100%;height:100%;">
+	<div class="modal-dialog" role="document" style="width: 100%; height: 90%;">
+		<div class="modal-content" style="width: 100%; height: 90%;">
+			<div class="modal-body" style="display: flex;flex-flow: column;">
+				<iframe class="document-frame" style="width: 100%; height: 100%; flex-grow: 1"></iframe>
+			</div>
+		</div>
+	</div>
+</div>
+
+<style>
+	.modal-dialog {
+		max-width: 90%;
+		width: auto !important;
+	}
+</style>

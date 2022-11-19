@@ -1,0 +1,53 @@
+﻿@using ICan.Common.Models.Enums;
+@model IEnumerable<ICan.Common.Models.Opt.WarehouseModel>
+@{
+	var title = "Склад тетрадей";
+	ViewData["Title"] = @title;
+	bool.TryParse(ViewData["IsAdmin"]?.ToString(), out var isAdmin);
+	bool.TryParse(ViewData["IsStoreKeeper"]?.ToString(), out var isStoreKeeper);
+	bool.TryParse(ViewData["IsOperator"]?.ToString(), out var isOperator);
+}
+<h2> @title</h2>
+<br />
+<span class="alert-danger">@TempData["ErrorMessage"]</span>
+<span class="text-success">@TempData["StatusMessage"]</span>
+<style>
+	.maxwidth-350 {
+		max-width: 350px;
+	}
+</style>
+<div class="row">
+	<div class="col-2">
+		<a asp-action="Create">Создать</a>
+	</div>
+	<div class="col-2">
+		<form method="post" asp-action="CalculateWhj" style="margin-top: -7px;" target="_blank">
+			<button class=" btn btn-link">Состояние склада</button>
+		</form>
+	</div>
+	@if (isAdmin || isOperator)
+	{
+		<div class="col-2">
+			<form method="post" asp-action="UploadFilesFromFTP" style="margin-top: -7px;" target="_blank">
+				<button class=" btn btn-link">Обновить УПД с FTP</button>
+			</form>
+		</div>
+	}
+</div>
+<script src="~/js/warehouseView.js" asp-append-version="true"></script>
+
+
+<table class="table table-responsive-md warehouse-table" 
+	   data-side-pagination="server"
+	   data-pagination="true" 
+	   data-page-size="100"
+	   data-page-list="[100, 200, 400]"
+	   data-search="true"
+	   data-show-search-clear-button="true"
+	   data-filter-control="true"
+	   data-remember-order="true"
+	   data-checkbox-header="false"
+	   data-url="@Url.Action("IndexData")"
+	    id="whTable">
+</table>
+

@@ -1,0 +1,164 @@
+﻿@model IEnumerable<ICan.Common.Models.Opt.MovePaperModel>
+
+@{ 
+    var title = "Перемещение бумаги";
+    ViewData["Title"] = title;
+}
+
+<style>
+  #coveredExpense {
+    background-color: rgba(158,196,17, 0.5);
+  }
+
+  #unCoveredExpense {
+    background-color: rgba(220,20,60, 0.5);
+  }
+</style>
+
+<h2>@title</h2>
+
+<span class="text-success">@TempData["StatusMessage"]</span>
+<span class="alert-danger">@TempData["ErrorMessage"]</span>
+
+<p>
+    <a asp-action="Create">Создать</a>
+</p>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th style="max-width:200px">
+                @Html.DisplayNameFor(model => model.MoveDate)
+            </th>
+            <th style="max-width:220px">
+                @Html.DisplayNameFor(model => model.SenderName)
+            </th>
+            <th style="max-width:220px">
+                @Html.DisplayNameFor(model => model.ReceiverName)
+            </th>
+            <th style="max-width:220px">
+                @Html.DisplayNameFor(model => model.PaperName)
+            </th>
+            <th style="max-width:220px">
+                @Html.DisplayNameFor(model => model.SheetCount)
+            </th>
+            <th style="max-width:220px">
+                @Html.DisplayNameFor(model => model.Weight)
+            </th>
+            <th style="max-width:220px">
+                @Html.DisplayNameFor(model => model.PrintOrderName)
+            </th>
+            <th style="max-width:220px">
+                @Html.DisplayNameFor(model => model.Comment)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            @if (item.IsExpensePlanCovered.HasValue && item.IsExpensePlanCovered.Value)
+            {
+            <tr id ="coveredExpense">
+                <td>
+                    @Html.DisplayFor(modelItem => item.MoveDate)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.SenderName)
+                </td>
+                <td style="max-width:250px">
+                    @Html.DisplayFor(modelItem => item.ReceiverName)
+                </td>
+                <td style="max-width:250px">
+                    @Html.DisplayFor(modelItem => item.PaperName)
+                </td>
+                <td style="max-width:250px">
+                    @Html.DisplayFor(modelItem => item.SheetCount)
+                </td>
+                <td style="max-width:250px">
+                    @Html.DisplayFor(modelItem => item.Weight)
+                </td>
+                  <td style="max-width:250px">
+                    @Html.DisplayFor(modelItem => item.PrintOrderName)
+                </td>
+                <td style="max-width:250px">
+                    @Html.DisplayFor(modelItem => item.Comment)
+                </td>
+                <td>
+                    <form asp-action="Delete" style="display: inline" asp-route-id="@item.MovePaperId">
+                        <i class="submit index far fa-times-circle" style="color:rgb(0, 123, 255)"></i>
+                    </form>
+                </td>
+            </tr>
+            }
+            @if (item.IsExpensePlanCovered.HasValue && item.IsExpensePlanCovered.Value == false)
+            {
+                <tr id="unCoveredExpense">
+                    <td>
+                    @Html.DisplayFor(modelItem => item.MoveDate)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.SenderName)
+                </td>
+                <td style="max-width:250px">
+                    @Html.DisplayFor(modelItem => item.ReceiverName)
+                </td>
+                <td style="max-width:250px">
+                    @Html.DisplayFor(modelItem => item.PaperName)
+                </td>
+                <td style="max-width:250px">
+                    @Html.DisplayFor(modelItem => item.SheetCount)
+                </td>
+                <td style="max-width:250px">
+                    @Html.DisplayFor(modelItem => item.Weight)
+                </td>
+                  <td style="max-width:250px">
+                    @Html.DisplayFor(modelItem => item.PrintOrderName)
+                </td>
+                <td style="max-width:250px">
+                    @Html.DisplayFor(modelItem => item.Comment)
+                </td>
+                <td>
+                    <form asp-action="Delete" style="display: inline" asp-route-id="@item.MovePaperId">
+                        <i class="submit index far fa-times-circle" style="color:rgb(0, 123, 255)"></i>
+                    </form>
+                </td>
+            </tr>
+            }
+               @if (item.IsExpensePlanCovered.HasValue == false)
+            {
+                <tr>
+                    <td>
+                    @Html.DisplayFor(modelItem => item.MoveDate)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.SenderName)
+                </td>
+                <td style="max-width:250px">
+                    @Html.DisplayFor(modelItem => item.ReceiverName)
+                </td>
+                <td style="max-width:250px">
+                    @Html.DisplayFor(modelItem => item.PaperName)
+                </td>
+                <td style="max-width:250px">
+                    @Html.DisplayFor(modelItem => item.SheetCount)
+                </td>
+                <td style="max-width:250px">
+                    @Html.DisplayFor(modelItem => item.Weight)
+                </td>
+                  <td style="max-width:250px">
+                    @Html.DisplayFor(modelItem => item.PrintOrderName)
+                </td>
+                <td style="max-width:250px">
+                    @Html.DisplayFor(modelItem => item.Comment)
+                </td>
+                <td>
+                    <form asp-action="Delete" style="display: inline" asp-route-id="@item.MovePaperId">
+                        <i class="submit index far fa-times-circle" style="color:rgb(0, 123, 255)"></i>
+                    </form>
+                </td>
+            </tr>
+            }
+        }
+    </tbody>
+</table>

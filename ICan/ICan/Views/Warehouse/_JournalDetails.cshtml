@@ -1,0 +1,10 @@
+﻿@model IEnumerable<ICan.Common.Models.Opt.WarehouseJournalModel>
+@{ Layout = null; }
+@if (Model != null && Model.Any())
+{
+<ul>
+    @foreach (var item in Model)
+    {
+<li>Дата: @(item.ActionDate.ToShortDateString()), количество: @(item.Amount)</li>}
+</ul>
+}

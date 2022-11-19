@@ -1,0 +1,41 @@
+﻿@model ICan.Common.Models.Opt.SpringOrderIncomingModel
+
+@{ 
+	var title = "Добавление прихода";
+	ViewData["Title"] = title;
+	Layout = null; 
+}
+
+<form method="post" asp-action="AddIncoming" class="universal-modal-form">
+	<div class="row">
+		<div class="col-md-12">
+			<div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+			@Html.HiddenFor(Model => Model.SpringOrderId)
+			@Html.HiddenFor(Model => Model.SpringNumerOfTurns, new { @class= "number-of-turns"})
+			<div class="form-group">
+				<label asp-for="IncomingDate" class="control-label"></label>
+				<sup><i class="fas fa-asterisk" style="font-size: 10px; color: red"></i></sup><br />
+				@Html.TextBoxFor(Model => Model.IncomingDate, "{0:dd.MM.yyyy HH:mm}", new { @type = "datetime", @class = "form-control" })
+				<span class="text-danger field-validation-error" data-valmsg-for="IncomingDate" data-valmsg-replace="true"> </span>
+			</div>
+			<div class="row springOrder-incoming">
+				<div class="col-3">
+					<label asp-for="SpoolCount" class="control-label"></label>
+					<sup><i class="fas fa-asterisk" style="font-size: 10px; color: red"></i></sup><br />
+					<input class="form-control spool-amount" type="number" min="0" asp-for="SpoolCount" />
+					<span class="text-danger field-validation-error" data-valmsg-for="SpoolCount" data-valmsg-replace="true"> </span>
+				</div>
+				<div class="col-6">
+					<label asp-for="NumberOfTurnsCount" class="control-label"></label>
+					<input class="form-control number-of-turns-count" readonly type="number" min="0" asp-for="NumberOfTurnsCount" />
+				</div>
+			</div>
+		</div>
+	</div>
+</form>
+
+
+@section Scripts {
+	@{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

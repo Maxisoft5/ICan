@@ -1,0 +1,482 @@
+﻿@using ICan.Common.Models.Enums
+@model ICan.Common.Models.Opt.PrintOrderModel
+
+@{
+	var actionType = (ActionType)ViewBag.Action;
+	var action = actionType == ActionType.Creation ? "Create" : "Edit";
+	var title = (actionType == ActionType.Creation ? "Создание" : "Редактирование") + " заказа печати";
+	ViewData["Title"] = title;
+	bool.TryParse(ViewData["IsAdmin"]?.ToString(), out var isAdmin);
+	bool.TryParse(ViewData["IsOperator"]?.ToString(), out var isOperator);
+	bool.TryParse(ViewData["IsAssembler"]?.ToString(), out var isAssembler);
+	var canEdit = isAdmin || isOperator || isAssembler;
+	var readonlyStr = canEdit ? "" : "readonly";
+	var semiproductTypes = (IEnumerable<SelectListItem>)ViewData["SemiproductTypes"];
+}
+
+<h2>@title</h2>
+
+<hr />
+
+<span class="alert-danger">@TempData["ErrorMessage"]</span>
+<span class="text-success">@TempData["StatusMessage"]</span>
+
+<ul class="nav nav-tabs">
+	<li class="nav-item">
+		<a class="nav-link active"
+		   id="main-tab" data-toggle="tab" href="#main-info" role="tab" aria-controls="main-info" aria-selected="true">Основная информация</a>
+	</li>
+	<li class="nav-item">
+		<a class="nav-link"
+		   id="payment-tab" data-toggle="tab" href="#payment-info" role="tab"
+		   aria-controls="payment-info" aria-selected="false">Платежи</a>
+	</li>
+</ul>
+
+<div class="tab-content" id="printOrderTabContent">
+	<div class="tab-pane fade show active" id="main-info" role="tabpanel" aria-labelledby="main-tab">
+		<form asp-action="@action">
+			<div class="row">
+				<div class="col-5">
+					<div asp-validation-summary="ModelOnly" class="text-danger"></div>
+					@if (actionType == ActionType.Edition)
+					{
+						@Html.HiddenFor(t => t.PrintOrderId)
+						<input asp-for="IsAssembled" class="form-control" type="hidden" />
+					}
+					<div class="form-group">
+						<label asp-for="OrderDate" class="control-label"></label>
+						<sup><i class="fas fa-asterisk" style="font-size: 10px; color: red"></i></sup><br />
+						@if (canEdit)
+							@Html.TextBoxFor(m => m.OrderDate, "{0:dd.MM.yyyy HH:mm}", new { @type = "datetime", @class = "form-control" })
+						else
+						{
+							<input asp-for="OrderDate" type="datetime" class="form-control" value="@Model.OrderDate" readonly>
+						}
+						<span class="text-danger field-validation-error" data-valmsg-for="OrderDate" data-valmsg-replace="true"> </span>
+					</div>
+					<div class="form-group">
+						<label asp-for="PaperName" class="control-label"></label>
+						<input asp-for="PaperName" class="form-control paper-name" readonly />
+					</div>
+					<div class="form-group">
+						<label asp-for="HaveWDVarnish" class="control-label"></label>
+						<input asp-for="HaveWDVarnish" class="form-control haveWDVarnish" readonly />
+					</div>
+					<div class="form-group">
+						<label asp-for="HaveStochastics" class="control-label"></label>
+						<input asp-for="HaveStochastics" class="form-control haveStochastics" readonly />
+					</div>
+
+					<div class="form-group">
+						<label asp-for="PrintingHouseOrderNum" class="control-label"></label>
+						@if (canEdit)
+						{
+							<input asp-for="PrintingHouseOrderNum" class="form-control" />
+						}
+						else
+						{
+							<input asp-for="PrintingHouseOrderNum" class="form-control" readonly />
+						}
+						<span class="text-danger field-validation-error" data-valmsg-for="PrintingHouseOrderNum" data-valmsg-replace="true"> </span>
+					</div>
+					<div class="form-group">
+						<label asp-for="Printing" class="control-label"></label><sup><i class="fas fa-asterisk" style="font-size: 10px; color: red"></i></sup><br />
+						@if (canEdit && Model.CanDeleteIncomes)
+						{
+							<input asp-for="Printing" class="form-control printing-amount" />
+						}
+						else
+						{
+							<input asp-for="Printing" class="form-control printing-amount" readonly />
+						}
+						<span class="text-danger field-validation-error" data-valmsg-for="Printing" data-valmsg-replace="true"> </span>
+					</div>
+
+					@if (canEdit)
+					{
+						<div class="form-group">
+							<label asp-for="PaperPlannedExpense" class="control-label"></label><br />
+							<input asp-for="PaperPlannedExpense" type="number" class="form-control paper-planned-expense" />
+							<span class="text-danger field-validation-error" data-valmsg-for="PaperPlannedExpense" data-valmsg-replace="true"> </span>
+						</div>
+
+						<div class="form-group">
+							<label asp-for="PaperExpenseDifference" class="control-label"></label><br />
+							<span class="paper-expense-diff" /> <br />
+							<span class="text-danger field-validation-error" data-valmsg-for="PaperPlannedExpense" data-valmsg-replace="true"> </span>
+						</div>
+					}
+					else
+					{
+						<input asp-for="PaperPlannedExpense" class="form-control" tyoe="hidden" />
+					}
+
+					@if (canEdit)
+					{
+						<div class="form-group">
+							<label asp-for="OrderSum" class="control-label"></label><sup><i class="fas fa-asterisk" style="font-size: 10px; color: red"></i></sup><br />
+							<input asp-for="OrderSum" id="orderSum" class="form-control" />
+							<span class="text-danger field-validation-error" data-valmsg-for="OrderSum" data-valmsg-replace="true"> </span>
+						</div>
+						<div class="form-group" style="display:flex; flex-flow:column;  align-items:flex-start">
+							<label asp-for="IsPaid" class="control-label"></label>
+							<input asp-for="IsPaid" id="isPaid" class="form-control left-aligned-checkbox" />
+							<span asp-validation-for="IsPaid" class="text-danger"></span>
+						</div>
+						<div class="form-group">
+							<label asp-for="CheckNumber" class="control-label"></label>
+							<input asp-for="CheckNumber" class="form-control" />
+							<span class="text-danger field-validation-error" data-valmsg-for="CheckNumber" data-valmsg-replace="true"></span>
+						</div>
+						<div class="form-group" style="display:flex; flex-flow:column;  align-items:flex-start">
+							<label asp-for="Comment" class="control-label"></label>
+							<textarea asp-for="Comment" class="form-control" rows="4"></textarea>
+						</div>
+					}
+					else
+					{
+						<input asp-for="OrderSum" class="form-control" type="hidden" />
+						<input asp-for="PaymentDate" class="form-control" type="hidden" />
+						<input asp-for="IsPaid" class="form-control" type="hidden" />
+						<input asp-for="CheckNumber" class="form-control" type="hidden" />
+						<input asp-for="Comment" class="form-control" type="hidden" />
+					}
+
+
+					<div class="form-group" style="display:flex; flex-flow:column;  align-items:flex-start">
+						<label asp-for="ConfirmPrint" class="control-label"></label>
+						<input asp-for="ConfirmPrint" class="form-control left-aligned-checkbox" />
+						<span asp-validation-for="ConfirmPrint" class="text-danger"></span>
+					</div>
+				</div>
+				<div class="col-7" style="margin-top:30px;">
+					<h4>Полуфабрикаты в заказе<sup><i class="fas fa-asterisk" style="font-size: 10px; color: red"></i></sup><span>&nbsp;</h4>
+					<div class="row">
+						<div class="col-12">
+							@if (actionType == ActionType.Creation && (Model.PrintOrderSemiproducts == null || !Model.PrintOrderSemiproducts.Any()))
+							{
+								<div class="form-group" style="margin-left:20px">
+									<label class="control-label">Тип полуфабриката</label>
+									@Html.DropDownList("SemiproductTypeId", semiproductTypes, new { @class = "form-control semiproductTypeList", @style = "max-width:200px" })
+								</div>
+							}
+							@if (canEdit && Model.CanEditSemiproducts)
+							{
+								<div class="form-group">
+									<button class="btn btn-link add-semiproduct" type="button">Добавить полуфабрикат</button>
+								</div>
+							}
+
+							<div class="form-group order-semiproducts">
+								@if (Model.PrintOrderSemiproducts != null && Model.PrintOrderSemiproducts.Any())
+								{
+									<div class="row" style="border-bottom: 1px solid darkgrey">
+										<div class="col-1" style="text-align:center;">
+											Собран
+										</div>
+										<div class="col-9">
+											Полуфабрикат
+										</div>
+
+										<div class="col-1" style="text-align:center;">
+											<span style="float:right">Приход</span>
+										</div>
+									</div>
+
+									@for (var i = 0; i < Model.PrintOrderSemiproducts.Count(); i++)
+									{
+										var semiproduct = Model.PrintOrderSemiproducts[i];
+										var printOrderSemiproductIdName = $"PrintOrderSemiproducts[{i}].PrintOrderSemiproductId";
+										var semiproductIdName = $"PrintOrderSemiproducts[{i}].SemiproductId";
+										var semiproducIsAssembledName = $"PrintOrderSemiproducts[{i}].IsAssembled";
+										var plusincome = @Model.PrintOrderIncomings?
+										.Where(inc => inc.IncomingType == PrintOrderIncomingType.Ordinal ||
+										inc.IncomingType == PrintOrderIncomingType.OverPrint)
+										.SelectMany(x => x.PrintOrderIncomingItems)
+										.Where(x => x.PrintOrderSemiproductId == semiproduct.PrintOrderSemiproductId)
+										.Sum(x => x.Amount) ?? 0;
+										var minusincome = @Model.PrintOrderIncomings?
+										.Where(inc => inc.IncomingType == PrintOrderIncomingType.Flaw)
+										.SelectMany(x => x.PrintOrderIncomingItems)
+										.Where(x => x.PrintOrderSemiproductId == semiproduct.PrintOrderSemiproductId)
+										.Sum(x => x.Amount) ?? 0;
+
+										var amount = plusincome - minusincome;
+										var isAssembledChcked = semiproduct.IsAssembled ? "checked" : string.Empty;
+										<div class="row order-semiproduct">
+
+											@if (semiproduct.PrintOrderSemiproductId > 0)
+											{
+												<div class="col-1" style="text-align:center;">
+													<input type="checkbox"
+											   class="existing-semiproduct-fake-assembled"
+											   @isAssembledChcked />
+													<input type="hidden"
+											   name="@semiproducIsAssembledName"
+											   class="existing-semiproduct-assembled"
+											   value="@semiproduct.IsAssembled.ToString().ToLower()" />
+												</div>
+												<div class="col-9">
+													<input type="hidden"
+											   name="@printOrderSemiproductIdName"
+											   class="existing-printorder-semiproduct"
+											   value="@semiproduct.PrintOrderSemiproductId" />
+													<input type="hidden"
+											   name="@semiproductIdName"
+											   class="existing-semiproduct"
+											   value="@semiproduct.SemiproductId" />
+
+													<span>@semiproduct.SemiProduct.DisplayName</span>
+												</div>
+
+												<div class="col-1">
+													<span style="float:right">@amount.ToString("N0")</span>
+												</div>
+											}
+											else
+											{
+												<div class="col-11">
+													<select name="@semiproductIdName" class="form-control added-semiproduct">
+														<option value="@semiproduct.SemiproductId">@semiproduct.SemiProduct.DisplayName</option>
+													</select>
+												</div>
+											}
+											<div class="col-1">
+												@if (canEdit && Model.CanEditSemiproducts)
+												{
+													<a href="#" class="delete-order-semiproduct">
+														<i class="index far fa-times-circle" style="color:rgb(0, 123, 255)"></i>
+													</a>
+												}
+											</div>
+										</div>
+									}
+
+								}
+							</div>
+						</div>
+					</div>
+
+					<div class="form-group order-paperorders" style="margin-top:20px">
+						<h4>Заказы бумаги<sup><i class="fas fa-asterisk" style="font-size: 10px; color: red"></i></sup><span>&nbsp;</span></h4>
+						@if (canEdit)
+						{
+							<a href="#" class="order-add-paperorder">Добавить заказ бумаги</a>
+
+							<br />
+						}
+						<div class="row" style="border-bottom: 1px solid darkgrey">
+							<div class="col-2">Отправлен</div>
+							<div class="col-8">Заказ бумаги</div>
+							<div class="col-1">Расход</div>
+							<div class="col-1"></div>
+						</div>
+						@if (Model.PrintOrderPapers != null && Model.PrintOrderPapers.Any())
+						{
+							for (var i = 0; i < Model.PrintOrderPapers.Count; i++)
+							{
+								<div class="row order-paperorder">
+
+									@{
+										var paperOrder = Model.PrintOrderPapers[i];
+										var printOrderPaper = $"PrintOrderPapers[{i}]";
+										var printOrderPaperId = $"{printOrderPaper}.PrintOrderPaperId";
+										var printOrderIsSent = $"{printOrderPaper}.IsSent";
+										var paperOrderName = $"{printOrderPaper}.PaperOrderId";
+										var printOrderSheetName = $"{printOrderPaper}.SheetsTakenAmount";
+										var paperOrderIsSentChckd = paperOrder.IsSent ? "checked" : string.Empty;
+										var isSent = paperOrder.IsSent ? "checked" : string.Empty;
+
+									}
+									@if (paperOrder.PrintOrderPaperId > 0)
+									{
+										<div class="col-1">
+											<input type="checkbox"
+									   class="existing-order-fake-issent"
+									   @isSent />
+											<input type="hidden"
+									   name="@printOrderIsSent"
+									   class="existing-order-printpaperorder-issent"
+									   @readonlyStr
+									   value="@paperOrder.IsSent.ToString().ToLower()" />
+										</div>
+										<div class="col-10">
+											<input type="hidden"
+									   name="@printOrderPaperId"
+									   class="existing-order-printpaperorder"
+									   value="@paperOrder.PrintOrderPaperId" />
+
+											<input type="hidden"
+									   name="@paperOrderName"
+									   class="existing-order-paperorder"
+									   value="@paperOrder.PaperOrderId" />
+
+											<span>@Model.PrintOrderPapers[i].PaperOrder</span>
+
+											<input type="number"
+									   name="@printOrderSheetName"
+									   class="form-control existing-order-paperorder-sheets"
+									   value="@paperOrder.SheetsTakenAmount"
+									   style="font-size:small;width: 75px; float:right; height:20px" @readonlyStr />
+										</div>
+									}
+									else
+									{
+										<div class="col-1">
+
+											<input type="checkbox"
+									   name="@printOrderIsSent"
+									   class="added-order-paperorder-fake-issent"
+									   @paperOrderIsSentChckd />
+											<input type="hidden"
+									   name="@printOrderIsSent"
+									   class="added-order-paperorder-issent"
+									   @readonlyStr
+									   value="@paperOrder.IsSent.ToString().ToLower()" />
+										</div>
+										<div class="col-10">
+
+											<select name="@paperOrderName" class="form-control added-order-paperorder"
+										style="font-size:small;">
+												<option value="@paperOrder.PaperOrderId">@paperOrder.PaperOrder</option>
+											</select>
+											@*</div>
+												<div class="col-3">*@
+											<input type="number"
+									   name="@printOrderSheetName"
+									   class="form-control added-order-paperorder-sheets"
+									   value="@paperOrder.SheetsTakenAmount" style="width: 75px;font-size:small; float:right" />
+										</div>
+									}
+
+									<div class="col-1">
+										@if (canEdit)
+										{
+											<a href="#" class="delete-order-paperorder">
+												<i class="index far fa-times-circle" style="color:rgb(0, 123, 255)"></i>
+											</a>
+										}
+									</div>
+
+								</div>
+							}
+						}
+					</div>
+					@if (actionType == ActionType.Edition)
+					{
+						<div class="row" style="margin-top:50px;">
+							<div class="col-12">
+								<h4>Приход</h4>
+								@if (canEdit)
+								{
+									<div class="form-group">
+										<button class="btn btn-link add-incoming" type="button">Добавить приход</button>
+									</div>
+								}
+								<div class="form-group order-incomes">
+									@for (var i = 0; i < Model.PrintOrderIncomings.Count(); i++)
+									{
+										var incoming = Model.PrintOrderIncomings[i];
+										<div class="row order-income">
+											<div class="col-2">
+												@incoming.IncomingDate.ToString()
+											</div>
+											<div class="col-2">
+												@incoming.IncomingTypeName
+											</div>
+											<div class="col-7">
+												@foreach (var incomingItem in incoming.PrintOrderIncomingItems)
+												{
+													<div class="row">
+														<div class="col-9">
+															<span title=@incoming.Comment>
+																@incomingItem.PrintOrderSemiproductName
+															</span>
+														</div>
+														<div class="col-3 printOrderSemiproductId-@incomingItem.PrintOrderSemiproductId"
+												 style="text-align: right;">
+															<span class="print-order-incoming-amount"
+													  data-print-order-incoming-type="@((int)incoming.IncomingType)"
+													  data-amount="@incomingItem.Amount">@incomingItem.Amount.ToString("N0")</span>
+														</div>
+													</div>
+												}
+											</div>
+											@if (canEdit && Model.CanDeleteIncomes)
+											{
+												<div class="col-1">
+													<a href="#" class="delete-order-income" data-print-order-incoming-id="@(incoming.PrintOrderIncomingId)">
+														<i class="index far fa-times-circle" style="color:rgb(0, 123, 255)"></i>
+													</a>
+												</div>
+											}
+										</div>
+									}
+								</div>
+							</div>
+						</div>
+					}
+				</div>
+			</div>
+			<div class="row">
+				<div class="form-group">
+					<input id="savePrintOrderSaving" type="submit" value="Сохранить" class="btn btn-default" />
+				</div>
+			</div>
+		</form>
+	</div>
+
+	<div class="tab-pane fade" id="payment-info" role="tabpanel" aria-labelledby="payment-tab">
+		@if (canEdit)
+		{
+			@await Html.PartialAsync("_PrintOrderPayments", Model.PrintOrderPayments)
+		}
+		else
+		{
+			<span>Недостаточно прав для отображения информации</span>
+		}
+	</div>
+</div>
+
+<script src="~/js/printOrder.js" asp-append-version="true"></script>
+
+<div>
+	<a asp-action="Index">Назад к списку</a>
+</div>
+
+<script>
+	$(function () {
+		$("#IsPaid").on("change", setPaymentDate);
+		$(document).on("change", ".added-semiproduct", function () {
+			getPaperInfo(this.value);
+		});
+		reuseSemiproductInfo();
+	});
+</script>
+@section Scripts {
+	@{
+	await Html.RenderPartialAsync("_ValidationScriptsPartial");
+}
+}
+
+<div class="modal fade add-incoming-modal" tabindex="-1" role="dialog">
+	<div class="modal-dialog modal-lg" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title">Добавление прихода</h5>
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+			</div>
+
+			<div class="modal-body" style="display: flex;flex-flow: column;">
+			</div>
+
+			<div class="modal-footer">
+				<button type="button" class="btn btn-primary add-incoming-modal_save">Сохранить</button>
+				<button type="button" class="btn btn-outline-dark modal-close" data-dismiss="modal">Закрыть</button>
+			</div>
+		</div>
+	</div>
+</div>

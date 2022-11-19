@@ -1,0 +1,96 @@
+﻿@model IEnumerable<ICan.Common.Models.Opt.SemiproductModel>
+
+@{
+	ViewData["Title"] = "Полуфабрикаты";
+	bool.TryParse(ViewData["IsAdmin"]?.ToString(), out var isAdmin);
+	bool.TryParse(ViewData["IsAssembler"]?.ToString(), out var isAssembler);
+}
+
+<h2>Полуфабрикаты</h2>
+
+<span class="text-success">@TempData["StatusMessage"]</span>
+<span class="alert-danger">@TempData["ErrorMessage"]</span>
+
+<p>
+	<a asp-action="Create">Создать</a>
+</p>
+<table class="table table-responsive-md table-striped" data-toggle="table"
+	    data-search="true"
+	   data-filter-control="true"
+	   data-show-search-clear-button="true">
+	<thead>
+        <tr>
+            <th data-field="SemiproductTypeName" data-sortable="true"
+                data-filter-control="select">
+                @Html.DisplayNameFor(model => model.SemiproductTypeName)
+            </th>
+            <th data-field="BlockTypeName" data-sortable="true"
+                data-filter-control="select">
+                @Html.DisplayNameFor(model => model.BlockTypeName)
+            </th>
+            <th data-field="ProductName" data-sortable="true"
+                data-filter-control="select">
+                @Html.DisplayNameFor(model => model.ProductDisplayName)
+            </th>
+            <th data-field="Name" data-sortable="true"
+                data-filter-control="input" style="max-width:120px">
+                @Html.DisplayNameFor(model => model.Name)
+            </th>
+            <th data-field="PaperName" data-sortable="true"
+                data-filter-control="input">
+                @Html.DisplayNameFor(model => model.PaperNames)
+            </th>
+            <th data-field="FormatName" data-sortable="true"
+                data-filter-control="select">
+                @Html.DisplayNameFor(model => model.FormatName)
+            </th>
+            <th data-field="StripNumber" data-sortable="true"
+                data-filter-control="select">
+                @Html.DisplayNameFor(model => model.StripNumber)
+            </th>
+
+            <th></th>
+        </tr>
+	</thead>
+	<tbody>
+		@foreach (var item in Model)
+		{
+        <tr>
+            <td class="narrow-100">
+                @Html.DisplayFor(modelItem => item.SemiproductTypeName)
+            </td>
+            <td class="narrow-100">
+                @Html.DisplayFor(modelItem => item.BlockTypeName)
+            </td>
+            <td class="narrow-280">
+                @Html.DisplayFor(modelItem => item.ProductDisplayName)
+            </td>
+            <td class="narrow-50">
+                @Html.DisplayFor(modelItem => item.Name)
+            </td>
+            <td class="narrow-250">
+                @Html.DisplayFor(modelItem => item.PaperNames)
+            </td>
+            <td class="narrow-50">
+                @Html.DisplayFor(modelItem => item.FormatName)
+            </td>
+            <td class="narrow-50">
+                @Html.DisplayFor(modelItem => item.StripNumber)
+            </td>
+
+            <td class="narrow-90">
+
+                @if (isAdmin || isAssembler)
+                {
+                    <a asp-action="SemiproductState" asp-controller="SemiproductWarehouse"
+                       asp-route-productId="@item.ProductId" class="buttons" target="_blank"><i class="fas fa-warehouse"></i></a>
+                }
+                <a asp-action="Edit" asp-route-id="@item.SemiproductId" class="buttons"><i class="far fa-edit"></i></a>
+                <form asp-action="Delete" style="display: inline" asp-route-id="@item.SemiproductId">
+                    <i class="submit index far fa-times-circle" style="color:rgb(0, 123, 255)"></i>
+                </form>
+            </td>
+        </tr>
+		}
+	</tbody>
+</table>

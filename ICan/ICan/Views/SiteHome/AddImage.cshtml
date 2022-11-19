@@ -1,0 +1,35 @@
+﻿@model ICan.Common.Models.Opt.ProductImageModel
+
+@{  
+	Layout = null;
+}
+
+<form asp-action="AddImage" class="universal-modal-form" enctype="multipart/form-data">
+	<div class="row">
+		<div class="col-md-12">
+			<div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+			@Html.HiddenFor(Model => Model.ProductId)
+			<div class="form-group">
+				<label asp-for="ImageType" class="control-label"></label>
+				<sup><i class="fas fa-asterisk" style="font-size: 10px; color: red"></i></sup><br />
+				@Html.DropDownListFor(model => model.ImageType, (IEnumerable<SelectListItem>)ViewData["ImageTypes"],
+								 null, new { @class = "form-control image-type", style = "width:300px", id = "imageType" })
+			</div>
+
+			<div class="form-group">
+				<label asp-for="Order" class="control-label"></label>
+				<sup><i class="fas fa-asterisk" style="font-size: 10px; color: red"></i></sup><br />
+				<input asp-for="Order" class="form-control" />
+				<span asp-validation-for="Order" class="text-danger"></span>
+			</div>
+
+			<div class="form-group">
+				<label asp-for="FileName" class="control-label"></label>
+				<sup><i class="fas fa-asterisk" style="font-size: 10px; color: red"></i></sup><br />
+				<input type="file" name="image" class="form-control image-upload" required 
+					  value="Выберите файл" />
+			</div>
+		</div>
+	</div>
+</form>

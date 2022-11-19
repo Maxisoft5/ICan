@@ -1,0 +1,37 @@
+﻿@model ICan.Common.Models.Opt.SiteFilterModel
+
+@{ ViewData["Title"] = "Тетради в фильтре"; }
+
+<h2>@ViewData["Title"]</h2>
+
+<hr />
+
+<span class="text-success">@TempData["StatusMessage"]</span>
+<span class="alert-danger">@TempData["ErrorMessage"]</span>
+
+<div class="row" style="margin-bottom:20px;">
+	<div class="col-md-12">
+		<input type="hidden" asp-for="SiteFilterId" class="site-filter-id" />
+		<div class="form-group">
+			<label for="fa" class="control-label">Название</label>
+			@Html.DisplayFor(model => model.Name, new { @class = "form-control" })
+		</div>
+		<div class="form-group">
+			<label for="fa" class="control-label">Сайт</label>
+			@Html.DisplayFor(model => model.SiteName, new { @class = "form-control" })
+		</div>
+		<partial for="@Model" name="_SiteFilterProductList" />
+	</div>
+</div>
+
+<script asp-append-version="true" src="~/js/siteFilter.js"></script>
+<partial name="_AddiFilterProductModal" />
+
+<div>
+	<a asp-action="Index">Назад к списку</a>
+</div>
+
+@section Scripts {
+	@{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
+

@@ -1,0 +1,15 @@
+﻿@model float?
+
+<div class="rating-stars">
+	@{ 
+		var rate = Convert.ToInt32(Math.Round(Model??5));
+		for (int i = 1; i <= rate; i++)
+		{
+			<div class="rating-star star-selected"><img src="~/assets/star-selected.png"></div> 
+		}
+		for (int i = rate + 1; i <= 5; i++)
+		{
+			<div class="rating-star"><img src="~/assets/star.png"></div> 
+		}
+	}
+</div>

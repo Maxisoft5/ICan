@@ -1,0 +1,156 @@
+﻿@using ICan.Common.Models.Opt
+@model ICan.Common.Models.Opt.SemiproductModel
+@{ ViewData["Title"] = "Полуфабрикаты"; }
+<h2>Создание полуфабриката</h2>
+<span class="text-success">@TempData["StatusMessage"]</span>
+<span class="alert-danger">@TempData["ErrorMessage"]</span>
+<hr />
+<div class="row">
+	<form asp-action="Create" style="width:100%">
+		<div class="row">
+            <div class="col-4">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <div class="form-group">
+                    <label asp-for="ProductId" class="control-label"></label>
+                    <sup><i class="fas fa-asterisk" style="font-size: 10px; color: red"></i></sup><br />
+                    <select id="productId"  class = "form-control creating-product-id" name="ProductId">
+                        @foreach (var item in (IEnumerable<SelectProductModel>)ViewData["ProductId"])
+                        { 
+                            <option value="@item.ProductId" 
+                                    data-countryid="@item.CountryId"
+                                    selected="@(item.ProductId==Model.ProductId)"
+                                    >@(item.DisplayName)</option>
+                        }
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label asp-for="SemiproductTypeId" class="control-label"></label>
+                    <sup><i class="fas fa-asterisk" style="font-size: 10px; color: red"></i></sup><br />
+                    @Html.DropDownList("SemiproductTypeId", (IEnumerable<SelectListItem>)ViewData["SemiproductTypeId"],
+                                           null, new { @class = "form-control", id = "semiproductTypeId" })
+                </div>
+                <div class="form-group field-name">
+                    <label asp-for="Name" class="control-label"></label>
+                    <sup><i class="fas fa-asterisk" style="font-size: 10px; color: red"></i></sup><br />
+                    <select asp-for="Name" class="form-control" style="width:500px;">
+                        <option value="Дно">Дно</option>
+                        <option value="Крышка">Крышка</option>
+                    </select>
+                    <span asp-validation-for="Name" class="text-danger" />
+                </div>
+                <div class="form-group field-cutLength">
+                    <label asp-for="CutLength" class="control-label"></label>
+                    <sup><i class="fas fa-asterisk" style="font-size: 10px; color: red"></i></sup><br />
+                    <input asp-for="CutLength" class="form-control" min="0" data-val-required='Поле "Длина реза, мм" обязательно для заполнения' />
+                    <span asp-validation-for="CutLength" class="text-danger" />
+                </div>
+                <div class="form-group">
+                    <label asp-for="SemiproductPapers" class="control-label"></label>
+                    <sup><i class="fas fa-asterisk" style="font-size: 10px; color: red"></i></sup><br />
+                    <div class="form-group semiproduct-papers">
+                        @if (Model.SemiproductPapers != null && Model.SemiproductPapers.Any())
+                        {
+                            var papersArray = Model.SemiproductPapers.ToArray();
+                            @for (var i = 0; i < papersArray.Count(); i++)
+                            {
+                                <div class="row semiproduct-paper">
+                                    <div class="col-9">
+                                        @{ var semiproductPaper = papersArray[i];
+                                            var paperIdName = $"SemiproductPapers[{i}].PaperId";
+                                            var semiproductPaperIdName = $"SemiproductPapers[{i}].SemiproductPaperId"; }
+
+                                        <select name="@paperIdName" class="form-control added-semiproduct-paper">
+                                            <option value="@semiproductPaper.PaperId">@semiproductPaper.Paper.Name</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-3">
+                                        <a href="#" class="delete-semiproduct-paper">
+                                            <i class="index far fa-times-circle" style="color:rgb(0, 123, 255)"></i>
+                                        </a>
+                                    </div>
+                                </div>}}
+                        <span asp-validation-for="SemiproductPapers" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <button class="btn btn-link add-semiproduct-paper" type="button">Добавить бумагу</button>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label asp-for="FormatId" class="control-label"></label>
+                    <sup><i class="fas fa-asterisk" style="font-size: 10px; color: red"></i></sup><br />
+                    @Html.DropDownList("FormatId", (IEnumerable<SelectListItem>)ViewData["FormatId"],
+                                           null, new { @class = "form-control", style = "width:300px", id = "formatId" })
+                </div>
+                <div class="form-group blockTypeId">
+                    <label asp-for="BlockTypeId" class="control-label"></label>
+                    <sup><i class="fas fa-asterisk" style="font-size: 10px; color: red"></i></sup>
+                    <select asp-for="BlockTypeId" class="form-control" asp-items="ViewBag.BlockTypeId">
+                        <option value=""></option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label asp-for="StripNumber" class="control-label"></label>
+                    <sup><i class="fas fa-asterisk" style="font-size: 10px; color: red"></i></sup><br />
+                    <input asp-for="StripNumber" class="form-control" />
+                    <span asp-validation-for="StripNumber" class="text-danger" />
+                </div>
+                <div class="form-group" style="display:flex; flex-flow:column;  align-items:flex-start">
+                    <label asp-for="HaveWDVarnish" class="control-label"></label>
+                    <input asp-for="HaveWDVarnish" class="form-control left-aligned-checkbox" />
+                    <span asp-validation-for="HaveWDVarnish" class="text-danger"></span>
+                </div>
+                <div class="form-group" style="display:flex; flex-flow:column;  align-items:flex-start">
+                    <label asp-for="HaveStochastics" class="control-label"></label>
+                    <input asp-for="HaveStochastics" class="form-control left-aligned-checkbox" />
+                    <span asp-validation-for="HaveStochastics" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <input type="submit" value="Создать" class="btn btn-default" />
+                </div>
+            </div>
+			<div class="col-6" style="margin-left:50px">
+				<div class="form-group is-universal-block">
+					<label asp-for="IsUniversal" class="control-label"></label>
+					<input asp-for="IsUniversal" class="form-control isUniversal" style="width:25px;" />
+				</div>
+				<div class="product_list">
+					@if (Model.RelatedProducts != null && Model.RelatedProducts.Any())
+					{
+						var relationProducts = Model.RelatedProducts.ToArray();
+						@for (var i = 0; i < relationProducts.Count(); i++)
+						{
+							<div class="row semiproduct-relatedProducts existing-relatedProducts">
+								<div class="col-10">
+									@{ var relatedProduct = relationProducts[i];
+										var relationProductId = $"RelatedProducts[{i}].ProductId"; }
+									<input type="hidden"
+										   name="@relationProductId"
+										   class="existing-relatedProduct"
+										   value="@relatedProduct.ProductId" />
+
+									<span>@relatedProduct.Product.DisplayName</span>
+								</div>
+								<div class="col-2">
+									<a href="#" class="delete-semiproduct-product">
+										<i class="index far fa-times-circle" style="color:rgb(0, 123, 255)"></i>
+									</a>
+								</div>
+							</div>
+						}
+					}
+				</div>
+				<div class="form-group">
+					@{ var displayStyle = Model.IsUniversal ? "" : "display:none";
+						<button class="btn btn-link add-relationProduct" type="button" style="@displayStyle">Добавить тетрадь</button> }
+				</div>
+			</div>
+		</div>
+	</form>
+</div>
+<div>
+	<a asp-action="Index">Назад к списку</a>
+</div>
+<script src="~/js/semiproduct.js" asp-append-version="true"></script>
+@section Scripts {
+	@{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

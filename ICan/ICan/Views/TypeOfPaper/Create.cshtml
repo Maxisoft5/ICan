@@ -1,0 +1,40 @@
+﻿@model ICan.Common.Models.Opt.TypeOfPaperModel
+
+@{
+	var title = "Создание вида бумаги";
+	ViewData["Title"] = title;
+}
+<h2>@title</h2>
+<span class="text-success">@TempData["StatusMessage"]</span>
+<span class="alert-danger">@TempData["ErrorMessage"]</span>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Name" class="control-label"></label>
+                <sup><i class="fas fa-asterisk" style="font-size: 10px; color: red"></i></sup>
+                <input asp-for="Name" class="form-control" />
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="PaperType" class="control-label"></label>
+                <input asp-for="PaperType" class="form-control" />
+                <span asp-validation-for="PaperType" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Density" class="control-label"></label>
+                <input asp-for="Density" class="form-control" />
+                <span asp-validation-for="Density" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="button" value="Создать" class="btn btn-default save-button" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Назад к списку</a>
+</div>

@@ -1,0 +1,62 @@
+﻿@model ICan.Common.Models.Opt.PrintOrderIncomingModel
+
+@{
+	var title = "Добавление прихода";
+	ViewData["Title"] = title;
+	Layout = null;
+	var availableIncomingTypes = (IEnumerable<SelectListItem>)ViewData["IncomingTypes"];
+}
+
+<form asp-action="AddIncoming" class="add-incoming-form">
+	<div class="row">
+		<div class="col-md-12">
+			<div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+			@Html.HiddenFor(Model => Model.PrintOrderId)
+			<div class="form-group">
+				<label asp-for="IncomingDate" class="control-label"></label>
+				<sup><i class="fas fa-asterisk" style="font-size: 10px; color: red"></i></sup><br />
+				<input type="datetime" name="IncomingDate" class="form-control"
+					   required
+					   placeholder="Дата прихода" value="@DateTime.Now.ToString("dd-MM-yyyy HH:mm")" />
+				<span class="text-danger field-validation-error" data-valmsg-for="IncomingDate" data-valmsg-replace="true"> </span>
+			</div>
+			<div class="form-group">
+				<label asp-for="IncomingType" class="control-label"></label>
+				@Html.DropDownList(nameof(Model.IncomingType), availableIncomingTypes,
+				new { @class = "form-control incoming-type", @style = "max-width:200px" })
+			</div>
+
+			<div class="form-group">
+				<label asp-for="Comment" class="control-label"></label><br />
+				<input type="text" name="Comment" class="form-control"
+					   required />
+			</div>
+			@for (var i = 0; i < Model.PrintOrderIncomingItems.Count; i++)
+			{
+				var incomingitem = Model.PrintOrderIncomingItems[i];
+				var name = $"PrintOrderIncomingItems[{i}].";
+
+				<div class="row order-income">
+
+					<div class="col-9">
+						<input type="hidden" value="@incomingitem.PrintOrderSemiproductId" class="printorder-semiproduct-id" name="@($"{name}PrintOrderSemiproductId")" />
+						<input type="hidden" value="@incomingitem.PrintOrderSemiproductTypeId" class="printorder-semiproduct-type-id" />
+						<span class="semiproduct-name">@incomingitem.PrintOrderSemiproductName</span>
+					</div>
+					<div class="col-3">
+						<input class="form-control amount-check"
+							data-exists="@(incomingitem.Exists.ToString().ToLower())" type="number" value="0" min="0" name="@($"{name}Amount")" />
+					</div>
+				</div>
+			}
+		</div>
+	</div>
+</form>
+
+
+@section Scripts {
+	@{
+	await Html.RenderPartialAsync("_ValidationScriptsPartial");
+}
+}

@@ -1,0 +1,38 @@
+﻿@model ICan.Common.Models.Opt.PaperOrderIncomingModel
+
+@{ var title = "Добавление прихода";
+				ViewData["Title"] = title;
+				Layout = null; }
+
+<form method="post" asp-action="AddIncoming" class="add-incoming-form">
+	<div class="row">
+		<div class="col-md-12">
+			<div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+			@Html.HiddenFor(Model => Model.PaperOrderId)
+			<div class="form-group">
+				<label asp-for="IncomingDate" class="control-label"></label>
+				<sup><i class="fas fa-asterisk" style="font-size: 10px; color: red"></i></sup><br />
+				@Html.TextBoxFor(Model => Model.IncomingDate, "{0:dd.MM.yyyy HH:mm}", new { @type = "datetime", @class = "form-control" })
+				<span class="text-danger field-validation-error" data-valmsg-for="IncomingDate" data-valmsg-replace="true"> </span>
+			</div>
+			<div class="row order-income">
+				<div class="col-3">
+					<label asp-for="Amount" class="control-label"></label>
+					<input class="amount-check form-control" type="number" min="0" asp-for="Amount" />
+				</div>
+				<div class="col-8">
+					<label asp-for="WarehouseTypes" class="control-label"></label>
+					<sup><i class="fas fa-asterisk" style="font-size: 10px; color: red"></i></sup><br />
+					@Html.DropDownList("WarehouseTypeId", Model.WarehouseTypes,
+								null, new { @class = "form-control", style = "width:300px", id = "WarehouseTypeId" })
+				</div>
+			</div>
+		</div>
+	</div>
+</form>
+
+
+@section Scripts {
+	@{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

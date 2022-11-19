@@ -1,0 +1,116 @@
+﻿@using ICan.Common.Models.Enums
+@model ICan.Common.Models.Opt.EventModel
+
+@{
+	var actionType = ActionType.Details;
+	ActionType.TryParse(ViewData["ActionType"]?.ToString(), out actionType);
+	bool.TryParse(ViewData["IsAdmin"].ToString(), out bool isAdmin);
+
+	var header = actionType == ActionType.Details ? "Просмотр" : "Редактирование";
+	ViewData["Title"] = header + " акции";
+}
+
+<h2>@header</h2>
+
+<hr />
+<div class="row">
+	<div class="col-md-4">
+		<form asp-action="Edit">
+			<div asp-validation-summary="ModelOnly" class="text-danger"></div>
+			<input type="hidden" asp-for="EventId" />
+			<div class="form-group">
+				<label asp-for="Name" class="control-label"></label>
+				<sup><i class="fas fa-asterisk" style="font-size: 10px; color: red"></i></sup>
+				@if (actionType == ActionType.Details || !isAdmin)
+				{
+					<input asp-for="Name" class="form-control" disabled />
+				}
+				else
+				{
+					<input asp-for="Name" class="form-control" />
+				}
+				<span asp-validation-for="Name" class="text-danger"></span>
+			</div>
+			<div class="form-group">
+				<label asp-for="StartDate" class="control-label"></label>
+				<sup><i class="fas fa-asterisk" style="font-size: 10px; color: red"></i></sup>
+				@if (actionType == ActionType.Details || !isAdmin)
+				{
+					<input asp-for="StartDate" class="form-control" disabled />
+				}
+				else
+				{
+					<input asp-for="StartDate" class="form-control" />
+				}
+				<span asp-validation-for="StartDate" class="text-danger"></span>
+			</div>
+			<div class="form-group">
+				<label asp-for="EndDate" class="control-label"></label>
+				@if (actionType == ActionType.Details || !isAdmin)
+				{
+					<input asp-for="EndDate" class="form-control" disabled />
+				}
+				else
+				{
+					<input asp-for="EndDate" class="form-control" />
+				}
+				<span asp-validation-for="EndDate" class="text-danger"></span>
+			</div>
+			<div class="form-group" style="display:flex; flex-flow:column;  align-items:flex-start">
+				<label asp-for="Enabled" class="control-label"></label>
+				@if (actionType == ActionType.Details || !isAdmin)
+				{
+					<input asp-for="Enabled" class="form-control left-aligned-checkbox" disabled />
+				}
+				else
+				{
+					<input asp-for="Enabled" class="form-control left-aligned-checkbox" />
+				}
+				<span asp-validation-for="Enabled" class="text-danger"></span>
+			</div>
+			<div class="form-group">
+				<label asp-for="DiscountPercent" class="control-label"></label>
+				<sup><i class="fas fa-asterisk" style="font-size: 10px; color: red"></i></sup>
+				@*@Html.EditorFor(q=> q.DiscountPercent, new   { type = "number", @class="form-control" })*@
+				@if (actionType == ActionType.Details || !isAdmin)
+				{
+					<input asp-for="DiscountPercent" class="form-control" type="number" disabled/>
+
+				}
+				else
+				{
+					<input asp-for="DiscountPercent" class="form-control" type="number"/>
+				}
+				<span asp-validation-for="DiscountPercent" class="text-danger"></span>
+			</div>
+			<div class="form-group">
+				<label asp-for="Description" class="control-label"></label>
+				@if (actionType == ActionType.Details || !isAdmin)
+				{
+					@Html.TextAreaFor(model => model.Description,
+					  new { @class = "form-control", disabled = "disabled", rows = 5 })
+				}
+				else
+				{
+					@Html.TextAreaFor(model => model.Description,
+					new { @class = "form-control", rows = 5 })
+				}
+				<span asp-validation-for="Description" class="text-danger"></span>
+			</div>
+			@if (actionType == ActionType.Edition)
+			{
+				<div class="form-group">
+					<input type="submit" value="Сохранить" class="btn btn-default" />
+				</div>
+			}
+		</form>
+	</div>
+</div>
+
+<div>
+	<a asp-action="Index">Назад к списку</a>
+</div>
+
+@section Scripts {
+	@{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

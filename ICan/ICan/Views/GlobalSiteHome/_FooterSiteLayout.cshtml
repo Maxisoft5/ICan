@@ -1,0 +1,32 @@
+﻿@{
+	Layout = "/Views/GlobalSiteHome/_SiteLayout.cshtml";
+}
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
+ 
+@RenderBody()
+<div class="footer-desktop-wrapper">
+	<div class="footer-desktop">
+		<div class="footer-desktop-description">
+			<div class="footer-description-text footer-description-text--uk">
+				<h2 class="footer-description-text-heading">@Localizer["ACTIVITY BOOK SERIES"]</h2>
+			</div>
+		</div>
+		<div class="footer-publishing">
+			<p class="footer-publishing-text">© @Localizer["2022 Yamogu Ltd."]</p>
+			<p class="footer-publishing-text">@Localizer["All Rights Reserved"]</p>
+		</div>
+		<div class="footer-telephone">
+			<p class="footer-telephone-number">@Localizer["info@yamogu.uk"]</p>
+		</div>
+	</div>
+</div>
+<footer class="footer">
+	<div class="footer-marketplace-wrapper">
+		<div class="footer-marketplace footer-marketplace--uk">
+			<a class="marketplace-link" target="_blank" href="@Localizer["Amazon Url"]">
+				<img class="marketplace-img--global" src='~/assets/amazon-footer.svg'>
+			</a>
+		</div>
+	</div>
+</footer>

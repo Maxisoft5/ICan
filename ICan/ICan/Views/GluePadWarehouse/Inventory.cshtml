@@ -1,0 +1,29 @@
+﻿@{
+    var title = "Добавление инвентаризации";
+    ViewData["Title"] = title;
+}
+<h2>@title</h2>
+<hr />
+
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="AddInventory">
+            <div class="form-group">
+                <label class="control-label">Клеевых подушека на складе</label>
+                <sup><i class="fas fa-asterisk" style="font-size: 10px; color: red"></i></sup>
+                <input name="amount" class="form-control" />
+            </div>
+            <div class="form-group" style="margin-top:5px;">
+                <label class="control-label">Комментарий</label>
+                <textarea name="comment" class="form-control"></textarea>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Сохранить" class="btn btn-default" />
+            </div>
+        </form>
+    </div>
+</div>
+<div>
+    <a asp-action="Index">Назад к списку</a>
+</div>
+

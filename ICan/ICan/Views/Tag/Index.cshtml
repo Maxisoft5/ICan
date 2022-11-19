@@ -1,0 +1,46 @@
+﻿@model IEnumerable<ICan.Common.Models.Opt.TagModel>
+
+@{ 
+	var title = "Теги";
+	ViewData["Title"] = title;
+	bool.TryParse(ViewData["IsAdmin"]?.ToString(), out var isAdmin);
+}
+
+<h2>@title</h2>
+
+<span class="text-success">@TempData["StatusMessage"]</span>
+<span class="alert-danger">@TempData["ErrorMessage"]</span>
+
+@if (isAdmin)
+{
+<p>
+	<a asp-action="Create">Добавить</a>
+</p>
+}
+
+<table class="table">
+	<thead>
+		<tr>
+			<th style="max-width:200px">
+				@Html.DisplayNameFor(model => model.TagName)
+			</th>
+			<th></th>
+		</tr>
+	</thead>
+	<tbody>
+		@foreach (var item in Model)
+		{
+	<tr>
+		<td>
+			@Html.DisplayFor(modelItem => item.TagName)
+		</td>
+		<td>
+				@if (isAdmin)
+				{
+					<a asp-action="Edit" asp-route-id="@item.TagId"><i class="far fa-edit"></i></a> 
+				}
+		</td>
+	</tr>
+	}
+	</tbody>
+</table>

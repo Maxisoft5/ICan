@@ -1,0 +1,29 @@
+﻿@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
+
+@{
+	Layout = "/Views/GlobalSiteHome/_FooterSiteLayout.cshtml";
+	ViewData["Title"] ="Contacts";
+}
+<main>
+	<div class="contacts-wrapper">
+		<div class="map-wrapper">
+			<div class="map">
+				<iframe src="https://yandex.ru/map-widget/v1/?um=constructor%3Adb0ceaf2ffbd94ae4ccfd59278abcca4f0bc4a73cba9662904485df4b89a1946&amp;source=constructor&lang=en_US"
+						class="map-iframe" frameborder="0"></iframe>
+			</div>
+		</div>
+		<div class="contacts-description-wrapper contacts-description-wrapper--global">
+			<div class="contacts-description contacts-description--global">
+				<div class="address">
+					<p class="address-text address-text--global">Contact us:<br /><span class="address-tex--color-red">Yamogu</span> Publishing</p>
+					<p class="address-text address-text--global indent">General inquiries <a class="bold-weight" href='mailto: info@yamogu.com'>info@yamogu.com</a></p>
+					<p class="address-text address-text--global indent">Posyolok Sovkhoza im. Lenina, building 1, Leninskiy district, Moscow region, Russia</p>
+					<img class="postman" src="~/assets/postman.png">
+				</div>
+
+			</div>
+		</div>
+	</div>
+
+</main>

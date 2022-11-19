@@ -1,0 +1,44 @@
+﻿@model ICan.Common.Models.Opt.NotchOrderIncomingModel
+
+@{
+	var title = "Добавление прихода";
+	ViewData["Title"] = title;
+	Layout = null;
+}
+
+<form asp-action="AddIncoming" class="add-incoming-form">
+	<div class="row">
+		<div class="col-md-12">
+			<div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+			@Html.HiddenFor(Model => Model.NotchOrderId)
+			<div class="form-group">
+				<label asp-for="IncomingDate" class="control-label"></label>
+				<sup><i class="fas fa-asterisk" style="font-size: 10px; color: red"></i></sup><br />
+				@Html.TextBoxFor(Model => Model.IncomingDate, "{0:dd.MM.yyyy HH:mm}", new { @type = "datetime", @class = "form-control" })
+				<span class="text-danger field-validation-error" data-valmsg-for="IncomingDate" data-valmsg-replace="true"> </span>
+			</div>
+			@for (var i = 0; i < Model.IncomingItems.Count; i++)
+			{
+				
+				var incomingitem = Model.IncomingItems[i];
+				var name = $"IncomingItems[{i}].";
+
+				<div class="row order-income">
+					<div class="col-6">
+						<input type="hidden" value="@incomingitem.SemiproductId" name="@($"{name}SemiproductId")" />
+						<span>@incomingitem.NotchOrderSemiproduct</span>
+					</div>
+					<div class="col-3">
+						<input class="form-control amount-check" type="number" value="0" min="0" name="@($"{name}Amount")" />
+					</div>
+				</div>
+			}
+		</div>
+	</div>
+</form>
+
+
+@section Scripts {
+	@{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

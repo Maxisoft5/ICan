@@ -1,0 +1,33 @@
+﻿@model IEnumerable<ICan.Common.Models.Opt.CalcUniversalWhjDetails>
+@{ var title = ViewData["Title"]?.ToString(); }
+
+<h2> @title</h2>
+<hr />
+
+@if (Model != null)
+{
+
+<table class="table table-responsive-md" style="width: 50%">
+	<thead>
+		<tr>
+			<th scope="col">Товар</th>
+			<th scope="col" style="text-align:right;">Количество </th>
+		</tr>
+	</thead>
+	<tbody>
+		@foreach (var item in Model)
+		{
+			<tr>
+				<td>
+					@item.ObjectDisplayName
+				</td>
+					<td style="text-align:right;">@item.Current</td>
+			</tr>
+		}
+	</tbody>
+</table>}
+
+<div>
+	<a asp-action="Index">Назад к списку</a>
+</div>
+

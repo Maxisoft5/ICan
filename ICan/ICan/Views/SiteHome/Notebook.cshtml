@@ -1,0 +1,284 @@
+﻿@model ICan.Common.Models.Opt.SiteProductModel
+
+@{ Layout = "_SiteLayout"; }
+
+<main class="product-main" itemscope itemtype="http://schema.org/Product">
+	<div class="carousel-wrapper">
+		<div id="carousel-products" class="carousel slide carousel-products" data-ride="carousel">
+			<div class="carousel-inner" role="listbox">
+				@if (Model.SmallGalleryImages != null && Model.SmallGalleryImages.Any())
+				{
+					var images = Model.SmallGalleryImages.ToArray();
+	@for (int i = 0; i < images.Length; i++)
+	{
+		var activeClass = i == 0 ? "active" : "";
+		var path = $"{Model.BucketUrl}/{images[i].FileName}";
+<div class="item @activeClass" data-number="@i">
+	<div class="item-center">
+		<img class="item-img" src="@path" itemprop="image">
+	</div>
+</div>}}
+			</div>
+
+			<a class="left carousel-control" href="#carousel-products" role="button" data-slide="prev">
+				<span class="glyphicon glyphicon-menu-left" aria-hidden="true"></span>
+			</a>
+			<a class="right carousel-control" href="#carousel-products" role="button" data-slide="next">
+				<span class="glyphicon glyphicon-menu-right" aria-hidden="true"></span>
+			</a>
+			<div class="indicator-wrapper">
+				<ol class="carousel-indicators">
+					<li data-target="#carousel-products" data-slide-to="0" class="active"></li>
+					<li data-target="#carousel-products" data-slide-to="1"></li>
+					<li data-target="#carousel-products" data-slide-to="2"></li>
+					<li data-target="#carousel-products" data-slide-to="3"></li>
+					<li data-target="#carousel-products" data-slide-to="4"></li>
+					<li data-target="#carousel-products" data-slide-to="5"></li>
+					<li data-target="#carousel-products" data-slide-to="6"></li>
+					<li data-target="#carousel-products" data-slide-to="7"></li>
+				</ol>
+				@if (!string.IsNullOrWhiteSpace(Model.VideoFileName))
+				{
+	<img class="video-icon-circle" src="~/assets/play.svg" />}
+			</div>
+		</div>
+		<div class="product-tab">
+			<ul class="nav nav-tabs" role="tablist">
+				<li role="presentation" class="active"><a href="#description" aria-controls="description" role="tab" data-toggle="tab">Описание</a></li>
+				<li role="presentation"><a href="#information" aria-controls="information" role="tab" data-toggle="tab">Информация</a></li>
+				<li role="presentation"><a href="#reviews" aria-controls="reviews" role="tab" data-toggle="tab">Отзывы</a></li>
+			</ul>
+			<div class="tab-content">
+				<div role="tabpanel" class="tab-pane active" id="description">
+					<h2 class="tab-heading" itemprop="name">
+						@Model.SiteName
+					</h2>
+					<h2 class="tab-heading" itemprop="name">
+						@Model.ProductSeriesSiteName
+					</h2>
+					<div itemprop="description">
+						@Html.Raw(@Model.Description)
+					</div>
+					<div class="drop-down closed">ещё</div>
+				</div>
+				<div role="tabpanel" class="tab-pane" id="information">
+					<h2 class="tab-heading">
+						@Model.SiteName
+					</h2>
+					<h2 class="tab-heading">
+						@Model.ProductSeriesSiteName
+					</h2>
+					@Html.Raw(@Model.Information)
+					<div class="drop-down closed">ещё</div>
+				</div>
+				<div role="tabpanel" class="tab-pane" id="reviews">
+					<h2 class="tab-heading">
+						@Model.SiteName
+					</h2>
+					<h2 class="tab-heading">
+						@Model.ProductSeriesSiteName
+					</h2>
+					@Html.Raw(@Model.ReviewsText)
+					<div class="drop-down closed">ещё</div>
+				</div>
+			</div>
+			<div class="marketplace-rating">
+				@if (Model.WbMarketPlaceProduct?.Price != null)
+				{
+	<div class="marketplace-rating-item" itemprop="offers" itemscope itemtype="http://schema.org/Offer">
+		<div>
+			<div itemprop="aggregateRating" itemscope itemtype="https://schema.org/AggregateRating">
+				<a
+					href="@Model.WbMarketPlaceProduct?.Url"
+					class="gtm-watch"
+					data-event-name="wb-notebook"
+					target="_blank"
+					itemprop="ratingValue"
+				>
+					<partial name="_ProductRate" model="Model.WbMarketPlaceProduct?.Raiting " />
+				</a>
+				<a href="@Model.WbMarketPlaceProduct?.Url" class="gtm-watch" data-event-name="wb-notebook" target="_blank">
+					<p class="quantity-reviews">
+						<span itemprop="reviewCount">@(Model.WbMarketPlaceProduct?.ReviewsAmount ?? 0 )</span>
+						<span>@(Model.WbMarketPlaceProduct?.ReviewsAmountDescr)</span>
+					</p>
+				</a>
+			</div>
+			<a href="@Model.WbMarketPlaceProduct?.Url" class="gtm-watch" data-event-name="wb-notebook" target="_blank">
+				<p class="marketplace-rating-price">
+					<span>@(Model.WbMarketPlaceProduct?.DisplayPriceAndCurrency)</span>
+					<meta itemprop="price" content="@(Model.WbMarketPlaceProduct?.DisplayPrice)">
+					<meta itemprop="priceCurrency" content="@(Model.WbMarketPlaceProduct?.DisplayСurrency)">
+				</p>
+			</a>
+			<a class="marketplace-link-rating gtm-watch" data-event-name="wb-notebook" href="@Model.WbMarketPlaceProduct?.Url" target="_blank">
+				<picture>
+					<source srcset='~/assets/desk-WB-108-51.png' media="(min-width: 1024px)">
+					<img class="marketplace-rating-img" src='~/assets/WB(306-145).png'>
+				</picture>
+			</a>
+		</div>
+	</div>}
+				@if (Model.YaMarketPlaceProduct?.Price != null)
+				{
+	<div class="marketplace-rating-item" itemprop="offers" itemscope itemtype="http://schema.org/Offer">
+		<div>
+			<div itemprop="aggregateRating" itemscope itemtype="https://schema.org/AggregateRating">
+				<a
+					href="@Model.YaMarketPlaceProduct?.Url"
+					class="gtm-watch"
+					data-event-name="ym-notebook"
+					target="_blank"
+					itemprop="ratingValue"
+				>
+					<partial name="_ProductRate" model="Model.YaMarketPlaceProduct?.Raiting " />
+				</a>
+				<a href="@Model.YaMarketPlaceProduct?.Url" class="gtm-watch" data-event-name="ym-notebook" target="_blank">
+					<p class="quantity-reviews">
+						<span itemprop="reviewCount">@(Model.YaMarketPlaceProduct?.ReviewsAmount ?? 0)</span>
+						<span>@(Model.YaMarketPlaceProduct?.ReviewsAmountDescr)</span>
+					</p>
+				</a>
+			</div>
+			<a href="@Model.YaMarketPlaceProduct?.Url" class="gtm-watch" data-event-name="ym-notebook" target="_blank">
+				<p class="marketplace-rating-price">
+					<span>@(Model.YaMarketPlaceProduct?.DisplayPriceAndCurrency)</span>
+					<meta itemprop="price" content="@(Model.YaMarketPlaceProduct?.DisplayPrice)">
+					<meta itemprop="priceCurrency" content="@(Model.YaMarketPlaceProduct?.DisplayСurrency)">
+				</p>
+			</a>
+			<a class="marketplace-link-rating gtm-watch" data-event-name="ym-notebook" href="@Model.YaMarketPlaceProduct?.Url" target="_blank">
+				<picture>
+					<source srcset="~/assets/desk-yandex-108-51.png" media="(min-width: 1024px)">
+					<img class="marketplace-rating-img" src="~/assets/Yandex(306-145).png">
+				</picture>
+			</a>
+		</div>
+	</div>}
+				@if (Model.OzMarketPlaceProduct?.Price != null)
+				{
+	<div class="marketplace-rating-item" itemprop="offers" itemscope itemtype="http://schema.org/Offer">
+		<div>
+			<div itemprop="aggregateRating" itemscope itemtype="https://schema.org/AggregateRating">
+				<a itemprop="ratingValue" href="@Model.OzMarketPlaceProduct?.Url" class="gtm-watch" data-event-name="oz-notebook" target="_blank">
+					<partial name="_ProductRate" model="Model.OzMarketPlaceProduct?.Raiting " />
+				</a>
+				<a href="@Model.OzMarketPlaceProduct?.Url" class="gtm-watch" data-event-name="oz-notebook" target="_blank">
+					<p class="quantity-reviews">
+						<span itemprop="reviewCount">@(Model.OzMarketPlaceProduct?.ReviewsAmount ?? 0 )</span>
+						<span>@(Model.OzMarketPlaceProduct?.ReviewsAmountDescr)</span>
+					</p>
+				</a>
+			</div>
+			<a href="@Model.OzMarketPlaceProduct?.Url" class="gtm-watch" data-event-name="oz-notebook" target="_blank">
+				<p class="marketplace-rating-price">
+					<span>@(Model.OzMarketPlaceProduct?.DisplayPriceAndCurrency)</span>
+					<meta itemprop="price" content="@(Model.OzMarketPlaceProduct?.DisplayPrice)">
+					<meta itemprop="priceCurrency" content="@(Model.OzMarketPlaceProduct?.DisplayСurrency)">
+				</p>
+			</a>
+			<a class="marketplace-link-rating gtm-watch" data-event-name="oz-notebook" href="@Model.OzMarketPlaceProduct?.Url" target="_blank">
+				<picture>
+					<source srcset="~/assets/desk-ozon-108-51.png" media="(min-width: 1024px)">
+					<img class="marketplace-rating-img" src="~/assets/Ozon(306-145).png">
+				</picture>
+			</a>
+		</div>
+	</div>}
+			</div>
+		</div>
+	</div>
+	<div class="product-description">
+		@Html.Raw(Model.LongDescription)
+	</div>
+</main>
+<div class="footer-desktop-wrapper footer-desktop-wrapper-product">
+	<div class="footer-desktop">
+		<div class="footer-desktop-description">
+			<div class="footer-description-socials">
+				<a href="https://www.instagram.com/yamogu.ru" class="footer-description-social"><img class="social-footer" src="~/assets/Inst.png"></a>
+				<a href="https://vk.com/yamogu_razvitie" class="footer-description-social"><img class="social-footer" src="~/assets/vk.png"></a>
+			</div>
+			<div class="footer-description-text">
+				<h2 class="footer-description-text-heading">Рабочие тетради для детей</h2>
+				<p class="footer-description-text-paragraph">Пишите нам: <a href="">info@yamogu.ru</a></p>
+				<p class="footer-description-text-paragraph">По вопросам оптового сотрудничества: <a href="">opt@yamogu.ru</a></p>
+			</div>
+		</div>
+		<div class="footer-publishing">
+			<p class="footer-publishing-text">© 2021 Издательство <span>«Я МОГУ!»</span></p>
+			<p class="footer-publishing-text">Все права защищены</p>
+		</div>
+		<div class="footer-telephone">
+			<p class="footer-telephone-number">+7 (495) 14 200 13</p>
+			<p class="footer-telephone-text">по будням с 9 до 17</p>
+		</div>
+	</div>
+	<div class="cookie-alert">
+		<p class="cookie-paragraph">Мы используем файлы cookie.</p>
+		<p class="cookie-paragraph">Подробнее в <a href="/Agreement">пользовательском соглашении.</a></p>
+		<p class="cookie-paragraph">Оставаясь на сайте, вы даете на это свое согласие.</p>
+	</div>
+</div>
+<div class="modal fade" id="products-popup" tabindex="-1" role="dialog" aria-labelledby="products-popupLabel">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close cross-close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+
+			</div>
+			<div class="modal-body">
+				<div id="carousel-popup" class="carousel slide" data-ride="carousel">
+					<div class="carousel-inner" role="listbox">
+
+						@if (Model.BigGalleryImages != null && Model.BigGalleryImages.Any())
+						{
+							var images = Model.BigGalleryImages.ToArray();
+			@for (int i = 0; i < images.Length; i++)
+			{
+				var path = $"{Model.BucketUrl}/{images[i].FileName}";
+				var activeClass = i == 0 ? "active" : "";
+
+<div class="item @activeClass">
+	<div class="item-center">
+		<figure class="zoom" onmousemove='zoom(event)' onmouseleave='clearBackground(event)'>
+			<img class="item-img" data-target="#carousel-popup" src="@path" />
+		</figure>
+	</div>
+</div>}}
+					</div>
+					<div class="arrow-control-wrapper">
+						<div class="arrow-control">
+							<a class="left carousel-control" href="#carousel-popup" role="button" data-slide="prev">
+								<span class="glyphicon glyphicon-menu-left arrow-swipe" aria-hidden="true"></span>
+							</a>
+							<a class="right carousel-control" href="#carousel-popup" role="button" data-slide="next">
+								<span class="glyphicon glyphicon-menu-right arrow-swipe" aria-hidden="true"></span>
+							</a>
+						</div>
+					</div>
+					<div class="indicator-wrapper">
+						<ol class="carousel-indicators">
+							<li data-target="#carousel-popup" data-slide-to="0" class="active"></li>
+							<li data-target="#carousel-popup" data-slide-to="1"></li>
+							<li data-target="#carousel-popup" data-slide-to="2"></li>
+							<li data-target="#carousel-popup" data-slide-to="3"></li>
+							<li data-target="#carousel-popup" data-slide-to="4"></li>
+							<li data-target="#carousel-popup" data-slide-to="5"></li>
+							<li data-target="#carousel-popup" data-slide-to="6"></li>
+							<li data-target="#carousel-popup" data-slide-to="7"></li>
+						</ol>
+						@if (!string.IsNullOrWhiteSpace(Model.VideoFileName))
+						{
+			<img class="video-icon-circle" src="~/assets/play.svg" />}
+					</div>
+				</div>
+				<div class="video-wrapper hidden">
+					<video class="video" controls src="@Model.VideoFileFullPath"></video>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<div class="is-large"></div>
+<script src="~/js/sitehome/product.js" asp-append-version="true"></script>

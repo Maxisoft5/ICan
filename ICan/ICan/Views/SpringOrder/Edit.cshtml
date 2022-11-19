@@ -1,0 +1,135 @@
+﻿@using ICan.Common.Models.Enums
+@model ICan.Common.Models.Opt.SpringOrderModel
+@{ var title = "Редактирование заказа пружины";
+				ViewData["Title"] = title;
+				var springList = (IEnumerable<SelectListItem>)ViewData["SpringList"]; }
+
+<h2>@title</h2>
+<hr />
+<span class="text-success">@TempData["StatusMessage"]</span>
+<span class="alert-danger">@TempData["ErrorMessage"]</span>
+
+<ul class="nav nav-tabs">
+	<li class="nav-item">
+		<a class="nav-link active"
+		   id="order-tab" data-toggle="tab" href="#order-info" role="tab"
+		   aria-controls="order-info" aria-selected="true">Заказ пружины</a>
+	</li>
+	<li class="nav-item">
+		<a class="nav-link"
+		   id="payment-tab" data-toggle="tab" href="#payment-info" role="tab"
+		   aria-controls="payment-info" aria-selected="false">Платежи</a>
+	</li>
+</ul>
+
+
+<div class="tab-content" id="springOrderTabContent">
+	<div class="tab-pane fade show active" id="order-info" role="tabpanel" aria-labelledby="order-tab">
+		<form asp-action="Edit">
+			<div class="row" style="padding-top:20px">
+				<div class="col-4">
+					<div asp-validation-summary="ModelOnly" class="text-danger"></div>
+					@Html.HiddenFor(t => t.SpringOrderId)					
+					<div class="form-group">
+						<label asp-for="SpringId" class="control-label"></label>
+						<sup><i class="fas fa-asterisk" style="font-size: 10px; color: red"></i></sup>
+						@Html.DropDownList("SpringId", springList, new { @class = "form-control" })
+						<span asp-validation-for="SpringId" class="text-danger"></span>
+					</div>
+					<div class="form-group">
+						<label asp-for="OrderDate" class="control-label"></label>
+						<sup><i class="fas fa-asterisk" style="font-size: 10px; color: red"></i></sup>
+						@Html.TextBoxFor(Model => Model.OrderDate, "{0:dd.MM.yyyy HH:mm}", new { @type = "datetime", @class = "form-control" , @readonly="readonly"})
+						<span asp-validation-for="OrderDate" class="text-danger"></span>
+					</div>
+					<div class="form-group">
+						<label asp-for="InvoiceNumber" class="control-label"></label>
+						<input asp-for="InvoiceNumber" class="form-control" />
+						<span asp-validation-for="InvoiceNumber" class="text-danger"></span>
+					</div>
+					<div class="form-group">
+						<label asp-for="UPDNumber" class="control-label"></label>
+						<input asp-for="UPDNumber" class="form-control" />
+						<span asp-validation-for="UPDNumber" class="text-danger"></span>
+					</div>
+					<div class="form-group">
+						<label asp-for="Cost" class="control-label"></label>
+						<input asp-for="Cost" class="form-control" />
+						<span asp-validation-for="Cost" class="text-danger"></span>
+					</div>
+					<div class="form-group">
+						<label asp-for="Provider" class="control-label"></label>
+						<sup><i class="fas fa-asterisk" style="font-size: 10px; color: red"></i></sup>
+						<input asp-for="Provider" class="form-control" />
+						<span asp-validation-for="Provider" class="text-danger"></span>
+					</div>
+					<div class="form-group">
+						<label asp-for="SpoolCount" class="control-label"></label>
+						<sup><i class="fas fa-asterisk" style="font-size: 10px; color: red"></i></sup>
+						<input asp-for="SpoolCount" class="form-control" />
+						<span asp-validation-for="SpoolCount" class="text-danger"></span>
+					</div>
+					<div class="form-group">
+						<label asp-for="IsAssembled" class="control-label"></label>
+						<input asp-for="IsAssembled" class="form-control" style="max-width:44px" />
+						<span asp-validation-for="IsAssembled" class="text-danger"></span>
+					</div>
+					<div class="form-group">
+						<input type="submit" value="Сохранить" class="btn btn-default" />
+					</div>
+				</div>
+				<div class="col-8">
+					<div class="row">
+						<div class="col-12">
+							<h4>Приход</h4>
+							<div class="form-group">
+								<button class="btn btn-link add-incoming" type="button">Добавить приход</button>
+							</div>
+							<div class="form-group">
+								@if (Model.SpringOrderIncomings != null && Model.SpringOrderIncomings.Any())
+								{
+					<table class="table">
+						<thead>
+							<tr>
+								<th>@Html.DisplayNameFor(model => model.SpringOrderIncomings.First().IncomingDate)</th>
+								<th>@Html.DisplayNameFor(model => model.SpringOrderIncomings.First().SpoolCount)</th>
+								<th>@Html.DisplayNameFor(model => model.SpringOrderIncomings.First().NumberOfTurnsCount)</th>
+								<th></th>
+							</tr>
+						</thead>
+						<tbody>
+							@foreach (var incoming in Model.SpringOrderIncomings)
+							{
+			<tr>
+				<td>@incoming.IncomingDate</td>
+				<td>@incoming.SpoolCount</td>
+				<td>@incoming.NumberOfTurnsCount</td>
+				<td>
+					<a href="#" class="delete-order-incoming" data-spring-order-incoming-id="@(incoming.SpringOrderIncomingId)">
+						<i class="index far fa-times-circle" style="color:rgb(0, 123, 255)"></i>
+					</a>
+				</td>
+			</tr>}
+						</tbody>
+					</table>}
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</form>
+	</div>
+	<div class="tab-pane fade show" id="payment-info" role="tabpanel" aria-labelledby="payment-tab" style="padding-top:20px">
+		@await Html.PartialAsync("_SpringOrderPayments", Model.Payments)
+	</div>
+</div>
+
+<div>
+	<a asp-action="Index">Назад к списку</a>
+</div>
+<partial name="_UniversalModal" />
+
+<script src="~/js/springOrder.js" asp-append-version="true"></script>
+@section Scripts {
+	@{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

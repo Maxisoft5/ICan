@@ -1,0 +1,44 @@
+﻿@model IEnumerable<ICan.Common.Models.Opt.GlobalSettingModel>
+@{
+	var title = "Настройки";
+	ViewData["Title"] = title;
+}
+<h2>@title</h2>
+<hr />
+
+<span class="text-success">@TempData["StatusMessage"]</span>
+<span class="alert-danger">@TempData["ErrorMessage"]</span>
+<table class="table table-responsive">
+	<thead>
+		<tr>
+			<th>
+				@Html.DisplayNameFor(model => model.Comment)
+			</th>
+			<th>
+				@Html.DisplayNameFor(model => model.Content)
+			</th>
+			<th></th>
+		</tr>
+	</thead>
+	<tbody>
+		@foreach (var item in Model)
+		{
+			<tr>
+				<td>
+					<p>
+						@Html.ActionLink(item.Comment, "Edit", "GlobalSetting", new { id = item.GlobalSettingId })
+					</p>
+				</td>
+				<td >
+					 @Html.Raw(item.Content) 
+				</td>
+
+				<td style="width:7%">
+					<p>
+						<a asp-action="Edit" asp-route-id="@item.GlobalSettingId"><i class="far fa-edit"></i></a>
+					</p>
+				</td>
+			</tr>
+		}
+	</tbody>
+</table>

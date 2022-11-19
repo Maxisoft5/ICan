@@ -1,0 +1,486 @@
+﻿<!DOCTYPE html>
+<html lang="@ViewData["Language"]">
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<meta name="google-site-verification" content="BZfZEauptg-o4B6hq6DqDJ824SaRKYMzjR1J-duIFlo	">
+
+	<link rel="icon" type="image/x-icon" href="~/favicon.ico">
+	<title>Я Могу - @ViewBag.Title</title>
+	<script src='https://www.google.com/recaptcha/api.js'></script>
+	<link rel="stylesheet" href="~/lib/bootstrap-table/extensions/filter-control/bootstrap-table-filter-control.min.css" />
+	<link rel="stylesheet" href="~/lib/bootstrap-table/bootstrap-table.min.css" />
+	<environment include="Development">
+		<link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
+		<link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap-grid.css" />
+		<link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap-reboot.css" />
+		<link rel="stylesheet" href="~/css/fontawesome/css/fontawesome-all.min.css" />
+	</environment>
+	<script src="~/js/site.js" asp-append-version="true"></script>
+	<script src="~/lib/moment/moment.js"></script>
+	<script src="~/lib/sweetalert/sweetalert.min.js" asp-append-version="true"></script>
+
+	<environment exclude="Development">
+		<link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+		<link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap-grid.min.css" />
+		<link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap-reboot.min.css" />
+		<link rel="stylesheet" href="~/css/fontawesome/css/fontawesome-all.min.css" />
+	</environment>
+	<link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+	<environment include="Development">
+		<script src="~/lib/jquery/dist/jquery.js"></script>
+		<script src="~/lib/popper.js/dist/umd/popper.js"></script>
+		<script src="~/lib/bootstrap/dist/js/bootstrap.js"></script>
+	</environment>
+	<environment exclude="Development">
+		<script src="https://ajax.aspnetcdn.com/ajax/jquery/jquery-2.2.0.min.js"
+				asp-fallback-src="~/lib/jquery/dist/jquery.min.js"
+				asp-fallback-test="window.jQuery"
+				crossorigin="anonymous">
+		</script>
+		<script src="~/lib/popper.js/dist/umd/popper.js"></script>
+		<script src="~/lib/bootstrap/dist/js/bootstrap.min.js"
+				asp-fallback-src="~/lib/bootstrap/dist/js/bootstrap.min.js"
+				asp-fallback-test="window.jQuery && window.jQuery.fn && window.jQuery.fn.modal"
+				crossorigin="anonymous">
+		</script>
+	</environment>
+
+	<script src="~/lib/bootstrap-table/bootstrap-table.min.js"></script>
+	<script src="~/lib/bootstrap-table/dist/locale/bootstrap-table-ru-RU.js"></script>
+	<script src="~/lib/bootstrap-table/extensions/filter-control/bootstrap-table-filter-control.min.js"></script>
+	<script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+	<script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+	<script src="~/lib/jquery-validation-unobtrusive/jquery.unobtrusive-ajax.min.js"></script>
+	<script src="~/lib/jquery-validation/dist/additional-methods.min.js"></script>
+	<script>
+		window.applicationBaseUrl = '@Html.Raw(JavaScriptEncoder.Default.Encode(Url.Content("~/")))';
+		  window.urls = {
+			getOrderSize: '@Url.Action("Get", "OrderSizeDiscount")',
+			editOrder: '@Url.Action("Edit", "Order")',
+			deletePhoto: "@Url.Action("DeletePhoto", "Order")",
+			addShopName :  '@Url.Action("AddShopName", "Shop")',
+			editShopName :  '@Url.Action("EditShopName", "Shop")',
+			deleteShopName :  '@Url.Action("DeleteShopName", "Shop")',
+			getAvailableSemiproducts :  '@Url.Action("AvailableSemiproducts", "PrintOrder")',
+			getAvailablePaperOrders :  '@Url.Action("AvailablePaperOrders", "PrintOrder")',
+			getPrintOrdersByPaperId :'@Url.Action("GetPrintOrdersByPaperId", "MovePaper")',
+			addIncoming :  '@Url.Action("AddIncoming", "PrintOrder")',
+			deleteIncoming :  '@Url.Action("DeleteIncoming", "PrintOrder")',
+			addOrder:"@Url.Action("Post", "Product")",
+			detailsOrder:"@Url.Action("Details", "Order")",
+			getProducts:"@Url.Action("List", "Product")",
+			getWarehouseActions:"@Url.Action("Actions", "Warehouse")",
+			updateProductsInOrder:"@Url.Action("Update", "Product")",
+			editOrder:"@Url.Action("Edit", "Order")",
+			addImage:"@Url.Action("AddImage", "Material")",
+			deleteImage: "@Url.Action("DeleteImage", "Material")",
+			importPrices: "@Url.Action("ImportPrices", "Product")",
+			addSiteProductImage:"@Url.Action("AddImage", "SiteHome")",
+			deleteSiteProductImage: "@Url.Action("DeleteImage", "SiteHome")",
+			addSiteProductTag: "@Url.Action("AddTag", "SiteHome")",
+			deleteSiteProductTag:"@Url.Action("DeleteTag", "SiteHome")",
+			getUserInfo: "@Url.Action("GetUserInfo", "Manage")",
+			getPaperName :  '@Url.Action("GetPaperName", "PrintOrder")',
+			getSemiproductsAndOrders: '@Url.Action("GetSemiproductsAndOrders", "Assembly")',
+			editAssembly: '@Url.Action("Edit", "Assembly")',
+			getAvailablePapers: '@Url.Action("GetAvailablePapers", "Semiproduct")',
+			deletePrintOrderPayment: '@Url.Action("DeletePayment", "PrintOrder")',
+			deleteSpringOrderPayment: '@Url.Action("DeletePayment", "SpringOrder")',
+			addPrintOrderPayment: '@Url.Action("AddPayment", "PrintOrder")',
+			addSpringOrderPayment: '@Url.Action("AddPayment", "SpringOrder")',
+			indexClient :  '@Url.Action("Index", "Manage")',
+			orderExport :  '@Url.Action("Export", "Order")',
+			orderEdit: '@Url.Action("Edit", "Order")',
+			deleteOrder :  '@Url.Action("Delete", "Order")',
+			editShop :  '@Url.Action("Edit", "Shop")',
+			previewDocument :  '@Url.Action("Preview", "Shop")',
+			deleteContractFile: '@Url.Action("DeleteContractFile", "Shop")',
+			getPrintOrdersWithStickers: '@Url.Action("GetPrintOrders", "NotchOrder")',
+			addNotchOrderIncoming: '@Url.Action("AddIncoming", "NotchOrder")',
+			addPaperOrderIncoming: '@Url.Action("AddIncoming", "PaperOrder")',
+			deleteNotchOrderIncoming: '@Url.Action("DeleteIncoming", "NotchOrder")',
+			deletePaperOrderIncoming: '@Url.Action("DeleteIncoming", "PaperOrder")',
+			deleteSpringOrderIncoming: '@Url.Action("DeleteIncoming", "SpringOrder")',
+			wbGraphData: '@Url.Action("GetGraphicsData", "Wb")',
+			getAvailableProducts: '@Url.Action("GetAvailableProducts", "Semiproduct")',
+			addSiteFilterProduct: '@Url.Action("AddFilterProduct", "SiteFilter")',
+			editSiteFilterProduct: '@Url.Action("EditFilterProduct", "SiteFilter")',
+			addMarketPlaceFile: '@Url.Action("UploadMarketPlaceFile", "SiteHome")',
+			addMarketplaceProduct: '@Url.Action("AddMarketplaceProduct", "SiteHome")',
+			editMarketplaceProduct: '@Url.Action("EditMarketplaceProduct", "SiteHome")',
+			deleteMarketplaceProduct: '@Url.Action("DeleteMarketplaceProduct", "SiteHome")',
+			getSecondPartOfBox: '@Url.Action("GetSecondPartOfBox", "Semiproduct")',
+			getShops: '@Url.Action("GetAvailableShops", "Shop")',
+			unbindShop: '@Url.Action("UnbindShop", "Shop")',
+			getProductsByProductSeries: '@Url.Action("GetProductsByProductSeries", "Assembly")',
+			addSpringOrderIncoming: '@Url.Action("AddIncoming", "SpringOrder")',
+			getSemiproductsByProductSeries: '@Url.Action("GetSemiproductsBySeries", "SemiproductWarehouse")',
+			getSetting: '@Url.Action("Get", "Settings")',
+			materialList: '@Url.Action("Index", "Material")',
+			deleteProductVideo: '@Url.Action("DeleteVideo", "Sitehome")',
+            getPaperOrderWeight: '@Url.Action("GetPaperOrderWeight", "PaperOrder")',
+			getPaperOrderSheetCount: '@Url.Action("GetPaperOrderSheetCount", "PaperOrder")',
+			addCampaignImage: '@Url.Action("AddImage", "Campaign")',
+			warehouseEdit: '@Url.Action("Edit", "Warehouse")',
+			warehouseDetails: '@Url.Action("Details", "Warehouse")',
+			warehouseDelete: '@Url.Action("Delete", "Warehouse")'
+		}
+
+		$(document).ready(function () {
+			setInitial();
+
+			if ("@User?.Identity?.IsAuthenticated.ToString().ToUpper()" == "TRUE") {
+				setUser();
+			}
+
+			initCommonControls();
+			$("table").on("reset-view.bs.table", initCommonControls);
+		});
+	</script>
+	<style>
+		.maxwidth-150 {
+			max-width: 60px;
+		}
+	</style>
+</head>
+@inject UserManager<ApplicationUser> UserManager
+@using System.Text.Encodings.Web;
+@{
+	bool.TryParse(ViewData["IsAdmin"]?.ToString(), out var isAdmin);
+	bool.TryParse(ViewData["IsOperator"]?.ToString(), out var isOperator);
+	bool.TryParse(ViewData["IsStorekeeper"]?.ToString(), out var isStoreKeeper);
+	bool.TryParse(ViewData["IsAssembler"]?.ToString(), out var isAssembler);
+	bool.TryParse(ViewData["IsDesigner"]?.ToString(), out var isDesigner);
+	bool.TryParse(ViewData["IsContentMan"]?.ToString(), out var isContentManager);
+	var isClient = User?.Identity?.IsAuthenticated ?? false
+		? UserManager.GetUserAsync(User).Result.IsClient
+		: true;
+
+	var controller = @ViewContext.RouteData.Values["controller"]?.ToString();
+	var action = @ViewContext.RouteData.Values["action"]?.ToString();
+	var showMenu = !string.Equals(controller, "Account", StringComparison.InvariantCultureIgnoreCase)
+		|| string.Equals(action, "AccessDenied", StringComparison.InvariantCultureIgnoreCase);
+
+	bool.TryParse(ViewData["IsMobileBrowser"]?.ToString(), out bool isMobile);
+	var desktopClass = isMobile ? "" : "container";
+	var desktopStyle = isMobile ? "" : "max-width: 85%;";
+
+}
+
+<body>
+	<nav class="navbar navbar-expand-lg navbar-light"
+		 style="background-color: #9EC411" border-color="#9EC411">
+		<a class="navbar-brand" style="background-color: #9EC411" border-color="#9EC411" href="@Url.Action("Index","Product")">
+			<img src="~/images/logo.png" width="50" height="50" class="image-responsive" />
+		</a>
+		<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+			<span class="navbar-toggler-icon"></span>
+		</button>
+		<div class="collapse navbar-collapse" id="navbarSupportedContent">
+			<ul class="navbar-nav mr-auto">
+				@if (isAdmin || isOperator || isStoreKeeper || isClient) /*Операатор, Админ, клиент, Кладовшик*/
+				{
+					<li class="nav-item ">
+						<a class="nav-link" asp-area="" asp-controller="Order" asp-action="Index">
+							<span class="black-text">Заказы</span>
+						</a>
+					</li>
+
+					@if (isAdmin || isOperator || isClient)
+					{
+						<li class="nav-item" active>
+							<a class="nav-link" asp-area="" asp-controller="Product" asp-action="Index">
+								<span class="black-text">Товары</span>
+							</a>
+						</li>
+						<li class="nav-item">
+							<a class="nav-link" asp-area="" asp-controller="Delivery" asp-action="Index">
+								<span class="black-text">Доставка</span>
+							</a>
+						</li>
+					}
+				}
+
+				@if (isAdmin || isContentManager)
+				{
+					<li class="nav-item dropdown">
+						<a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+							<span class="black-text">Сайт</span>
+						</a>
+						<div class="dropdown-menu" aria-labelledby="navbarDropdown">
+							<a class="dropdown-item" asp-controller="Tag" asp-action="Index">
+								<span class="black-text">Теги</span>
+							</a>
+							<a class="dropdown-item" asp-controller="Marketplace" asp-action="Index">
+								<span class="black-text">Маркетплейсы</span>
+							</a>
+
+							<a class="dropdown-item" asp-controller="SiteFilter" asp-action="Index">
+								<span class="black-text">Настройка фильтра</span>
+							</a>
+							<a class="dropdown-item" asp-controller="SiteHome" asp-action="ProductList">
+								<span class="black-text">Тетради</span>
+							</a>
+							<a class="dropdown-item" asp-controller="Material" asp-action="List">
+								<span class="black-text">Материалы</span>
+							</a>
+						</div>
+					</li>
+				}
+				@if (isAdmin || isOperator)
+				{
+					<li class="nav-item">
+						<a class="nav-link" asp-area="" asp-controller="Manage" asp-action="List">
+							<span class="black-text">Пользователи</span>
+						</a>
+					</li>
+				}
+				@if (isAdmin)
+				{
+					<li class="nav-item dropdown">
+						<a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+							<span class="black-text">Маркетинг</span>
+						</a>
+						<div class="dropdown-menu" aria-labelledby="navbarDropdown">
+							<a class="dropdown-item" asp-area="" asp-controller="AmazonMarketing" asp-action="Index">
+								<span class="black-text">Парсинг файла для Амазон</span>
+							</a>
+							<a class="dropdown-item" asp-area="" asp-controller="Campaign" asp-action="Index">
+								<span class="black-text">Рассылки</span>
+							</a>
+						</div>
+					</li>
+				}
+				@if (isAdmin || isOperator || isContentManager)
+				{
+
+					<li class="nav-item dropdown">
+						<a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+							<span class="black-text">Справочники</span>
+						</a>
+
+						<div class="dropdown-menu" aria-labelledby="navbarDropdown">
+							<a class="dropdown-item" asp-area="" asp-controller="Productseries" asp-action="Index">
+								<span class="black-text">Серии</span>
+							</a>
+							@if (isAdmin || isOperator)
+							{
+								<a class="dropdown-item" asp-area="" asp-controller="Event" asp-action="Index">
+									<span class="black-text">Акции</span>
+								</a>
+								<a class="dropdown-item" asp-area="" asp-controller="WarehouseType" asp-action="Index">
+									<span class="black-text">Типы склада</span>
+								</a>
+
+								<a class="dropdown-item" asp-controller="GlobalSetting" asp-action="Index">
+									<span class="black-text">Настройки</span>
+								</a>
+								@if (isAdmin)
+								{
+									<a class="dropdown-item" asp-area="" asp-controller="Requisites" asp-action="Index">
+										<span class="black-text">Реквизиты</span>
+									</a>
+									<a class="dropdown-item" asp-controller="Discount" asp-action="Index">
+										<span class="black-text">Индивидуальные скидки</span>
+									</a>
+									<a class="dropdown-item" asp-controller="Country" asp-action="Index">
+										<span class="black-text">Страны</span>
+									</a>
+								}
+							}
+						</div>
+					</li>
+				}
+				@if (isAdmin || isOperator || isAssembler || isDesigner)
+				{
+					<li class="nav-item dropdown">
+						<a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+							<span class="black-text">Производство</span>
+						</a>
+
+						<div class="dropdown-menu" aria-labelledby="navbarDropdown">
+							@if (isAdmin || isOperator || isAssembler)
+							{
+								<a class="dropdown-item" asp-controller="Assembly" asp-action="Index">
+									<span class="black-text">Сборка</span>
+								</a>
+								@if (isAdmin || isAssembler)
+								{
+									<a class="dropdown-item" asp-controller="SemiproductWarehouse" asp-action="Index">
+										<span class="black-text">Склад полуфабрикатов</span>
+									</a>
+									<a class="dropdown-item" asp-controller="Spring" asp-action="Index">
+										<span class="black-text">Пружины</span>
+									</a>
+									<a class="dropdown-item" asp-controller="SpringOrder" asp-action="Index">
+										<span class="black-text">Заказ пружины</span>
+									</a>
+									<a class="dropdown-item" asp-controller="SpringWarehouse" asp-action="Index">
+										<span class="black-text">Склад пружины</span>
+									</a>
+								}
+
+								<a class="dropdown-item" asp-controller="Semiproduct" asp-action="Index">
+									<span class="black-text">Полуфабрикаты</span>
+								</a>
+								<a class="dropdown-item" asp-controller="Counterparty" asp-action="Index">
+									<span class="black-text">Контрагенты</span>
+								</a>
+
+								<a class="dropdown-item" asp-controller="NotchOrder" asp-action="Index">
+									<span class="black-text">Заказ надсечки</span>
+								</a>
+							}
+							<a class="dropdown-item" asp-controller="PrintOrder" asp-action="Index">
+								<span class="black-text">Заказ печати</span>
+							</a>
+							@if (isAdmin || isAssembler)
+							{
+								<a class="dropdown-item" asp-controller="GluePadIncoming" asp-action="Index">
+									<span class="black-text">Приход клеевых подушек</span>
+								</a>
+								<a class="dropdown-item" asp-controller="GluePadWarehouse" asp-action="Index">
+									<span class="black-text">Склад подушек</span>
+								</a>
+							}
+						</div>
+					</li>
+				}
+
+				@if (isAdmin || isAssembler)
+				{
+					<li class="nav-item dropdown">
+						<a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+							<span class="black-text">Бумага</span>
+						</a>
+						<div class="dropdown-menu" aria-labelledby="navbarDropdown">
+							<a class="dropdown-item" asp-controller="Paper" asp-action="Index">
+								<span class="black-text">Бумага</span>
+							</a>
+							<a class="dropdown-item" asp-controller="Format" asp-action="Index">
+								<span class="black-text">Формат</span>
+							</a>
+							<a class="dropdown-item" asp-controller="TypeOfPaper" asp-action="Index">
+								<span class="black-text">Вид бумаги</span>
+							</a>
+							<a class="dropdown-item" asp-controller="PaperOrder" asp-action="Index">
+								<span class="black-text">Заказ бумаги</span>
+							</a>
+							<a class="dropdown-item" asp-controller="PaperWarehouse" asp-action="Index">
+								<span class="black-text">Склад бумаги</span>
+							</a>
+							<a class="dropdown-item" asp-controller="MovePaper" asp-action="Index">
+								<span class="black-text">Перемещение бумаги</span>
+							</a>
+						</div>
+					</li>
+				}
+
+
+				@if (isAdmin || isOperator)
+				{
+					<li class="nav-item dropdown">
+						<a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+							<span class="black-text">Отчеты</span>
+						</a>
+						<div class="dropdown-menu" aria-labelledby="navbarDropdown">
+
+							<a class="nav-link" asp-area="" asp-controller="Shop" asp-action="Index">
+								<span class="black-text">Магазины</span>
+							</a>
+							<a class="nav-link" asp-area="" asp-controller="CountRedirect" asp-action="Results">
+								<span class="black-text">Стастистика переходов</span>
+							</a>
+
+							@if (isAdmin)
+							{
+								<a class="nav-link" asp-area="" asp-controller="Report" asp-action="Index">
+									<span class="black-text">Сводные отчёты</span>
+								</a>
+								<a class="nav-link" asp-area="" asp-controller="Shipment" asp-action="Index">
+									<span class="black-text">Отчёты по отгрузкам</span>
+								</a>
+							}
+
+							<a class="nav-link" asp-controller="Report" asp-action="UploadedUpds">
+								<span class="black-text">Загруженные УПД</span>
+							</a>
+							@if (isAdmin)
+							{
+								<a class="nav-link" asp-controller="UpdPayment" asp-action="Index">
+									<span class="black-text">Оплаты</span>
+								</a><a class="nav-link" asp-controller="UpdPayment" asp-action="CarriedIndex">
+									<span class="black-text">Проведённые оплаты</span>
+								</a>
+							}
+						</div>
+					</li>
+				}
+
+				@if (isAdmin || isOperator || isStoreKeeper)
+				{
+					<li class="nav-item dropdown">
+						<a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+							<span class="black-text">Склад</span>
+						</a>
+						<div class="dropdown-menu" aria-labelledby="navbarDropdown">
+							@if (isAdmin || isOperator || isStoreKeeper)
+							{
+								<a class="nav-link" asp-area="" asp-controller="Warehouse"
+								   asp-action="Index">
+									<span class="black-text">Склад тетрадей</span>
+								</a>
+								@if (isAdmin || isOperator)
+								{
+									<a class="nav-link" asp-area="" asp-controller="Report" asp-action="LeonardoIndex">
+										<span class="black-text">Леонардо</span>
+									</a>
+								}
+							}
+						</div>
+					</li>
+				}
+
+				@if (isAdmin || isOperator)
+				{
+					<li class="nav-item dropdown">
+						<a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+							<span class="black-text">ВБ</span>
+						</a>
+						<div class="dropdown-menu" aria-labelledby="navbarDropdown">
+							<a class="dropdown-item" asp-area="" asp-controller="Wb" asp-action="Reports">
+								<span class="black-text">Отчёты</span>
+							</a>
+							<a class="dropdown-item" asp-area="" asp-controller="Wb" asp-action="ApiReports">
+								<span class="black-text">Отчёты по данным API</span>
+							</a>
+							<a class="dropdown-item" asp-area="" asp-controller="Wb" asp-action="CompareReport">
+								<span class="black-text">Сравнение ЛК и API</span>
+							</a>
+						</div>
+					</li>
+				}
+			</ul>
+			@if (showMenu)
+			{
+				@await Html.PartialAsync("_LoginPartial")
+			}
+		</div>
+	</nav>
+	<div class="@desktopClass body-content" style="@desktopStyle">
+		@RenderBody()
+		<hr />
+	</div>
+	<footer class="footer">
+		<div>&copy; 2022 - Я Могу</div>
+		<div style="flex-grow:1"> </div>
+		<div>Разработка: <a href="http://afina.tech" target="_blank">Afina Technologies</a></div>
+	</footer>
+	<!-- Loader -->
+	<div id="loading">
+		<img src="~/images/loader.svg" class="loader-img" alt="Loader">
+	</div>
+	@RenderSection("Scripts", required: false)
+</body>
+</html>

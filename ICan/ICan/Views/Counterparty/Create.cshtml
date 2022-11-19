@@ -1,0 +1,60 @@
+﻿@model ICan.Common.Models.Opt.CounterpartyModel
+
+@{
+	var title = "Создание нового контрагента";
+	ViewData["Title"] = title;
+}
+
+<h2>@title</h2>
+
+<hr />
+<div class="row">
+	<div class="col-md-4">
+		<form asp-action="Create">
+			<div asp-validation-summary="ModelOnly" class="text-danger"></div>
+			<div class="form-group">
+				<label asp-for="Name" class="control-label"></label>
+				<sup><i class="fas fa-asterisk" style="font-size: 10px; color: red"></i></sup>
+				<input asp-for="Name" class="form-control" />
+				<span asp-validation-for="Name" class="text-danger"></span>
+			</div>
+			<div class="form-group">
+				<label asp-for="Inn" class="control-label"></label>
+
+				<input asp-for="Inn" class="form-control" />
+				<span asp-validation-for="Inn" class="text-danger"></span>
+			</div>
+
+			<div class="form-group" style="display:flex; flex-flow:column;  align-items:flex-start">
+				<label asp-for="Enabled" class="control-label"></label>
+				<input asp-for="Enabled" class="form-control left-aligned-checkbox" checked />
+				<span asp-validation-for="Enabled" class="text-danger"></span>
+			</div>
+
+			<div class="form-group">
+				<label asp-for="PaperOrderRoleId" class="control-label"></label>
+				<sup><i class="fas fa-asterisk" style="font-size: 10px; color: red"></i></sup><br />
+
+				@Html.DropDownListFor(model => model.PaperOrderRoleId, (IEnumerable<SelectListItem>)ViewData["PaperOrderRole"],
+					   null, new { @class = "form-control",  style ="width:300px", id= "formatId" })
+			</div>
+			<div class="form-group">
+				<label asp-for="PaymentDelay" class="control-label"></label>
+
+				<input asp-for="PaymentDelay" class="form-control" />
+				<span asp-validation-for="PaymentDelay" class="text-danger"></span>
+			</div>
+			<div class="form-group">
+				<input type="submit" value="Создать" class="btn btn-default" />
+			</div>
+		</form>
+	</div>
+</div>
+
+<div>
+	<a asp-action="Index">Назад к списку</a>
+</div>
+
+@section Scripts {
+	@{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

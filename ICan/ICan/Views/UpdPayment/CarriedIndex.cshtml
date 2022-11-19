@@ -1,0 +1,85 @@
+﻿@model IEnumerable<ICan.Common.Models.Opt.UpdPaymentModel>
+
+@{
+	var title = "Подтверждённые оплаты";
+	ViewData["Title"] = title;
+}
+
+<h2>@title</h2>
+
+<span class="text-success">@TempData["StatusMessage"]</span>
+<span class="alert-danger">@TempData["ErrorMessage"]</span>
+
+ 
+<table class="table"
+	   data-toggle="table"
+	   data-search="true"
+	   data-filter-control="true"
+	   data-show-search-clear-button="true">
+	<thead>
+		<tr>
+			<th data-field="ShopName"
+				data-sortable="true"
+				data-sorter="datesTimeSorter"
+				data-filter-control="input"
+				class="narrow-200">
+				@Html.DisplayNameFor(model => model.ShopName)
+			</th>
+			<th data-field="Date" data-sortable="true"
+				data-filter-control="select" class="narrow-150">
+				@Html.DisplayNameFor(model => model.Date)
+			</th>
+
+			<th data-field="UpdNumber" data-sortable="true"
+				data-filter-control="input">
+				@Html.DisplayNameFor(model => model.UpdNumber)
+			</th>
+			<th data-field="ReportDate" data-sortable="true"
+				data-filter-control="select">
+				@Html.DisplayNameFor(model => model.ReportDate)
+			</th>
+			<th>
+				@Html.DisplayNameFor(model => model.IsUnbound)
+			</th>
+			<th></th>
+		</tr>
+	</thead>
+	<tbody>
+		@foreach (var item in Model)
+		{
+			var dangerClass = item.IsUnbound ? "bg-danger" : string.Empty;
+		<tr>
+			<td>
+				@Html.DisplayFor(modelItem => item.ShopName)
+			</td>
+			<td>
+				@Html.DisplayFor(modelItem => item.Date)
+			</td>
+
+			<td>
+				@Html.DisplayFor(modelItem => item.UpdNumber)
+			</td>
+			<td>
+				@Html.DisplayFor(modelItem => item.ReportDate)
+			</td>
+			<td class="@dangerClass checkbox-cell">
+				@if (item.IsUnbound)
+				{
+					<i class="fas fa-check"></i>
+				}
+			</td>
+			<td>
+				<form asp-action="DeleteCarriedPayment" style="display: inline" asp-route-id="@item.UpdPaymentId">
+					<i class="submit index far fa-times-circle" style="color:rgb(0, 123, 255)"></i>
+				</form>
+			</td>
+		</tr>
+		}
+	</tbody>
+</table>
+
+<style>
+	td.bg-danger {
+		text-align:center;
+	}
+</style>

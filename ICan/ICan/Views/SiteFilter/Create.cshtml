@@ -1,0 +1,30 @@
+﻿@model ICan.Common.Models.Opt.SiteFilterModel
+
+<br />
+<h4>Создание фильтра</h4>
+<hr />
+<span class="text-success">@TempData["StatusMessage"]</span>
+<span class="alert-danger">@TempData["ErrorMessage"]</span>
+
+<form method="post" asp-action="Create">
+	<div class="row">
+		<dix class="col-md-12">
+			<div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+			<div class="form-group">
+				<label asp-for="Name" class="control-label"></label>
+				<sup><i class="fas fa-asterisk" style="font-size: 10px; color: red"></i></sup><br />
+				@Html.TextBoxFor(Model => Model.Name, new { @class = "form-control" })
+				<span class="text-danger field-validation-error" data-valmsg-for="Name" data-valmsg-replace="true"> </span>
+			</div>
+			<br />
+			<div class="form-group">
+				<input type="submit" value="Сохранить" class="btn btn-default" />
+			</div>
+		</dix>
+	</div>
+</form>
+
+<div>
+	<a asp-action="Index">Вернуться к списку</a>
+</div>

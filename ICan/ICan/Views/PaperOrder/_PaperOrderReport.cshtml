@@ -1,0 +1,76 @@
+﻿@model ICan.Common.Models.Opt.PaperOrderModel
+
+<div class="row">
+	<div class="col-12">
+		<div class="form-group">
+			<label asp-for="OrderDate" class="control-label"></label>
+			<br />
+			@Html.DisplayFor(m => m.OrderDate)
+		</div>
+
+		<div class="form-group">
+			<label asp-for="PaperName" class="control-label"></label>
+			<br />
+			@Html.DisplayFor(m => m.PaperName)
+		</div>
+
+		<div class="form-group">
+			<label asp-for="SheetCount" class="control-label"></label>
+			<br />
+			@Html.DisplayFor(m => m.SheetCount)
+		</div>
+		<div class="form-group">
+			<label asp-for="Weight" class="control-label"></label>
+			<br />
+			@Html.DisplayFor(m => m.Weight)
+		</div>
+		@foreach (var printOrder in Model.PrintOrderPapers)
+		{
+			<div class="row">
+				<div class="col-12">
+					<h5><a href="@Url.Action("Edit","PrintOrder", new { id = printOrder.PrintOrderId })">Заказ</a> печати №@(printOrder.PrintOrder.PrintingHouseOrderNum)</h5>
+				</div>
+			</div>
+				<div class="row">
+					<div class="col-2">
+						<div class="form-group">
+							<label asp-for="@(printOrder.PrintOrder.OrderDate)" class="control-label"></label>
+							<br />
+							@Html.DisplayFor(m => printOrder.PrintOrder.OrderDate)
+						</div>
+					</div>
+					<div class="col-2">
+						<div class="form-group">
+							<label asp-for="@(printOrder.PrintOrder.Printing)" class="control-label"></label>
+							<br />
+							@Html.DisplayFor(m => printOrder.PrintOrder.Printing)
+						</div>
+					</div>
+					<div class="col-2">
+						<div class="form-group">
+							<label class="control-label">Использовно в заказе</label>
+							<br />
+							@Html.DisplayFor(m => printOrder.PrintOrder.SheetsTaken)
+						</div>
+					</div>
+					<div class="col-4">
+						<div class="form-group">
+							<label asp-for="@(printOrder.PrintOrder.PrintOrderSemiproducts)" class="control-label"></label>
+							<br />
+							<ul>
+								@foreach (var semiproduct in printOrder.PrintOrder.PrintOrderSemiproducts)
+								{
+									<li>@(semiproduct.SemiProduct.DisplayName) 
+									@if (semiproduct.IsAssembled) {
+										<span>&nbsp;</span><i class="fas fa-box"></i>
+									}
+									</li> 
+								}
+							</ul>
+						</div>
+					</div>
+				</div>
+			}
+	</div>
+</div>
+

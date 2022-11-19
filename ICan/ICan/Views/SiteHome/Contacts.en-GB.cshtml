@@ -1,0 +1,33 @@
+﻿@using Microsoft.AspNetCore.Mvc.Localization
+
+@{
+	Layout = "/Views/GlobalSiteHome/_FooterSiteLayout.cshtml";
+	ViewData["Title"] = "Contact us";
+}
+<main>
+	<div class="contacts-wrapper">
+		<div class="map-wrapper">
+			<div class="map">
+				<iframe src="https://yandex.ru/map-widget/v1/-/CCU46ThawC?lang=en_US"
+						class="map-iframe" frameborder="0"></iframe>
+			</div>
+		</div>
+		<div class="contacts-description-wrapper contacts-description-wrapper--global">
+			<div class="contacts-description contacts-description--global">
+				<div class="address">
+					<p class="address-text address-text--global">Contact us:<br /><span class="address-tex--color-red">Yamogu</span>&nbsp;Publishing</p>
+					<p class="address-text address-text--global indent">General inquiries: <a class="bold-weight" href='mailto: info@yamogu.uk'>info@yamogu.uk</a></p>
+					<p class="address-text address-text--global indent">YAMOGU LTD</p>
+					<p class="address-text address-text--global">Kemp House</p>
+					<p class="address-text address-text--global">160 City Road</p>
+					<p class="address-text address-text--global">London</p>
+					<p class="address-text address-text--global">United Kingdom</p>
+					<p class="address-text address-text--global">EC1V 2NX</p>
+					<img class="postman" src="~/assets/postman.png">
+				</div>
+
+			</div>
+		</div>
+	</div>
+
+</main>
